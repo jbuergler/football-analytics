@@ -87,7 +87,7 @@ events_raw %>%
     from.kick.off = sum(play_pattern.name == "From Kick Off", na.rm = TRUE), # 2,955
     from.throw.in = sum(play_pattern.name == "From Throw In", na.rm = TRUE), # 27,052
     from.keeper = sum(play_pattern.name == "From Keeper", na.rm = TRUE), # 4,775
-    from.goal.kick = sum(play_pattern.name == "From Goal Kick", na.rm = TRUE), # 7.707
+    from.goal.kick = sum(play_pattern.name == "From Goal Kick", na.rm = TRUE), # 7,707
     from.corner = sum(play_pattern.name == "From Corner", na.rm = TRUE), # 3,695
     from.free.kick = sum(play_pattern.name == "From Free Kick", na.rm = TRUE), # 12,077
     other = sum(play_pattern.name == "Other", na.rm = TRUE), # 637

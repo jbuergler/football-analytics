@@ -15,6 +15,7 @@ library(bslib)
 library(plotly)
 library(shiny)
 library(shinylive)
+library(bsicons)
 
 
 

@@ -7,7 +7,7 @@ library(tidyverse)
 library(plotly)
 library(ggrepel)
 library(ggsoccer)
-library(gt) #9CA3AF
+library(gt)
 
 # LOAD DATA ----
 tbl_team_xg_summary <- readRDS("tbl_team_xg_summary.rds")
@@ -19,6 +19,10 @@ tbl_final_timeline <- readRDS("tbl_final_timeline.rds")
 tbl_final_player_actions <- readRDS("tbl_final_player_actions.rds")
 tbl_final_pass_thirds <- readRDS("tbl_final_pass_thirds.rds")
 tbl_verdict_summary <- readRDS("tbl_verdict_summary.rds")
+# tbl_final_pressures not loaded — value (393 vs 253) hardcoded in value box
+# source: tbl_final_pressures.rds computed in 04_analyse.R
+# tbl_ball_progression used in 04_analyse.R to build tbl_verdict_summary
+# not loaded directly in app — values are already baked into tbl_verdict_summary
 
 # COLOURS ----
 euro_colours <- c(
@@ -98,7 +102,7 @@ ui <- page_navbar(
       card(
         p("The 2025 UEFA Women's European Championship was hosted in Switzerland from the 2nd to 27th July 2025. 
     Sixteen nations competed across the group stage and knockout rounds, producing 106 goals across 
-    31 matches. England and Spain appeared as the strongest teams meeting in the final at St. Jakob Park in Basel on the 27th July. 
+    31 matches. England and Spain stood out as the strongest teams meeting in the final at St. Jakob Park in Basel on the 27th July. 
     England, managed by Sarina Wiegman, were the defending champions having won the Euros in 2022.
     Spain, managed by Montserrat Tomé, arrived as reigning World Cup holders.
     Following a 1–1 draw after extra time, England won 3–1 on penalties to retain their European title.
@@ -941,7 +945,7 @@ server <- function(input, output, session) {
         values = c("Pass" = "#F1BF00", "Carry" = "grey69"),
         name   = NULL,
         labels = c("Pass" = "Final-third pass",
-                   "Carry" = "Progressive carry")
+                   "Carry" = "Final-third carry")
       ) +
       coord_cartesian(xlim = c(60, 121), ylim = c(0, 80)) +
       theme_pitch() +
@@ -970,7 +974,7 @@ server <- function(input, output, session) {
         values = c("Pass" = "#CE1124", "Carry" = "grey69"),
         name   = NULL,
         labels = c("Pass" = "Final-third pass",
-                   "Carry" = "Progressive carry")
+                   "Carry" = "Final-third carry")
       ) +
       coord_cartesian(xlim = c(60, 121), ylim = c(0, 80)) +
       theme_pitch() +

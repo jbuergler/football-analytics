@@ -216,7 +216,6 @@ fig_match_xg_bars_eng <- tbl_stage_breakdown %>%
     values_to = "xg"
   ) %>%
   mutate(
-    metric_label = if_else(metric == "xg_total", "England xG", "Opponent xG"),
     bar_colour   = if_else(metric == "xg_total", "England", "Opponent")
   ) %>%
   ggplot(aes(x = match_label, y = xg, fill = bar_colour)) +
@@ -269,7 +268,6 @@ fig_match_xg_bars_esp <- tbl_stage_breakdown %>%
     values_to = "xg"
   ) %>%
   mutate(
-    metric_label = if_else(metric == "xg_total", "Spain xG", "Opponent xG"),
     bar_colour   = if_else(metric == "xg_total", "Spain", "Opponent")
   ) %>%
   ggplot(aes(x = match_label, y = xg, fill = bar_colour))+
@@ -498,7 +496,7 @@ fig_player_passmap <- tbl_final_player_actions %>%
   scale_colour_manual(
     values = c("Pass" = "#4E2CA3", "Carry" = "#9CA3AF"),# neutral colours here
     name   = NULL,
-    labels = c("Pass" = "Final-third pass", "Carry" = "Progressive carry")
+    labels = c("Pass" = "Final-third pass", "Carry" = "Final-third carry")
   ) +
   coord_cartesian(xlim = c(60, 121), ylim = c(0, 80)) +
   labs(
