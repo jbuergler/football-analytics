@@ -350,6 +350,15 @@ tbl_final_timeline <- tbl_final_shots %>%
 # Completed passes and progressive carries for Bonmatí and Hemp in the final.
 # Used for the player pass map in Tab 3.
 # Filtered to final-third actions only to keep the map readable.
+names(events_clean)
+
+events_clean %>%
+  filter(
+    match_id  == final_match_id,
+    player %in% c("Aitana Bonmati Conca", "Lauren Hemp")
+  ) %>%
+  group_by(player) %>%
+  summarise(duration)
 
 tbl_final_player_actions <- events_clean %>%
   filter(

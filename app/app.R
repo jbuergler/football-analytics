@@ -594,12 +594,6 @@ server <- function(input, output, session) {
                               120 - location_x, location_x),
         plot_y      = if_else(team == "England",
                               80  - location_y, location_y),
-        point_alpha = case_when(
-          shot_outcome == "Goal"    ~ 1.0,
-          shot_outcome == "Saved"   ~ 0.85,
-          shot_outcome == "Blocked" ~ 0.7,
-          TRUE                      ~ 0.5
-        ),
         tooltip = paste0(
           team, " · ", player, "\n",
           "Minute: ", minute, "'\n",
@@ -614,8 +608,8 @@ server <- function(input, output, session) {
       geom_point(
         aes(size   = xg,
             colour = team,
-            alpha  = point_alpha,
-            text   = tooltip)
+            text   = tooltip),
+        alpha = 0.9
       ) +
       geom_point(
         data   = ~ filter(.x, shot_outcome == "Goal"),
@@ -626,11 +620,22 @@ server <- function(input, output, session) {
         stroke = 1.5
       ) +
       scale_colour_manual(values = euro_colours, name = NULL) +
-      scale_size_continuous(range = c(2, 8), guide = "none") +
-      scale_alpha_identity() +
+      scale_size_continuous(
+        range  = c(2, 8),
+        breaks = c(0.05, 0.2, 0.5),
+        labels = c("0.05", "0.20", "0.50")
+      ) +
+      scale_size_continuous(
+        range = c(2, 8),
+        guide = "none"
+      ) +
+      guides(
+        colour = guide_legend(
+          override.aes = list(size = 5, alpha = 1))
+      ) +
       coord_cartesian(xlim = c(0, 120), ylim = c(0, 80)) +
       labs(
-        subtitle = "England attack left · Spain attack right · size = xG · white ring = goal"
+        subtitle = "Circle size = xG value · England attack left · Spain attack right · white ring = goal"
       ) +
       theme_pitch() +
       theme(

@@ -382,12 +382,6 @@ fig_shot_map <- tbl_final_shots %>%
     # Flip England so they attack left, Spain stays attacking right
     plot_x = if_else(team == "England", 120 - location_x, location_x),
     plot_y = if_else(team == "England", 80  - location_y, location_y),
-    point_alpha = case_when(
-      shot_outcome == "Goal"    ~ 1.0,
-      shot_outcome == "Saved"   ~ 0.85,
-      shot_outcome == "Blocked" ~ 0.7,
-      TRUE                      ~ 0.5
-    ),
     tooltip = paste0(
       team, " · ", player, "\n",
       "Minute: ", minute, "' · xG: ", round(xg, 3), "\n",
@@ -400,8 +394,8 @@ fig_shot_map <- tbl_final_shots %>%
   geom_point(
     aes(size   = xg,
         colour = team,
-        alpha  = point_alpha,
-        text   = tooltip)
+        text   = tooltip),
+    alpha = 0.9
   ) +
   geom_point(
     data = ~ filter(.x, shot_outcome == "Goal"),
@@ -411,14 +405,20 @@ fig_shot_map <- tbl_final_shots %>%
     colour = "black",
     stroke = 1.5
   ) +
-  scale_colour_manual(values = euro_colours, name = NULL) +
-  scale_size_continuous(range = c(2, 8), guide = "none") +
-  scale_alpha_identity() +
-  guides(colour = guide_legend(override.aes = list(size = 5))) +
+  scale_colour_manual(values = euro_colours) +
+  scale_size_continuous(range = c(2, 8), name = "xG Value",
+                        breaks = c(0.05, 0.2, 0.5),
+                        labels = c("0.05", "0.20", "0.50")) +
+  guides(
+    colour = guide_legend(
+      override.aes = list(size = 5, alpha = 1)),
+    size = guide_legend(
+      override.aes = list(alpha = 1))
+  ) +
   coord_cartesian(xlim = c(0, 120), ylim = c(0, 80)) +
   labs(
     title    = "Shot map — Women's Euro 2025 Final",
-    subtitle = "England attack left · Spain attack right"
+    subtitle = "England attack left · Spain attack right · circle size = xG · white ring = goal"
   ) +
   theme_pitch() +
   theme(
@@ -428,6 +428,8 @@ fig_shot_map <- tbl_final_shots %>%
     plot.subtitle = element_text(size = 10, colour = "#6B7280",
                                    margin = margin(b = 8)),
     legend.position = "bottom",
+    legend.box = "horizontal",
+    legend.spacing.x = unit(1, "cm"),
     legend.text = element_text(size = 11, colour = "#1F2937"),
     plot.background = element_rect(fill = "white", colour = NA)
   )
@@ -611,6 +613,4 @@ tbl_verdict_gt <- tbl_verdict_summary %>%
     table.width = pct(80)
   )
 
-## Commit and Push ----
-# ./_publish.sh "05_visualise: Tab 4 static final verdict gt table complete"
 
