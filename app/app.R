@@ -183,7 +183,7 @@ ui <- page_navbar(
   # TAB 1: Tournament Overview ----
   nav_panel(
     "Tournament Overview",
-    
+    # sidebar to collapse with information of the tab
     layout_sidebar(
       
       sidebar = sidebar(
@@ -267,6 +267,33 @@ ui <- page_navbar(
   # TAB 2: The Journey ----
   nav_panel(
     "The Journey",
+    # sidebar to collapse with information of the tab
+    layout_sidebar(
+      sidebar = sidebar(
+        width = 210,
+        bg    = "#F9FAFB",
+        open  = TRUE,
+        tags$p(
+          tags$strong("About this Tab", style = "color: #1F2937;"),
+          style = "margin-bottom: 0.4rem;"
+        ),
+        tags$p(
+          "This tab shows how England and Spain compared throughout the tournament 
+        in terms of expected goals and pressing intensity. The cumulative xG chart 
+        shows the momentum over the tournament. Select any team to compare against 
+        England. The match bars break down each game individually based on England's 
+        and Spain's xG against all their opponents. The pressing chart shows how both 
+        teams applied pressure across the group stage and knockout rounds based on 
+        location on the pitch (high-press rate) and counterpressing.",
+          style = "font-size: 0.78rem; color: #6B7280;"
+        ),
+        tags$hr(),
+        tags$p(
+          "Based on StatsBomb open event data
+        31 matches · excluding Penalty Shootouts",
+          style = "font-size: 0.78rem; color: #6B7280;"
+        )
+      ),
     
     card(
       full_screen = TRUE,
@@ -311,11 +338,39 @@ ui <- page_navbar(
         plotlyOutput("press_shift", height = "320px")
       )
     )
+    )
   ),
   
   # TAB 3: The Final ----
   nav_panel(
     "The Final",
+    # sidebar to collapse with information of the tab
+    layout_sidebar(
+    sidebar = sidebar(
+      width = 210,
+      bg    = "#F9FAFB",
+      open  = TRUE,
+      tags$p(
+        tags$strong("About this Tab", style = "color: #1F2937;"),
+        style = "margin-bottom: 0.4rem;"
+      ),
+      tags$p(
+        "The final at St. Jakob-Park ended 1–1 after extra time, with England 
+        winning 3–1 on penalties. This tab examines the match through four 
+        analytical lenses: where shots were taken and their respective xG values, 
+        how expected goals accumulated across the 120 minutes, how each team 
+        distributed their passes, and how the two players with the most attacking 
+        threat in terms of passes and carries compared in the final third.
+        For better readability expand the respective graphs and plots.",
+        style = "font-size: 0.78rem; color: #6B7280;"
+      ),
+      tags$hr(),
+      tags$p(
+        "Based on StatsBomb open event data
+        · excluding Penalty Shootouts",
+        style = "font-size: 0.78rem; color: #6B7280;"
+      )
+    ),
     
     # Row 1 — shot map and xG timeline
     layout_columns(
@@ -323,7 +378,8 @@ ui <- page_navbar(
       card(
         full_screen = TRUE,
         card_header("Shot Map - Final"),
-        p("Spain registered 23 shots to England's 8, with higher-quality chances concentrated centrally.",
+        p("Spain registered 23 shots to England's 8, with higher-quality chances concentrated centrally.
+          Zoom in to see the shot and pitch dimensions more clearly.",
           style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
         plotlyOutput("shot_map", height = "400px")
       ),
@@ -366,6 +422,7 @@ ui <- page_navbar(
           plotOutput("passmap_hemp", height = "420px", width = "100%")
         )
       )
+    )
     )
   ),
   
@@ -410,6 +467,10 @@ ui <- page_navbar(
         into the attacking third."),
         p("In the final, Spain generated 2.14 xG from 23 shots
         against England's 0.88 xG from 8 shots."),
+        p("Spain dominated the data, but tournament football is not always 
+        won by the better team on paper. England's defensive shape, game 
+        management and clinical penalty shootout ultimately decided the 
+          outcome. That is something the data alone cannot fully explain."),
         p(tags$em("The Table shows how England compared to Spain
                   across seven key analytical metrics."))
       ),
@@ -422,8 +483,8 @@ ui <- page_navbar(
         gt_output("verdict_table")
       )
     )
-    )
   )
+)
 
 
 # SERVER ----
