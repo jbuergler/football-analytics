@@ -328,6 +328,13 @@ tbl_final_shots <- shots_clean %>%
   ) %>%
   arrange(period, minute)
 
+tbl_final_shots %>%
+  group_by(team) %>%
+  summarise(
+    shots = n()
+  )
+
+
 # Key finding: both goals were headers 
 # England: Russo, min 56, 0.213 xG. Spain: Caldentey, min 24, 0.396 xG
 

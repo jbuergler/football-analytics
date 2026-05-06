@@ -156,12 +156,16 @@ ui <- page_navbar(
         col_widths = c(6, 6),
         card(
           full_screen = TRUE,
-          card_header("xG Difference per Match"),
+          card_header("xG Dominance - Tournament Ranking"),
+          p("Spain top the tournament in xG dominance (+1.98), ahead of England (+1.20) and the rest of the field.",
+            style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
           plotlyOutput("xg_lollipop", height = "380px")
         ),
         card(
           full_screen = TRUE,
-          card_header("Goals vs expected Goals"),
+          card_header("Goals vs Expected Goals"),
+          p("Spain and England both outscored their xG, with Spain generating slightly more overall chance quality.",
+            style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
           plotlyOutput("xg_scatter", height = "380px")
         )
       )
@@ -175,6 +179,8 @@ ui <- page_navbar(
     card(
       full_screen = TRUE,
       card_header("Cumulative xG across the Tournament"),
+      p("England's xG built steadily but Spain pulled clear in the knockout rounds.",
+        style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
       layout_columns(
         col_widths = c(3, 9),
         selectInput(
@@ -194,14 +200,22 @@ ui <- page_navbar(
     layout_columns(
       col_widths = c(6, 6),
       navset_card_tab(
-        title       = "Match-by-match xG",
+        title       = "Match-by-Match xG",
         full_screen = TRUE,
-        nav_panel("England", plotlyOutput("match_bars_eng", height = "320px")),
-        nav_panel("Spain",   plotlyOutput("match_bars_esp", height = "320px"))
+        nav_panel("England", 
+                  p("Spain's per-match xG was more consistent; England had bigger variation across games.",
+                    style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
+                  plotlyOutput("match_bars_eng")),
+        nav_panel("Spain",
+                  p("Spain's per-match xG was more consistent; England had bigger variation across games.",
+                    style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
+                  plotlyOutput("match_bars_esp"))
       ),
       card(
         full_screen = TRUE,
         card_header("Pressing intensity — Group Stage vs Knockout"),
+        p("Spain pressed consistently higher and counter-pressed more throughout the tournament.",
+          style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
         plotlyOutput("press_shift", height = "320px")
       )
     )
@@ -216,12 +230,16 @@ ui <- page_navbar(
       col_widths = c(6, 6),
       card(
         full_screen = TRUE,
-        card_header("Shot Map — England vs Spain"),
+        card_header("Shot Map - Final"),
+        p("Spain registered 23 shots to England's 8, with higher-quality chances concentrated centrally.",
+          style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
         plotlyOutput("shot_map", height = "400px")
       ),
       card(
         full_screen = TRUE,
-        card_header("Cumulative xG Timeline"),
+        card_header("Cumulative xG Timeline - Final"),
+        p("Spain dominated xG from the beginning. England's last shot of the game was in the 68th minute.",
+          style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
         plotlyOutput("xg_timeline", height = "400px")
       )
     ),
@@ -233,21 +251,27 @@ ui <- page_navbar(
       # Left — Pass Distribution by Pitch Third
       card(
         full_screen = TRUE,
-        card_header("Pass Distribution by Pitch Third"),
+        card_header("Pass Distribution by Pitch Third - Final"),
+        p("Spain played more passes into the final third, showing attempts to create chances in the attacking end.",
+          style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
         plotlyOutput("pass_thirds", height = "380px")
       ),
       
       # Right — player passmap with player selector
       navset_card_tab(
-        title = "Player actions — Final Third",
+        title = "Top Player actions — Final Third",
         full_screen = TRUE,
         nav_panel(
           "Bonmatí (Spain)",
-          plotOutput("passmap_bonmati", height = "380px", width = "100%")
+          p("Bonmatí generated significantly more final-third actions than Hemp despite playing the same minutes.",
+            style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
+          plotOutput("passmap_bonmati", height = "420px", width = "100%")
         ),
         nav_panel(
           "Hemp (England)",
-          plotOutput("passmap_hemp", height = "380px", width = "100%")
+          p("Bonmatí generated significantly more final-third actions than Hemp despite playing the same minutes.",
+            style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
+          plotOutput("passmap_hemp", height = "420px", width = "100%")
         )
       )
     )
@@ -300,7 +324,9 @@ ui <- page_navbar(
       
       card(
         full_screen = TRUE,
-        card_header("England vs Spain — key metrics"),
+        card_header("Key Performance Metrics - England vs Spain"),
+        p("Spain led England on all seven performance metrics. The data supports Spain as the deserving winner.",
+          style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
         gt_output("verdict_table")
       )
     )
