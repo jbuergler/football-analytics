@@ -7,7 +7,7 @@ library(tidyverse)
 library(plotly)
 library(ggrepel)
 library(ggsoccer)
-library(gt)
+library(gt) #9CA3AF
 
 # LOAD DATA ----
 tbl_team_xg_summary <- readRDS("tbl_team_xg_summary.rds")
@@ -27,23 +27,24 @@ euro_colours <- c(
   "Other"   = "grey69"
 )
 
+# only have
 team_colours <- c(
-  "England"     = "#CE1124",
-  "Spain"       = "#F1BF00",
-  "Sweden"      = "#006AA7",
-  "France"      = "#21304D",
-  "Germany"     = "#000000",
-  "Norway"      = "#BA0C2F",
-  "Netherlands" = "#F36C21",
-  "Denmark"     = "#C8102E",
-  "Italy"       = "#007CC3",
-  "Portugal"    = "#0D6938",
-  "Belgium"     = "#ED2939",
-  "Iceland"     = "#02529C",
-  "Switzerland" = "#DA291C",
-  "Finland"     = "#002F6C",
-  "Wales"       = "#174A3F",
-  "Poland"      = "#DC143C"
+  "England" = "#CE1124",
+  "Spain"   = "#F1BF00",
+  "Sweden" = "grey69",
+  "France" = "grey69",
+  "Germany" = "grey69",
+  "Norway" = "grey69",
+  "Netherlands" = "grey69",
+  "Denmark" = "grey69",
+  "Italy" = "grey69",
+  "Portugal" = "grey69",
+  "Belgium" = "grey69",
+  "Iceland" = "grey69",
+  "Switzerland" = "grey69",
+  "Finland" = "grey69",
+  "Wales" = "grey69",
+  "Poland" = "grey69"
 )
 
 # THEME ----
@@ -647,7 +648,7 @@ server <- function(input, output, session) {
                  fill = bar_colour, text = tooltip)) +
       geom_col(position = position_dodge(width = 0.75), width = 0.65) +
       scale_fill_manual(
-        values = c("England" = "#CE1124", "Opponent" = "#9CA3AF")
+        values = c("England" = "#CE1124", "Opponent" = "grey69")
       ) +
       scale_y_continuous(
         limits = c(0, 7),
@@ -692,7 +693,7 @@ server <- function(input, output, session) {
                  fill = bar_colour, text = tooltip)) +
       geom_col(position = position_dodge(width = 0.75), width = 0.65) +
       scale_fill_manual(
-        values = c("Spain" = "#F1BF00", "Opponent" = "#9CA3AF")
+        values = c("Spain" = "#F1BF00", "Opponent" = "grey69")
       ) +
       scale_y_continuous(
         limits = c(0, 7),
