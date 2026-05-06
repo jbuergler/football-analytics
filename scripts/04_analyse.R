@@ -16,7 +16,7 @@
 # data/cleaned/tbl_final_shots.rds               - Part 3A: the final in detail: shots
 # data/cleaned/tbl_final_timeline.rds            - Part 3A
 # data/cleaned/tbl_final_player_actions.rds      - Part 3B: the final in detail: possession
-# data/cleaned/tbl_final_pass_thirds.rds         - Part 3
+# data/cleaned/tbl_final_pass_thirds.rds         - Part 3B
 # data/cleaned/tbl_verdict_summary.rds           - Part 4: was it deserved?
 # data/cleaned/tbl_final_pressures.rds           - Part 4
 

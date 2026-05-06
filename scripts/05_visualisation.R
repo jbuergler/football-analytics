@@ -65,7 +65,7 @@ fig_xg_lollipop <- tbl_team_xg_summary %>%
   ) %>%
   ggplot(aes(x = avg_xg_diff, y = team, colour = team_highlight)) +
 
-  geom_vline(xintercept = 0, colour = "#9CA3AF",
+  geom_vline(xintercept = 0, colour = "grey69",
              linewidth = 0.5, linetype = "dashed") +
 
   geom_segment(aes(x = 0, xend = avg_xg_diff,
@@ -91,7 +91,6 @@ fig_xg_lollipop <- tbl_team_xg_summary %>%
 ## fig_xg_scatter ----
 # One takeaway: both finalists' goals broadly matched their xG —
 # the xG differential reflects genuine quality, not finishing luck.
-
 fig_xg_scatter <- tbl_team_xg_summary %>%
   mutate(
     team_highlight = case_when(
@@ -102,7 +101,7 @@ fig_xg_scatter <- tbl_team_xg_summary %>%
     ) %>%
   ggplot(aes(x = total_xg, y = total_goals, colour = team_highlight)) +
   geom_abline(slope = 1, intercept = 0,
-              colour = "#9CA3AF", linewidth = 0.5, linetype = "dashed") +
+              colour = "grey69", linewidth = 0.5, linetype = "dashed") +
   geom_point(aes(size = team_highlight == "Other"), show.legend = FALSE) +
   geom_text_repel(
     data = ~ filter(.x, team_highlight %in% c("Spain", "England")),
@@ -119,10 +118,10 @@ fig_xg_scatter <- tbl_team_xg_summary %>%
                      expand = expansion(mult = c(0, 0.1))) +
   annotate("text", x = 1, y = 19,
            label = "above line = scored more than xG predicted",
-           size = 2.8, colour = "#9CA3AF", hjust = 0) +
+           size = 2.8, colour = "grey69", hjust = 0) +
   annotate("text", x = 8, y = 1,
            label = "below line = scored less than xG predicted",
-           size = 2.8, colour = "#9CA3AF", hjust = 0) +
+           size = 2.8, colour = "grey69", hjust = 0) +
   labs(
     title    = "Goals scored vs expected goals — Women's Euro 2025",
     subtitle = "Teams above the dashed line scored more than their chance quality predicted",
@@ -163,13 +162,13 @@ fig_cumulative_xg <- tbl_cumulative_xg %>%
     size = 2.5
   ) +
 
-  geom_vline(xintercept = 3.5, colour = "#9CA3AF",
+  geom_vline(xintercept = 3.5, colour = "grey69",
              linewidth = 0.5, linetype = "dashed") +
 
   annotate("text", x = 2, y = max(tbl_cumulative_xg$cumulative_xg) * 0.95,
-           label = "Group Stage", size = 4, colour = "#9CA3AF", hjust = 0.5) +
+           label = "Group Stage", size = 4, colour = "grey69", hjust = 0.5) +
   annotate("text", x = 4.5, y = max(tbl_cumulative_xg$cumulative_xg) * 0.95,
-           label = "Knockout", size = 4, colour = "#9CA3AF", hjust = 0.5) +
+           label = "Knockout", size = 4, colour = "grey69", hjust = 0.5) +
 
   geom_text(
     data = ~ filter(.x, team_highlight != "Other") %>%
@@ -229,10 +228,10 @@ fig_match_xg_bars_eng <- tbl_stage_breakdown %>%
            fill = "#FFF0F0", alpha = 0.5) +
   annotate("text", x = 2, y = 5.4,
            label = "Group Stage", size = 3,
-           colour = "grey30", hjust = 0.5) +
+           colour = "grey69", hjust = 0.5) +
   annotate("text", x = 5, y = 5.4,
            label = "Knockout", size = 3,
-           colour = "grey30", hjust = 0.5) +
+           colour = "grey69", hjust = 0.5) +
   geom_col(position = position_dodge(width = 0.75), width = 0.65) +
   scale_fill_manual(
     values = c("England" = "#CE1124", "Opponent" = "grey69"),
@@ -281,10 +280,10 @@ fig_match_xg_bars_esp <- tbl_stage_breakdown %>%
            fill = "#FEF9EC", alpha = 0.5) +
   annotate("text", x = 2, y = 5.4,
            label = "Group Stage", size = 3,
-           colour = "grey30", hjust = 0.5) +
+           colour = "grey69", hjust = 0.5) +
   annotate("text", x = 5, y = 5.4,
            label = "Knockout", size = 3,
-           colour = "grey30", hjust = 0.5) +
+           colour = "grey69", hjust = 0.5) +
   geom_col(position = position_dodge(width = 0.75), width = 0.65) +
   scale_fill_manual(
     values = c("Spain" = "#F1BF00", "Opponent" = "grey69"),

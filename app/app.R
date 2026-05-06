@@ -34,7 +34,7 @@ euro_colours <- c(
 # only have
 team_colours <- c(
   "England" = "#CE1124",
-  "Spain"   = "#F1BF00",
+  "Spain" = "#F1BF00",
   "Sweden" = "grey69",
   "France" = "grey69",
   "Germany" = "grey69",
@@ -54,13 +54,9 @@ team_colours <- c(
 # THEME ----
 # controls Shiny layout, sidebar, value boxes, tabs
 euro_theme <- bs_theme(
-  version   = 5,
-  primary   = "#F1BF00", 
+  version = 5,
+  primary = "#F1BF00", 
   secondary = "#CE1124",   
-  success   = "#2E7D32",
-  info = "#4E2CA3",
-  warning = "#4DFFFF",
-  danger = "#006AA7",
   base_font = font_collection(
     "-apple-system",
     "BlinkMacSystemFont",
@@ -75,16 +71,16 @@ euro_theme <- bs_theme(
 theme_euro <- function() {
   theme_minimal(base_size = 12) +
     theme(
-      plot.title       = element_text(face = "bold", size = 13, colour = "#1F2937"),
-      plot.subtitle    = element_text(size = 10, colour = "#6B7280", margin = margin(b = 10)),
-      axis.title       = element_text(size = 10, colour = "#1F2937"),
-      axis.text        = element_text(size = 9,  colour = "#6B7280"),
+      plot.title = element_text(face = "bold", size = 13, colour = "#1F2937"),
+      plot.subtitle = element_text(size = 10, colour = "#6B7280", margin = margin(b = 10)),
+      axis.title = element_text(size = 10, colour = "#1F2937"),
+      axis.text = element_text(size = 9,  colour = "#6B7280"),
       panel.grid.major = element_line(colour = "#E5E7EB", linewidth = 0.3),
       panel.grid.minor = element_blank(),
       plot.background  = element_rect(fill = "white", colour = NA),
       panel.background = element_rect(fill = "white", colour = NA),
-      legend.position  = "none",
-      plot.caption     = element_text(size = 8, colour = "#9CA3AF", hjust = 0)
+      legend.position = "none",
+      plot.caption = element_text(size = 8, colour = "#9CA3AF", hjust = 0)
     )
 }
 
@@ -191,10 +187,9 @@ ui <- page_navbar(
     "Tournament Overview",
     # sidebar to collapse with information of the tab
     layout_sidebar(
-      
       sidebar = sidebar(
         width = 210,
-        bg    = "#F9FAFB",
+        bg  = "#F9FAFB",
         open  = TRUE,
         tags$p(
           tags$strong("Dashboard Question", style = "color: #1F2937;"),
@@ -225,28 +220,28 @@ ui <- page_navbar(
       layout_columns(
         col_widths = c(3, 3, 3, 3),
         value_box(
-          title    = "Teams",
-          value    = n_distinct(tbl_team_xg_summary$team),
+          title = "Teams",
+          value = n_distinct(tbl_team_xg_summary$team),
           showcase = bsicons::bs_icon("people-fill"),
-          theme    = "primary"
+          theme = "primary"
         ),
         value_box(
-          title    = "Matches played",
-          value    = "31",
+          title = "Matches played",
+          value = "31",
           showcase = bsicons::bs_icon("calendar-event"),
-          theme    = "secondary"
+          theme = "secondary"
         ),
         value_box(
-          title    = "Goals scored",
-          value    = 106,
+          title = "Goals scored",
+          value = 106,
           showcase = bsicons::bs_icon("bullseye"),
-          theme    = "primary"
+          theme = "primary"
         ),
         value_box(
-          title    = "Shots taken",
-          value    = 875,
+          title = "Shots taken",
+          value = 875,
           showcase = bsicons::bs_icon("crosshair"),
-          theme    = "secondary"
+          theme = "secondary"
         )
       ),
       
@@ -277,8 +272,8 @@ ui <- page_navbar(
     layout_sidebar(
       sidebar = sidebar(
         width = 210,
-        bg    = "#F9FAFB",
-        open  = TRUE,
+        bg = "#F9FAFB",
+        open = TRUE,
         tags$p(
           tags$strong("About this Tab", style = "color: #1F2937;"),
           style = "margin-bottom: 0.4rem;"
@@ -311,8 +306,8 @@ ui <- page_navbar(
         col_widths = c(3, 9),
         selectInput(
           inputId  = "compare_team",
-          label    = "Compare England against:",
-          choices  = tbl_cumulative_xg %>%
+          label = "Compare England against:",
+          choices = tbl_cumulative_xg %>%
             filter(team != "England") %>%
             distinct(team) %>%
             arrange(team) %>%
@@ -326,7 +321,7 @@ ui <- page_navbar(
     layout_columns(
       col_widths = c(6, 6),
       navset_card_tab(
-        title       = "Match-by-Match xG",
+        title = "Match-by-Match xG",
         full_screen = TRUE,
         nav_panel("England", 
                   p("Spain's per-match xG was more consistent; England had bigger variation across games.",
@@ -354,8 +349,8 @@ ui <- page_navbar(
     layout_sidebar(
       sidebar = sidebar(
         width = 210,
-        bg    = "#F9FAFB",
-        open  = TRUE,
+        bg = "#F9FAFB",
+        open = TRUE,
         tags$p(
           tags$strong("About this Tab", style = "color: #1F2937;"),
           style = "margin-bottom: 0.4rem;"
@@ -401,7 +396,7 @@ ui <- page_navbar(
     layout_sidebar(
       sidebar = sidebar(
         width = 210,
-        bg    = "#F9FAFB",
+        bg = "#F9FAFB",
         open  = TRUE,
         tags$p(
           tags$strong("About this Tab", style = "color: #1F2937;"),
@@ -466,22 +461,22 @@ ui <- page_navbar(
     layout_columns(
       col_widths = c(4, 4, 4),
       value_box(
-        title    = "England xG in the Final",
-        value    = "0.88",
+        title = "England xG in the Final",
+        value = "0.88",
         showcase = bsicons::bs_icon("arrow-down-circle-fill"),
-        theme    = "secondary"
+        theme = "secondary"
       ),
       value_box(
-        title    = "Spain xG in the Final",
-        value    = "2.14",
+        title = "Spain xG in the Final",
+        value = "2.14",
         showcase = bsicons::bs_icon("arrow-up-circle-fill"),
-        theme    = "primary"
+        theme = "primary"
       ),
       value_box(
-        title    = "England Pressures in the Final",
-        value    = "393 vs 253",
+        title = "England Pressures in the Final",
+        value = "393 vs 253",
         showcase = bsicons::bs_icon("arrow-up-circle-fill"),
-        theme    = "secondary"
+        theme = "secondary"
       )
     ),
     
@@ -522,12 +517,9 @@ ui <- page_navbar(
   )
 )
 
-
-
 # SERVER ----
 server <- function(input, output, session) {
   # TAB 1 OUTPUTS ----
-  
   ## xG lollipop ----
   output$xg_lollipop <- renderPlotly({
     p <- tbl_team_xg_summary %>%
@@ -570,7 +562,7 @@ server <- function(input, output, session) {
           team == "England" ~ "England",
           TRUE                      ~ "Other"
         ),
-        tooltip    = paste0(
+        tooltip = paste0(
           team, "\n",
           "Total xG: ", round(total_xg, 2), "\n",
           "Goals: ", total_goals
@@ -621,12 +613,12 @@ server <- function(input, output, session) {
       ggplot(aes(x = match_number, y = cumulative_xg,
                  group = team, colour = team)) +
       geom_line(
-        data      = ~ filter(.x, !is_visible),
+        data = ~ filter(.x, !is_visible),
         linewidth = 0,
-        alpha     = 0
+        alpha = 0
       ) +
       geom_line(
-        data      = ~ filter(.x, is_visible),
+        data = ~ filter(.x, is_visible),
         linewidth = 1.8
       ) +
       geom_point(
@@ -634,16 +626,16 @@ server <- function(input, output, session) {
         aes(text = tooltip),
         size = 2.5
       ) +
-      geom_vline(xintercept = 3.5, colour = "#9CA3AF",
+      geom_vline(xintercept = 3.5, colour = "grey69",
                  linewidth = 0.5, linetype = "dashed") +
       annotate("text", x = 2,
                y = max(tbl_cumulative_xg$cumulative_xg) * 0.95,
                label = "Group Stage", size = 3.5,
-               colour = "#9CA3AF", hjust = 0.5) +
+               colour = "grey69", hjust = 0.5) +
       annotate("text", x = 4.5,
                y = max(tbl_cumulative_xg$cumulative_xg) * 0.95,
                label = "Knockout", size = 3.5,
-               colour = "#9CA3AF", hjust = 0.5) +
+               colour = "grey69", hjust = 0.5) +
       scale_colour_manual(values = team_colours) +
       scale_x_continuous(
         breaks = 1:6,
@@ -669,14 +661,14 @@ server <- function(input, output, session) {
         match_label = fct_inorder(match_label)
       ) %>%
       pivot_longer(
-        cols      = c(xg_total, opp_xg),
+        cols = c(xg_total, opp_xg),
         names_to  = "metric",
         values_to = "xg"
       ) %>%
       mutate(
         bar_colour = if_else(metric == "xg_total", "England", "Opponent"),
         bar_colour = fct_relevel(bar_colour, "England", "Opponent"),
-        tooltip    = paste0(bar_colour, " xG: ", round(xg, 2))
+        tooltip = paste0(bar_colour, " xG: ", round(xg, 2))
       )
     
     p <- eng_data %>%
@@ -694,7 +686,7 @@ server <- function(input, output, session) {
       theme_euro() +
       theme(
         legend.position = "top",
-        axis.text.x     = element_text(size = 7)
+        axis.text.x = element_text(size = 7)
       )
     
     ggplotly(p, tooltip = "text") %>%
@@ -703,10 +695,10 @@ server <- function(input, output, session) {
         yaxis = list(range = c(0, 7)),
         legend = list(
           orientation = "h",
-          x           = 0.5,
-          xanchor     = "center",
-          y           = -0.15,
-          yanchor     = "top"
+          x = 0.5,
+          xanchor = "center",
+          y = -0.15,
+          yanchor = "top"
       )
     )
   })
@@ -721,14 +713,14 @@ server <- function(input, output, session) {
         match_label = fct_inorder(match_label)
       ) %>%
       pivot_longer(
-        cols      = c(xg_total, opp_xg),
+        cols = c(xg_total, opp_xg),
         names_to  = "metric",
         values_to = "xg"
       ) %>%
       mutate(
         bar_colour = if_else(metric == "xg_total", "Spain", "Opponent"),
         bar_colour = fct_relevel(bar_colour, "Spain", "Opponent"),
-        tooltip    = paste0(bar_colour, " xG: ", round(xg, 2))
+        tooltip = paste0(bar_colour, " xG: ", round(xg, 2))
       )
     
     p <- esp_data %>%
@@ -746,7 +738,7 @@ server <- function(input, output, session) {
       theme_euro() +
       theme(
         legend.position = "top",
-        axis.text.x     = element_text(size = 7)
+        axis.text.x = element_text(size = 7)
       )
     
     ggplotly(p, tooltip = "text") %>%
@@ -774,14 +766,14 @@ server <- function(input, output, session) {
         stage_label = fct_relevel(stage_label, "Group Stage", "Knockout")
       ) %>%
       pivot_longer(
-        cols      = c(high_press_rate, counterpress_rate),
+        cols = c(high_press_rate, counterpress_rate),
         names_to  = "metric",
         values_to = "rate"
       ) %>%
       mutate(
-        metric  = if_else(metric == "high_press_rate",
+        metric = if_else(metric == "high_press_rate",
                           "High-press rate", "Counter-press rate"),
-        metric  = fct_relevel(metric, "High-press rate",
+        metric = fct_relevel(metric, "High-press rate",
                               "Counter-press rate"),
         tooltip = paste0(team_clean, " · ", stage_label, "\n",
                          metric, ": ", rate, "%")
@@ -797,9 +789,9 @@ server <- function(input, output, session) {
       theme_euro() +
       theme(
         legend.position = "none",
-        strip.text      = element_text(face = "bold", size = 10,
+        strip.text = element_text(face = "bold", size = 10,
                                        colour = "#1F2937"),
-        panel.spacing   = unit(1.5, "lines")
+        panel.spacing = unit(1.5, "lines")
       )
     
     ggplotly(p, tooltip = "text") %>%
@@ -807,22 +799,22 @@ server <- function(input, output, session) {
         showlegend = TRUE,
         legend = list(
           orientation = "h",
-          x           = 0.5,
-          xanchor     = "center",
-          y           = -0.15,
-          yanchor     = "top"
+          x = 0.5,
+          xanchor = "center",
+          y = -0.15,
+          yanchor = "top"
         )
       )
   })
   
-  # TAB 3 OUTPUTS ----
+  # TAB 3A OUTPUTS ----
   ## Shot map ----
   output$shot_map <- renderPlotly({
     p <- tbl_final_shots %>%
       mutate(
-        plot_x      = if_else(team == "England",
+        plot_x = if_else(team == "England",
                               120 - location_x, location_x),
-        plot_y      = if_else(team == "England",
+        plot_y = if_else(team == "England",
                               80  - location_y, location_y),
         tooltip = paste0(
           team, " · ", player, "\n",
@@ -836,22 +828,22 @@ server <- function(input, output, session) {
       annotate_pitch(dimensions = pitch_statsbomb,
                      colour = "white", fill = "#4a7c3f") +
       geom_point(
-        aes(size   = xg,
+        aes(size = xg,
             colour = team,
             text   = tooltip),
         alpha = 0.9
       ) +
       geom_point(
-        data   = ~ filter(.x, shot_outcome == "Goal"),
+        data = ~ filter(.x, shot_outcome == "Goal"),
         aes(size = xg, text = tooltip),
-        shape  = 21,
-        fill   = NA,
+        shape = 21,
+        fill = NA,
         colour = "white",
         stroke = 1.5
       ) +
       scale_colour_manual(values = euro_colours, name = NULL) +
       scale_size_continuous(
-        range  = c(2, 8),
+        range = c(2, 8),
         breaks = c(0.05, 0.2, 0.5),
         labels = c("0.05", "0.20", "0.50")
       ) +
@@ -869,10 +861,10 @@ server <- function(input, output, session) {
       ) +
       theme_pitch() +
       theme(
-        plot.subtitle   = element_text(size = 9, colour = "#6B7280",
+        plot.subtitle = element_text(size = 9, colour = "#6B7280",
                                        margin = margin(b = 6)),
         legend.position = "bottom",
-        legend.text     = element_text(size = 10, colour = "#1F2937"),
+        legend.text = element_text(size = 10, colour = "#1F2937"),
         plot.background = element_rect(fill = "white", colour = NA)
       )
     
@@ -889,7 +881,7 @@ server <- function(input, output, session) {
   output$xg_timeline <- renderPlotly({
     p <- tbl_final_timeline %>%
       mutate(
-        tooltip    = paste0(
+        tooltip = paste0(
           team, " · ", player, "\n",
           "Minute: ", minute, "'\n",
           "xG: ", round(xg, 3), "\n",
@@ -899,24 +891,24 @@ server <- function(input, output, session) {
       ) %>%
       ggplot(aes(x = minute, y = cumulative_xg,
                  colour = team, group = team)) +
-      geom_vline(xintercept = 45,  colour = "#9CA3AF",
+      geom_vline(xintercept = 45,  colour = "grey69",
                  linewidth = 0.4, linetype = "dashed") +
-      geom_vline(xintercept = 90,  colour = "#9CA3AF",
+      geom_vline(xintercept = 90,  colour = "grey69",
                  linewidth = 0.4, linetype = "dashed") +
-      geom_vline(xintercept = 105, colour = "#9CA3AF",
+      geom_vline(xintercept = 105, colour = "grey69",
                  linewidth = 0.4, linetype = "dashed") +
       annotate("text", x = 22,  y = 2.2,
-               label = "1st half", size = 2.8, colour = "#9CA3AF") +
+               label = "1st half", size = 2.8, colour = "grey69") +
       annotate("text", x = 67,  y = 2.2,
-               label = "2nd half", size = 2.8, colour = "#9CA3AF") +
+               label = "2nd half", size = 2.8, colour = "grey69") +
       annotate("text", x = 100, y = 2.2,
-               label = "ET", size = 2.8, colour = "#9CA3AF") +
+               label = "ET", size = 2.8, colour = "grey69") +
       geom_step(linewidth = 1.2) +
       geom_point(aes(text = tooltip), size = 2) +
       geom_point(
-        data   = ~ filter(.x, shot_outcome == "Goal"),
-        size   = 3, shape = 21,
-        fill   = NA, colour = "#2E7D32", stroke = 1.5
+        data = ~ filter(.x, shot_outcome == "Goal"),
+        size = 3, shape = 21,
+        fill = NA, colour = "#2E7D32", stroke = 1.5
       ) +
       scale_colour_manual(values = euro_colours, name = NULL) +
       scale_x_continuous(
@@ -939,7 +931,7 @@ server <- function(input, output, session) {
         )
       )
   })
-  
+  # TAB 3B OUTPUTS ----
   ## Pass Thirds ----
   output$pass_thirds <- renderPlotly({
     p <- tbl_final_pass_thirds %>%
@@ -961,10 +953,10 @@ server <- function(input, output, session) {
         showlegend = TRUE,
         legend = list(
           orientation = "h",
-          x           = 0.5,
-          xanchor     = "center",
-          y           = -0.15,
-          yanchor     = "top"
+          x = 0.5,
+          xanchor = "center",
+          y = -0.15,
+          yanchor = "top"
         )
       )
   })
@@ -993,7 +985,8 @@ server <- function(input, output, session) {
       theme_pitch() +
       theme(
         legend.position = "bottom",
-        legend.text     = element_text(size = 10, colour = "#1F2937"),
+        legend.key.size = unit(1.2, "cm"), 
+        legend.text  = element_text(size = 10, colour = "#1F2937"),
         plot.background = element_rect(fill = "white", colour = NA)
       )
   }, bg = "white")
@@ -1022,7 +1015,8 @@ server <- function(input, output, session) {
       theme_pitch() +
       theme(
         legend.position = "bottom",
-        legend.text     = element_text(size = 10, colour = "#1F2937"),
+        legend.key.size = unit(1.2, "cm"), 
+        legend.text = element_text(size = 10, colour = "#1F2937"),
         plot.background = element_rect(fill = "white", colour = NA)
       )
   }, bg = "white")
@@ -1033,43 +1027,43 @@ server <- function(input, output, session) {
     tbl_verdict_summary %>%
       gt(groupname_col = "Dimension") %>%
       tab_header(
-        title    = md("**England vs Spain — Key Metrics**"),
+        title = md("**England vs Spain — Key Metrics**"),
         subtitle = "Tournament averages · Women's Euro 2025"
       ) %>%
       tab_spanner(
-        label   = "Team",
+        label = "Team",
         columns = c(England, Spain)
       ) %>%
       tab_style(
-        style     = cell_fill(color = "#FEF9EC"),
+        style = cell_fill(color = "#FEF9EC"),
         locations = cells_body(
           columns = Spain,
-          rows    = Spain_leads == TRUE
+          rows = Spain_leads == TRUE
         )
       ) %>%
       tab_style(
-        style     = cell_fill(color = "#FFF0F0"),
+        style = cell_fill(color = "#FFF0F0"),
         locations = cells_body(
           columns = England,
-          rows    = Spain_leads == FALSE
+          rows = Spain_leads == FALSE
         )
       ) %>%
       tab_style(
-        style     = cell_text(weight = "bold"),
+        style = cell_text(weight = "bold"),
         locations = cells_body(
           columns = Spain,
-          rows    = Spain_leads == TRUE
+          rows = Spain_leads == TRUE
         )
       ) %>%
       tab_style(
-        style     = cell_text(weight = "bold"),
+        style = cell_text(weight = "bold"),
         locations = cells_body(
           columns = England,
-          rows    = Spain_leads == FALSE
+          rows = Spain_leads == FALSE
         )
       ) %>%
       tab_style(
-        style     = cell_text(color = "#6B7280", size = "small"),
+        style = cell_text(color = "#6B7280", size = "small"),
         locations = cells_row_groups()
       ) %>%
       cols_hide(columns = Spain_leads) %>%
@@ -1079,11 +1073,11 @@ server <- function(input, output, session) {
       ) %>%
       opt_table_font(font = "system-ui") %>%
       tab_options(
-        table.border.top.color      = "white",
+        table.border.top.color = "white",
         heading.border.bottom.color = "#E5E7EB",
-        row_group.border.top.color  = "#E5E7EB",
-        column_labels.font.weight   = "bold",
-        table.width                 = pct(100)
+        row_group.border.top.color = "#E5E7EB",
+        column_labels.font.weight = "bold",
+        table.width = pct(100)
       )
   })
 
