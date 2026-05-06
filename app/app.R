@@ -87,10 +87,102 @@ theme_euro <- function() {
 ui <- page_navbar(
   title = "Women's Euro 2025",
   theme = euro_theme,
-  
-  # TAB 1: Tournament Picture ----
+  # TAB 0: Tournament Facts ----
   nav_panel(
-    "Tournament Picture",
+    "Tournament Facts and Context",
+    
+    # Intro paragraph
+    layout_columns(
+      col_widths = c(12),
+      card(
+        p("The 2025 UEFA Women's European Championship was hosted in Switzerland from the 2nd to 27th July 2025. 
+    Sixteen nations competed across the group stage and knockout rounds, producing 106 goals across 
+    31 matches. England and Spain appeared as the strongest teams meeting in the final at St. Jakob Park in Basel on the 27th July. 
+    England, managed by Sarina Wiegman, were the defending champions having won the Euros in 2022.
+    Spain, managed by Montserrat Tomé, arrived as reigning World Cup holders.
+    Following a 1–1 draw after extra time, England won 3–1 on penalties to retain their European title.
+    This dashboard uses StatsBomb open event data to analyse whether England's victory was deserved.",
+          style = "font-size:0.95rem; color:#374151; padding: 8px 4px;")
+      )
+    ),
+    
+    # Two cards side by side
+    layout_columns(
+      col_widths = c(6, 6),
+      
+      # England card
+      card(
+        card_header(
+          layout_columns(
+            col_widths = c(2, 10),
+            tags$img(
+              src = "https://flagcdn.com/w80/gb-eng.png",
+              height = "30px",
+              style = "margin-top:2px;"
+            ),
+            tags$span("England — The Lionesses",
+                      style = "font-weight:bold; font-size:1rem;")
+          )
+        ),
+        tags$p(tags$strong("Manager:"), " Sarina Wiegman"),
+        tags$p(tags$strong("Formation:"), 
+               " Primarily 4-2-3-1, shifting to 3-5-2 or 4-2-4 in-game through tactical substitutions."),
+        tags$hr(style = "margin: 6px 0;"),
+        tags$p(tags$strong("Key Players:"),
+               style = "margin-bottom:4px;"),
+        tags$ul(
+          tags$li(tags$strong("Hannah Hampton (GK):"),
+                  " Named tournament best goalkeeper after stepping up following Mary Earps' retirement."),
+          tags$li(tags$strong("Lucy Bronze (DF):"),
+                  " Named in the UEFA Team of the Tournament, a key presence in England's backline."),
+          tags$li(tags$strong("Leah Williamson (DF):"),
+                  " Captain who led the Lionesses to back-to-back European titles after returning from ACL injury."),
+          tags$li(tags$strong("Alessia Russo (FW):"),
+                  " Named in the UEFA Team of the Tournament, key starter throughout. Scored England's Goal in the Final to take the match to penalties."),
+          tags$li(tags$strong("Chloe Kelly (FW):"),
+                  " Named in the UEFA Team of the Tournament. Scored the winning penalty in the final shootout.")
+        )
+      ),
+      
+      # Spain card
+      card(
+        card_header(
+          layout_columns(
+            col_widths = c(2, 10),
+            tags$img(
+              src = "https://flagcdn.com/w80/es.png",
+              height = "30px",
+              style = "margin-top:2px;"
+            ),
+            tags$span("Spain — La Roja",
+                      style = "font-weight:bold; font-size:1rem;")
+          )
+        ),
+        tags$p(tags$strong("Manager:"), " Montserrat Tomé"),
+        tags$p(tags$strong("Formation:"), 
+               " 4-3-3 in possession, transitioning to a 4-4-2 defensive shape to press and counter-press high up the pitch."),
+        tags$hr(style = "margin: 6px 0;"),
+        tags$p(tags$strong("Key Players:"),
+               style = "margin-bottom:4px;"),
+        tags$ul(
+          tags$li(tags$strong("Aitana Bonmatí (MF):"),
+                  " Named Player of the Tournament. Two-time Ballon d'Or winner and the creative heart of Spain's midfield."),
+          tags$li(tags$strong("Alexia Putellas (MF):"),
+                  " Named in the UEFA Team of the Tournament. Broke records for group-stage goal involvements on her return from injury."),
+          tags$li(tags$strong("Patri Guijarro (MF):"),
+                  " Named in the UEFA Team of the Tournament. Key part of Spain's Midfield Trio."),
+          tags$li(tags$strong("Mariona Caldentey (FW):"),
+                  " Scored Spain's goal in the final to give them the early lead."),
+          tags$li(tags$strong("Esther González (FW):"),
+                  "Finished as the tournament's top scorer with 4 goals, including two in Spain's opening 5–0 win over Portugal.")
+        )
+      )
+    )
+  ),
+  
+  # TAB 1: Tournament Overview ----
+  nav_panel(
+    "Tournament Overview",
     
     layout_sidebar(
       
@@ -140,7 +232,7 @@ ui <- page_navbar(
         ),
         value_box(
           title    = "Goals scored",
-          value    = sum(tbl_team_xg_summary$total_goals),
+          value    = 106,
           showcase = bsicons::bs_icon("bullseye"),
           theme    = "primary"
         ),
