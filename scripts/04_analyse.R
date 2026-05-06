@@ -8,16 +8,16 @@
 # data/cleaned/weuro2025_events_clean.rds
 
 # Outputs: 
-# data/cleaned/tbl_team_xg_summary.rds           - Part 1: tournament picture
+# data/cleaned/tbl_team_xg_summary.rds           - Part 1: tournament overview
 # data/cleaned/tbl_press_summary.rds             - Part 1
 # data/cleaned/tbl_ball_progression.rds          - Part 1
-# data/cleaned/tbl_stage_breakdown.rds           - Part 2: routes to the final
+# data/cleaned/tbl_stage_breakdown.rds           - Part 2: the journey
 # data/cleaned/tbl_cumulative_xg.rds             - Part 2
-# data/cleaned/tbl_final_shots.rds               - Part 3: the final in detail
-# data/cleaned/tbl_final_timeline.rds            - Part 3
-# data/cleaned/tbl_final_player_actions.rds      - Part 3
+# data/cleaned/tbl_final_shots.rds               - Part 3A: the final in detail: shots
+# data/cleaned/tbl_final_timeline.rds            - Part 3A
+# data/cleaned/tbl_final_player_actions.rds      - Part 3B: the final in detail: possession
 # data/cleaned/tbl_final_pass_thirds.rds         - Part 3
-# data/cleaned/tbl_verdict_summary.rds           - Part 4: evidence for verdict
+# data/cleaned/tbl_verdict_summary.rds           - Part 4: was it deserved?
 # data/cleaned/tbl_final_pressures.rds           - Part 4
 
 # Note: every saved .rds contains only the columns the dashboard needs
@@ -443,7 +443,7 @@ saveRDS(tbl_final_pass_thirds, "data/cleaned/tbl_final_pass_thirds.rds")
 # used for tbl_verdict_gt in 05_visualise.R and static table in App Tab 4
 tbl_verdict_summary <- tibble(
   Dimension = c(
-    "Chance quality", "Chance quality",
+    "Chance quality", "Defensive Solidity",
     "Game control", "Game control",
     "Attacking Threat", "Attacking Threat",
     "Defensive Solidity"
@@ -504,5 +504,7 @@ saveRDS(tbl_final_pressures, "data/cleaned/tbl_final_pressures.rds")
 rds_files <- list.files("data/cleaned", pattern = "\\.rds$", full.names = TRUE)
 file.copy(rds_files, "app/", overwrite = TRUE)
 
+
 # Confirm all files are in app/
 list.files("app", pattern = "\\.rds$")
+

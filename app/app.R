@@ -106,7 +106,8 @@ ui <- page_navbar(
     England, managed by Sarina Wiegman, were the defending champions having won the Euros in 2022.
     Spain, managed by Montserrat Tomé, arrived as reigning World Cup holders.
     Following a 1–1 draw after extra time, England won 3–1 on penalties to retain their European title.
-    This dashboard uses StatsBomb open event data to analyse whether England's victory was deserved.",
+    This dashboard uses StatsBomb open event data to directly compare England and Spain's performances and analyse whether England's 
+    victory was deserved.",
           style = "font-size:0.95rem; color:#374151; padding: 8px 4px;")
       )
     ),
@@ -122,7 +123,7 @@ ui <- page_navbar(
             col_widths = c(2, 10),
             tags$img(
               src = "https://flagcdn.com/w80/gb-eng.png",
-              height = "30px",
+              height = "30px", width = "45px",
               style = "margin-top:2px;"
             ),
             tags$span("England — The Lionesses",
@@ -156,7 +157,7 @@ ui <- page_navbar(
             col_widths = c(2, 10),
             tags$img(
               src = "https://flagcdn.com/w80/es.png",
-              height = "30px",
+              height = "30px", width = "45px",
               style = "margin-top:2px;"
             ),
             tags$span("Spain — La Roja",
@@ -200,14 +201,14 @@ ui <- page_navbar(
           style = "margin-bottom: 0.4rem;"
         ),
         tags$p(
-          "Did England deserve to win Women's Euro 2025?",
+          "Did England deserve to win the Women's Euro 2025?",
           style = "font-style: italic; font-size: 0.85rem; color: #374151;"
         ),
         tags$hr(),
         tags$p(
           "This Dashboard compares England's Journey to and at the Final against Spain.
           It analyses their Journey from four analytical angles:
-          Tournament Picture ➜ 
+          Tournament Overview ➜ 
           England and Spain's Journeys to the Final ➜
           The Final itself ➜ 
           Analytical Decision: Did England deserve to win?",
@@ -289,7 +290,8 @@ ui <- page_navbar(
         England. The match bars break down each game individually based on England's 
         and Spain's xG against all their opponents. The pressing chart shows how both 
         teams applied pressure across the group stage and knockout rounds based on 
-        location on the pitch (high-press rate) and counterpressing.",
+        location on the pitch (high-press rate) and counterpressing.
+          For better readability expand the respective graphs and plots.",
           style = "font-size: 0.78rem; color: #6B7280;"
         ),
         tags$hr(),
@@ -346,89 +348,114 @@ ui <- page_navbar(
     )
   ),
   
-  # TAB 3: The Final ----
+  # TAB 3A: The Final - Shots ----
   nav_panel(
-    "The Final",
-    # sidebar to collapse with information of the tab
+    "The Final — Shots",
     layout_sidebar(
-    sidebar = sidebar(
-      width = 210,
-      bg    = "#F9FAFB",
-      open  = TRUE,
-      tags$p(
-        tags$strong("About this Tab", style = "color: #1F2937;"),
-        style = "margin-bottom: 0.4rem;"
-      ),
-      tags$p(
-        "The final at St. Jakob-Park ended 1–1 after extra time, with England 
-        winning 3–1 on penalties. This tab examines the match through four 
-        analytical lenses: where shots were taken and their respective xG values, 
-        how expected goals accumulated across the 120 minutes, how each team 
-        distributed their passes, and how the two players with the most attacking 
-        threat in terms of passes and carries compared in the final third.
-        For better readability expand the respective graphs and plots.",
-        style = "font-size: 0.78rem; color: #6B7280;"
-      ),
-      tags$hr(),
-      tags$p(
-        "Based on StatsBomb open event data
-        · excluding Penalty Shootouts",
-        style = "font-size: 0.78rem; color: #6B7280;"
-      )
-    ),
-    
-    # Row 1 — shot map and xG timeline
-    layout_columns(
-      col_widths = c(6, 6),
-      card(
-        full_screen = TRUE,
-        card_header("Shot Map - Final"),
-        p("Spain registered 23 shots to England's 8, with higher-quality chances concentrated centrally.
-          Zoom in to see the shot and pitch dimensions more clearly.",
-          style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
-        plotlyOutput("shot_map", height = "400px")
-      ),
-      card(
-        full_screen = TRUE,
-        card_header("Cumulative xG Timeline - Final"),
-        p("Spain dominated xG from the beginning. England's last shot of the game was in the 68th minute.",
-          style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
-        plotlyOutput("xg_timeline", height = "400px")
-      )
-    ),
-    
-    # Row 2 — two cards side by side
-    layout_columns(
-      col_widths = c(6, 6),
-      
-      # Left — Pass Distribution by Pitch Third
-      card(
-        full_screen = TRUE,
-        card_header("Pass Distribution by Pitch Third - Final"),
-        p("Spain played more passes into the final third, showing attempts to create chances in the attacking end.",
-          style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
-        plotlyOutput("pass_thirds", height = "380px")
-      ),
-      
-      # Right — player passmap with player selector
-      navset_card_tab(
-        title = "Top Player actions — Final Third",
-        full_screen = TRUE,
-        nav_panel(
-          "Bonmatí (Spain)",
-          p("Bonmatí generated significantly more final-third actions than Hemp despite playing the same minutes.",
-            style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
-          plotOutput("passmap_bonmati", height = "420px", width = "100%")
+      sidebar = sidebar(
+        width = 210,
+        bg    = "#F9FAFB",
+        open  = TRUE,
+        tags$p(
+          tags$strong("About this Tab", style = "color: #1F2937;"),
+          style = "margin-bottom: 0.4rem;"
         ),
-        nav_panel(
-          "Hemp (England)",
-          p("Bonmatí generated significantly more final-third actions than Hemp despite playing the same minutes.",
+        tags$p(
+          "The final at St. Jakob-Park ended 1–1 after extra time, with England 
+          winning 3–1 on penalties. This tab shows where shots were taken and 
+          their respective xG values, and how expected goals accumulated across 
+          the 120 minutes. 
+          See the following Possession tab for pass distribution and player comparisons.
+          For better readability expand the respective graphs and plots.",
+          style = "font-size: 0.78rem; color: #6B7280;"
+        ),
+        tags$hr(),
+        tags$p(
+          "Based on StatsBomb open event data · excluding Penalty Shootouts",
+          style = "font-size: 0.78rem; color: #6B7280;"
+        )
+      ),
+      layout_columns(
+        col_widths = c(6, 6),
+        card(
+          full_screen = TRUE,
+          card_header("Shot Map - Final"),
+          p("Spain registered 23 shots to England's 8, with higher-quality chances concentrated centrally. Zoom in to see the shot and pitch dimensions more clearly.",
             style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
-          plotOutput("passmap_hemp", height = "420px", width = "100%")
+          plotlyOutput("shot_map", height = "400px")
+        ),
+        card(
+          full_screen = TRUE,
+          card_header("Cumulative xG Timeline - Final"),
+          p("Spain dominated xG from the beginning. England's last shot of the game was in the 68th minute.",
+            style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
+          plotlyOutput("xg_timeline", height = "400px")
         )
       )
-    )
-    )
+    )  
+  ), 
+  
+  # TAB 3B: The Final - Possession ----
+  nav_panel(
+    "The Final — Possession",
+    layout_sidebar(
+      sidebar = sidebar(
+        width = 210,
+        bg    = "#F9FAFB",
+        open  = TRUE,
+        tags$p(
+          tags$strong("About this Tab", style = "color: #1F2937;"),
+          style = "margin-bottom: 0.4rem;"
+        ),
+        tags$p(
+          "Still examining the Women's Euro 2025 Final at St. Jakob-Park.
+          Continuing from the Shots tab, this tab examines how each 
+          team distributed their passes across the pitch and compares 
+          the two most active attacking players in 
+          the final third: Bonmatí for Spain and Hemp for England. 
+          For better readability expand the respective graphs and plots.",
+          style = "font-size: 0.78rem; color: #6B7280;"
+        ),
+        tags$hr(),
+        tags$p(
+          "Based on StatsBomb open event data · excluding Penalty Shootouts",
+          style = "font-size: 0.78rem; color: #6B7280;"
+        )
+      ),
+      layout_columns(
+        col_widths = c(6, 6),
+        card(
+          full_screen = TRUE,
+          card_header("Pass Distribution by Pitch Third - Final"),
+          p("Spain played more passes into the final third, 
+            showing attempts to create chances in the attacking end.
+            England were more dominant in the defensive third, reflecting
+            a more conservative approach.",
+            style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
+          plotlyOutput("pass_thirds", height = "380px")
+        ),
+        navset_card_tab(
+          title = "Top Player actions — Final Third",
+          full_screen = TRUE,
+          nav_panel(
+            "Bonmatí (Spain)",
+            p("Bonmatí generated significantly more final-third actions than Hemp 
+              despite playing the same minutes. She operated across the full width
+              of the attacking third.",
+              style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
+            plotOutput("passmap_bonmati", height = "420px", width = "100%")
+          ),
+          nav_panel(
+            "Hemp (England)",
+            p("Hemp operated primarily through the left channel with fewer final-third 
+              actions than Bonmatí. This reflects England's more conservative attacking 
+              approach in the final.",
+              style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
+            plotOutput("passmap_hemp", height = "420px", width = "100%")
+          )
+        )
+      )
+    )  
   ),
   
   # TAB 4: Was It Deserved? ----
@@ -464,7 +491,7 @@ ui <- page_navbar(
       
       card(
         card_header("Analytical Outcome"),
-        p("England won Women's Euro 2025 on penalties after a 1–1 draw,
+        p("England won the Women's Euro 2025 on penalties after a 1–1 draw,
         but the data tells a different story."),
         p("Spain dominated on every key metric in the tournament. They
         created higher quality chances, pressed higher,
@@ -480,8 +507,8 @@ ui <- page_navbar(
         won by the better team on paper. England's defensive shape, game 
         management and clinical penalty shootout ultimately decided the 
           outcome. That is something the data alone cannot fully explain."),
-        p(tags$em("The Table shows how England compared to Spain
-                  across seven key analytical metrics."))
+        p(tags$em("Spain led on all seven key metrics. 
+                  See the table on the right for the full breakdown."))
       ),
       
       card(
@@ -494,6 +521,7 @@ ui <- page_navbar(
     )
   )
 )
+
 
 
 # SERVER ----
@@ -672,8 +700,15 @@ server <- function(input, output, session) {
     ggplotly(p, tooltip = "text") %>%
       layout(
         showlegend = TRUE,
-        yaxis = list(range = c(0, 7))
+        yaxis = list(range = c(0, 7)),
+        legend = list(
+          orientation = "h",
+          x           = 0.5,
+          xanchor     = "center",
+          y           = -0.15,
+          yanchor     = "top"
       )
+    )
   })
   
   ## Match bars — Spain ----
@@ -717,7 +752,14 @@ server <- function(input, output, session) {
     ggplotly(p, tooltip = "text") %>%
       layout(
         showlegend = TRUE,
-        yaxis = list(range = c(0, 7))
+        yaxis = list(range = c(0, 7)),
+        legend = list(
+          orientation = "h",
+          x = 0.5,
+          xanchor = "center",
+          y = -0.15,
+          yanchor = "top"
+        )
       )
   })
   
@@ -898,7 +940,7 @@ server <- function(input, output, session) {
       )
   })
   
-  ## Pitch Thirds ----
+  ## Pass Thirds ----
   output$pass_thirds <- renderPlotly({
     p <- tbl_final_pass_thirds %>%
       ggplot(aes(x = pitch_third, y = pct,
@@ -921,8 +963,8 @@ server <- function(input, output, session) {
           orientation = "h",
           x           = 0.5,
           xanchor     = "center",
-          y           = 1.05,
-          yanchor     = "bottom"
+          y           = -0.15,
+          yanchor     = "top"
         )
       )
   })
