@@ -215,7 +215,7 @@ ui <- page_navbar(
         ),
         tags$hr(),
         tags$p(
-          "Based on StatsBomb open event data
+          "Based on StatsBomb open event data of
           31 matches · excluding Penalty Shootouts",
           style = "font-size: 0.78rem; color: #6B7280;"
         )
@@ -294,7 +294,7 @@ ui <- page_navbar(
         ),
         tags$hr(),
         tags$p(
-          "Based on StatsBomb open event data
+          "Based on StatsBomb open event data of
         31 matches · excluding Penalty Shootouts",
           style = "font-size: 0.78rem; color: #6B7280;"
         )
