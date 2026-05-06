@@ -1,4 +1,11 @@
 .Rproj.user
 .Rhistory
+.Rdata
 .RData
 .Ruserdata
+data/raw/
+.DS_Store
+Thumbs.db
+*.zip
+*.gz
+scripts/07_Report.qmd
