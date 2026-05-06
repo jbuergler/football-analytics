@@ -17,5 +17,5 @@ library(shiny)
 library(shinylive)
 
 
-# ./_publish.sh "Add 00_setup script: project libraries"
+
 

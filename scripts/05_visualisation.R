@@ -129,10 +129,7 @@ fig_xg_scatter <- tbl_team_xg_summary %>%
     x        = "Total expected goals (xG)",
     y        = "Total goals scored",
   ) +
-  theme_euro() # maybe ad all colours in for report
-
-## Commit and Push ----
-# ./_publish.sh "05_visualise: Tab 1 static lollipop and scatter plots complete"
+  theme_euro()
 
 # ---- TAB 2: THE JOURNEY ----
 
@@ -140,8 +137,6 @@ fig_xg_scatter <- tbl_team_xg_summary %>%
 # One takeaway: England's xG line spikes in the group stage then flattens —
 # Spain's rises steadily throughout. The arcs tell different stories
 # about how each team built their tournament.
-# maybe delete the other teams? will defo delete for the app
-
 fig_cumulative_xg <- tbl_cumulative_xg %>%
   mutate(
     team_highlight = case_when(
@@ -149,14 +144,6 @@ fig_cumulative_xg <- tbl_cumulative_xg %>%
       team == "England" ~ "England",
       TRUE ~ "Other"
     ),
-
-    match_label = paste0(
-      "Match ", match_number, " vs ", opponent, "\n",
-      stage, "\n",
-      "xG: ", round(xg_total, 2),
-      " | Goals: ", goals, "–", opp_goals, "\n",
-      "Cumulative xG: ", round(cumulative_xg, 2)
-    )
   ) %>%
   ggplot(aes(x = match_number, y = cumulative_xg,
              group = team, colour = team_highlight)) +
@@ -173,7 +160,6 @@ fig_cumulative_xg <- tbl_cumulative_xg %>%
 
   geom_point(
     data = ~ filter(.x, team_highlight != "Other"),
-    aes(text = match_label),
     size = 2.5
   ) +
 
@@ -233,8 +219,7 @@ fig_match_xg_bars_eng <- tbl_stage_breakdown %>%
     metric_label = if_else(metric == "xg_total", "England xG", "Opponent xG"),
     bar_colour   = if_else(metric == "xg_total", "England", "Opponent")
   ) %>%
-  ggplot(aes(x = match_label, y = xg, fill = bar_colour,
-             text = paste0(metric_label, ": ", round(xg, 2)))) +
+  ggplot(aes(x = match_label, y = xg, fill = bar_colour)) +
   annotate("rect",
            xmin = 0.5, xmax = 3.5,
            ymin = 0, ymax = 7,
@@ -251,7 +236,7 @@ fig_match_xg_bars_eng <- tbl_stage_breakdown %>%
            colour = "grey30", hjust = 0.5) +
   geom_col(position = position_dodge(width = 0.75), width = 0.65) +
   scale_fill_manual(
-    values = c("England" = "#CE1124", "Opponent" = "#9CA3AF"),
+    values = c("England" = "#CE1124", "Opponent" = "grey69"),
     labels = c("England" = "England xG", "Opponent" = "Opponent xG")
   ) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
@@ -287,8 +272,7 @@ fig_match_xg_bars_esp <- tbl_stage_breakdown %>%
     metric_label = if_else(metric == "xg_total", "Spain xG", "Opponent xG"),
     bar_colour   = if_else(metric == "xg_total", "Spain", "Opponent")
   ) %>%
-  ggplot(aes(x = match_label, y = xg, fill = bar_colour,
-             text = paste0(metric_label, ": ", round(xg, 2)))) +
+  ggplot(aes(x = match_label, y = xg, fill = bar_colour))+
   annotate("rect",
            xmin = 0.5, xmax = 3.5,
            ymin = 0, ymax = 7,
@@ -305,12 +289,12 @@ fig_match_xg_bars_esp <- tbl_stage_breakdown %>%
            colour = "grey30", hjust = 0.5) +
   geom_col(position = position_dodge(width = 0.75), width = 0.65) +
   scale_fill_manual(
-    values = c("Spain" = "#F1BF00", "Opponent" = "#9CA3AF"),
+    values = c("Spain" = "#F1BF00", "Opponent" = "grey69"),
     labels = c("Spain" = "Spain xG", "Opponent" = "Opponent xG")
   ) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
   labs(
-    title    = "Match-by-match xG — ",
+    title    = "Match-by-match xG — Spain",
     subtitle = "Yellow = Spain xG · Grey = Opponent xG · Yellow background = Knockout Stage",
     x        = NULL,
     y        = "Expected Goals (xG)",
@@ -345,9 +329,7 @@ fig_press_shift <- tbl_press_summary %>%
     ),
     metric = fct_relevel(metric, "High-press rate", "Counter-press rate")
   ) %>%
-  ggplot(aes(x = stage_label, y = rate, fill = team,
-             text = paste0(team, " · ", stage_label,
-                           "<br>", metric, ": ", rate, "%"))) +
+  ggplot(aes(x = stage_label, y = rate, fill = team))+
   geom_col(position = position_dodge(width = 0.7), width = 0.6) +
   facet_wrap(~ metric) +
   scale_fill_manual(values = euro_colours, name = NULL) +
@@ -369,9 +351,6 @@ fig_press_shift <- tbl_press_summary %>%
     panel.spacing = unit(1.5, "lines")
   )
 
-## Commit and Push ----
-# ./_publish.sh "05_visualise: Tab 2 static cumulative xg and match xg plots complete"
-
 # ---- TAB 3: THE FINAL ----
 
 ## fig_shot_map ----
@@ -382,19 +361,13 @@ fig_shot_map <- tbl_final_shots %>%
     # Flip England so they attack left, Spain stays attacking right
     plot_x = if_else(team == "England", 120 - location_x, location_x),
     plot_y = if_else(team == "England", 80  - location_y, location_y),
-    tooltip = paste0(
-      team, " · ", player, "\n",
-      "Minute: ", minute, "' · xG: ", round(xg, 3), "\n",
-      "Outcome: ", shot_outcome
-    )
   ) %>%
   ggplot(aes(x = plot_x, y = plot_y)) +
   annotate_pitch(dimensions = pitch_statsbomb,
                  colour = "white", fill = "#4a7c3f") +
   geom_point(
     aes(size   = xg,
-        colour = team,
-        text   = tooltip),
+        colour = team),
     alpha = 0.9
   ) +
   geom_point(
@@ -402,7 +375,7 @@ fig_shot_map <- tbl_final_shots %>%
     aes(size = xg),
     shape  = 21,
     fill   = NA,
-    colour = "black",
+    colour = "white",
     stroke = 1.5
   ) +
   scale_colour_manual(values = euro_colours) +
@@ -438,14 +411,6 @@ fig_shot_map <- tbl_final_shots %>%
 # One takeaway: Spain's xG accumulated steadily throughout
 # England's line barely moved after the first half.
 fig_xg_timeline <- tbl_final_timeline %>%
-  mutate(
-    tooltip = paste0(
-      team, " · ", player, "\n",
-      "Minute: ", minute, "' · xG: ", round(xg, 3), "\n",
-      "Outcome: ", shot_outcome, "\n",
-      "Cumulative xG: ", round(cumulative_xg, 3)
-    )
-  ) %>%
   ggplot(aes(x = minute, y = cumulative_xg,
              colour = team, group = team)) +
   # Halftime and full time reference lines
@@ -464,8 +429,7 @@ fig_xg_timeline <- tbl_final_timeline %>%
            size = 2.8, colour = "#9CA3AF") +
   # Step line — rises only when a shot is taken
   geom_step(linewidth = 1.2) +
-  # Points at each shot for hover targets
-  geom_point(aes(text = tooltip), size = 2) +
+  geom_point(size = 2) +
   geom_point(
     data = ~ filter(.x, shot_outcome == "Goal"),
     size = 3, shape  = 21,
@@ -493,7 +457,7 @@ fig_xg_timeline <- tbl_final_timeline %>%
 # takeaway: Spain in attacking third (29.2%) vs England's 15.2%
 fig_final_pass_thirds <- tbl_final_pass_thirds %>%
   ggplot(aes(x = pitch_third, y = pct,
-             fill = team, text = tooltip)) +
+             fill = team)) +
   geom_col(position = position_dodge(width = 0.7), width = 0.6) +
   scale_fill_manual(values = euro_colours, name = NULL) +
   scale_y_continuous(
@@ -513,7 +477,9 @@ fig_final_pass_thirds <- tbl_final_pass_thirds %>%
 # Method: StatsBomb Working with R (StatsBomb, 2022), Use Case 4 — plotting passes
 # takeaway: Bonmatí drove forward across the full width of the pitch 
 # Hemp mainly came through the left hand side
+# Note: 
 # as a facet wrap for a static visual, but will be 2 individual ones in the app
+# colours here are generic. In the app each player gets their team colour (Spain yellow for Bonmatí, England red for Hemp)
 fig_player_passmap <- tbl_final_player_actions %>%
   mutate(
     player_label = fct_relevel(player_label, "Hemp (England)", "Bonmatí (Spain)")
@@ -524,14 +490,13 @@ fig_player_passmap <- tbl_final_player_actions %>%
   geom_segment(
     aes(x = location_x, y = location_y,
         xend = end_x,    yend = end_y,
-        colour = action_type,
-        text = tooltip),
+        colour = action_type),
     linewidth = 0.6, alpha = 0.7,
     arrow = arrow(length = unit(0.15, "cm"), type = "closed")
   ) +
   facet_wrap(~ player_label) +
   scale_colour_manual(
-    values = c("Pass" = "#F1BF00", "Carry" = "#CE1124"),
+    values = c("Pass" = "#4E2CA3", "Carry" = "#9CA3AF"),# neutral colours here
     name   = NULL,
     labels = c("Pass" = "Final-third pass", "Carry" = "Progressive carry")
   ) +
@@ -552,9 +517,6 @@ fig_player_passmap <- tbl_final_player_actions %>%
     plot.background = element_rect(fill = "white", colour = NA)
   )
 
-## Commit and Push ----
-# ./_publish.sh "05_visualise: Tab 3 static shotmap, xg timeline, final pass thirds, and player passes plots complete"
-
 # ---- TAB 4: WAS IT DESERVED? ----
 ## tbl_verdict_gt ----
 # gt summary table for Tab 4 — rendered via gt_output() in the Shiny app.
@@ -564,7 +526,7 @@ tbl_verdict_gt <- tbl_verdict_summary %>%
   gt(groupname_col = "Dimension") %>%
   tab_header(
     title = md("**England vs Spain — Key Metrics**"),
-    subtitle = "Women's Euros 2025 Tournament Averages"
+    subtitle = "Tournament averages · Women's Euro 2025"
   ) %>%
   tab_spanner(
     label = "Team",

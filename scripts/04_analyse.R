@@ -253,7 +253,7 @@ tbl_stage_breakdown <- tbl_match_xg %>%
     match_id, match_date, team, opponent, stage, stage_type,
     goals, opp_goals, xg_total, opp_xg, xg_diff,
     goals_minus_xg, match_result, won_dominant, won_fortunate
-  ) ## check if can delete this?
+  ) 
 
 ## tbl_cumulative_xg ----
 # Running xG and goal totals per team, in match order
@@ -275,8 +275,6 @@ tbl_cumulative_xg <- tbl_match_xg %>%
 
 ## tbl_team_journey ----
 # One row per team per stage type
-### summary stats might delete ----
-# potentially used in written report, if not delete
 
 tbl_team_journey <- tbl_stage_breakdown %>%
   group_by(team, stage_type) %>%
@@ -357,16 +355,6 @@ tbl_final_timeline <- tbl_final_shots %>%
 # Completed passes and progressive carries for Bonmatí and Hemp in the final.
 # Used for the player pass map in Tab 3.
 # Filtered to final-third actions only to keep the map readable.
-names(events_clean)
-
-events_clean %>%
-  filter(
-    match_id  == final_match_id,
-    player %in% c("Aitana Bonmati Conca", "Lauren Hemp")
-  ) %>%
-  group_by(player) %>%
-  summarise(duration)
-
 tbl_final_player_actions <- events_clean %>%
   filter(
     match_id  == final_match_id,
@@ -494,13 +482,9 @@ tbl_verdict_summary <- tibble(
 ## Save Part 4 Table ----
 saveRDS(tbl_verdict_summary, "data/cleaned/tbl_verdict_summary.rds")
 
-## Commit and Push ----
-# ./_publish.sh "04_analyse: pipeline complete, tables for Tab 4 finalised"
+# Copy all app data files to app/ folder
+rds_files <- list.files("data/cleaned", pattern = "\\.rds$", full.names = TRUE)
+file.copy(rds_files, "app/", overwrite = TRUE)
 
-
-file.copy( "data/cleaned/tbl_verdict_summary.rds",
- "app/tbl_verdict_summary.rds", overwrite = TRUE)
-
-
-readRDS("app/tbl_verdict_summary.rds") %>% 
-  select(Dimension, Metric)
+# Confirm all files are in app/
+list.files("app", pattern = "\\.rds$")

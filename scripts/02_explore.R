@@ -38,7 +38,8 @@ events_raw %>%
     clearance = sum(type.name == "Clearance", na.rm = TRUE), # 1,280
     block = sum(type.name == "Block", na.rm = TRUE), # 1,494
     goalkeeper = sum(type.name == "Goal Keeper", na.rm = TRUE), # 1,184
-    shot = sum(type.name == "Shot", na.rm = TRUE), # 912
+    shot = sum(type.name == "Shot", na.rm = TRUE), # 912 (includes penalty shootout shots in period 5)
+    # After filtering period <= 4, shots = 875 — used in dashboard
     interception = sum(type.name == "Interception", na.rm = TRUE), # 516
     dispossessed = sum(type.name == "Dispossessed", na.rm = TRUE), # 812
     dribble = sum(type.name == "Dribble", na.rm = TRUE), # 942
@@ -67,6 +68,9 @@ events_raw %>%
 # for the ball progression analysis
 # Complete and incomplete dribbles are almost exactly split (455 vs 487) —
 # slight edge to defenders across the tournament
+# Total goals including own goals = 106
+# Own goals excluded from shot/xG analysis — 103 used in analytical tables
+# Dashboard value box shows 106 (total goals scored in tournament)
 
 # 11,784 pressure events across 31 matches — roughly 380 per match,
 # enough for a meaningful pressing analysis per team
@@ -308,5 +312,3 @@ events_raw %>%
 # - NA in pass.outcome.name = completed pass (not missing data)
 # - counterpress column is TRUE or NA, never FALSE — recode before analysis
 # - allclean() needed to extract x/y coordinates and ElapsedTime from nested columns
-
-# ./_publish.sh "02_explore: event type counts, shot/pass breakdowns, penalty shootout check"

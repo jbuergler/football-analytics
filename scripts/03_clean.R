@@ -35,7 +35,8 @@ weuro_matches <- readRDS("data/raw/weuro2025_matches.rds")
 events_filtered <- events_raw %>%
   filter(as.integer(period) <= 4)
 
-# save to raw data
+# saved to raw/ rather than cleaned/ — this is a filtered but not yet
+# fully cleaned version, used as an intermediate step only
 saveRDS(events_filtered, "data/raw/events_filtered.rds")
 
 # Quick check — period 5 should now be gone
@@ -104,7 +105,7 @@ shots_clean <- events_clean %>%
     match_id,match_date,competition_stage,
     team, opponent,player,
     period,minute,
-    location_x,location_y,pitch_third,
+    location_x,location_y,pitch_third, 
     shot_outcome = shot.outcome.name,
     shot_type = shot.type.name,
     shot_body_part = shot.body_part.name,
@@ -121,7 +122,7 @@ shots_clean <- events_clean %>%
     follows_dribble = replace_na(follows_dribble, FALSE),
     stage_type = case_when(
       competition_stage == "Group Stage" ~ "group",
-      TRUE ~ "knockout"),
+      TRUE ~ "knockout"), # covers QF, SF and Final
     match_date = as.Date(match_date)
   )
 
@@ -137,4 +138,3 @@ saveRDS(shots_clean,  "data/cleaned/weuro2025_shots_clean.rds")
 # Confirm files are saved
 list.files("data/cleaned")
 
-# ./_publish.sh "03_clean: team and player names standardised, stage_type added to shots_clean"

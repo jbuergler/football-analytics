@@ -10,6 +10,7 @@
 # data/raw/weuro2025_matches.rds
 
 # --- 1. Libraries ----
+# Note: these are already loaded if 00_setup.R has been run
 library(StatsBombR)
 library(tidyverse)
 library(naniar)
@@ -23,6 +24,7 @@ competitions %>%
   select(competition_id, competition_name, season_id, season_name)
 
 # --- 3. Filter to Women's Euro 2025 and pull matches ----
+# season_id 315 = UEFA Women's Euro 2025
 weuro_2025 <- competitions %>%
   filter(competition_id == 53, season_id == 315)
 
@@ -42,5 +44,5 @@ events_raw <- free_allevents(MatchesDF = weuro_matches, Parallel = TRUE)
 saveRDS(events_raw,    "data/raw/weuro2025_events.rds")
 saveRDS(weuro_matches, "data/raw/weuro2025_matches.rds")
 
-# ./_publish.sh "Add raw data pipeline and StatsBomb download script"
+
 

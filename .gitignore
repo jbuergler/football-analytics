@@ -9,8 +9,3 @@ Thumbs.db
 *.zip
 *.gz
 scripts/07_Report.qmd
-scripts/00-setup.R
-scripts/01_data.R
-scripts/02_explore.R
-scripts/03_clean.R
-scripts/04_analyse.R
