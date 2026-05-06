@@ -18,6 +18,7 @@
 # data/cleaned/tbl_final_player_actions.rds      - Part 3
 # data/cleaned/tbl_final_pass_thirds.rds         - Part 3
 # data/cleaned/tbl_verdict_summary.rds           - Part 4: evidence for verdict
+# data/cleaned/tbl_final_pressures.rds           - Part 4
 
 # Note: every saved .rds contains only the columns the dashboard needs
 # The app never loads the full event log (Shinylive file-size constraint).
@@ -479,8 +480,25 @@ tbl_verdict_summary <- tibble(
   Spain_leads = c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE)
 )
 
+## tbl_final_pressures ----
+# Pressure counts by team in the final
+# England out-pressed Spain (393 vs 253) — used for Tab 4 value box
+# Surprising given Spain's xG dominance — suggests England's tactical
+# approach was more aggressive than the scoreline implies
+tbl_final_pressures <- events_clean %>%
+  filter(
+    match_id == final_match_id,
+    type.name == "Pressure"
+  ) %>%
+  count(team)
+
+# Key finding:
+# England 393 pressures vs Spain 253
+# England pressed significantly more despite being the lower xG team
+
 ## Save Part 4 Table ----
 saveRDS(tbl_verdict_summary, "data/cleaned/tbl_verdict_summary.rds")
+saveRDS(tbl_final_pressures, "data/cleaned/tbl_final_pressures.rds")
 
 # Copy all app data files to app/ folder
 rds_files <- list.files("data/cleaned", pattern = "\\.rds$", full.names = TRUE)

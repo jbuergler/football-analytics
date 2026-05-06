@@ -435,22 +435,22 @@ ui <- page_navbar(
     layout_columns(
       col_widths = c(4, 4, 4),
       value_box(
-        title    = "Spain xG in the final",
-        value    = "2.14",
-        showcase = bsicons::bs_icon("bullseye"),
-        theme    = "primary"
-      ),
-      value_box(
-        title    = "England xG in the final",
+        title    = "England xG in the Final",
         value    = "0.88",
-        showcase = bsicons::bs_icon("bullseye"),
+        showcase = bsicons::bs_icon("arrow-down-circle-fill"),
         theme    = "secondary"
       ),
       value_box(
-        title    = "Spain led on metrics",
-        value    = "7 of 7",
-        showcase = bsicons::bs_icon("trophy-fill"),
+        title    = "Spain xG in the Final",
+        value    = "2.14",
+        showcase = bsicons::bs_icon("arrow-up-circle-fill"),
         theme    = "primary"
+      ),
+      value_box(
+        title    = "England Pressures in the Final",
+        value    = "393 vs 253",
+        showcase = bsicons::bs_icon("arrow-up-circle-fill"),
+        theme    = "secondary"
       )
     ),
     
@@ -466,8 +466,12 @@ ui <- page_navbar(
         created higher quality chances, pressed higher,
         completed more passes, and progressed the ball further
         into the attacking third."),
-        p("In the final, Spain generated 2.14 xG from 23 shots
-        against England's 0.88 xG from 8 shots."),
+        p("In the final, England's defensive resilience was a factor, but the 
+        data does not fully explain it. Spain still created 2.14 xG from 23 shots
+        against England's 0.88 xG from 9 shots. 
+        What stands out is that England out-pressed Spain in the final 
+        (393 vs 253 pressures). This suggests that Wiegman's tactical approach was 
+        more aggressive than the xG gap implies."),
         p("Spain dominated the data, but tournament football is not always 
         won by the better team on paper. England's defensive shape, game 
         management and clinical penalty shootout ultimately decided the 
