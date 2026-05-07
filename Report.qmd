@@ -1,6 +1,5 @@
 ---
 title: "Did England Deserve to Win? A Data Dashboard Analysis of UEFA Women's Euro 2025"
-  
 author: "Janine Buergler (201944190)"
 date: today
 
@@ -29,24 +28,108 @@ execute:
   warning: false
   message: false
 ---
+
 **Live dashboard:** <https://jbuergler.github.io/football-analytics/>
 
 **Repository:** <https://github.com/jbuergler/football-analytics>
 
 # Introduction and Research Question
 
+The UEFA Women's European Championship (Euro) is one of the most important tournaments in women's football. The 2025 edition, hosted in in Switzerland from 2nd to 27th July 2025, came at a moment when the sport continues to grow in visibility, commercial value and public attention. The tournament has achieved record television audiences in the United Kingdom (cite: womens sport trust 2026). Sixteen nations competed across the group stage and knockout rounds, producing 106 goals across 31 matches and setting multiple tournament records (cite: uefa records article).
+
+Research on women's football shows that this growth is part of a broader professionalisation, but that major gaps between the women's and men's game remain in areas such as commercial investment, media coverage, and resources (cite: tjonndal 2024 journal). This makes the tournament interesting not just because of who won, but about whether performance data supports the results. This is something that matters to fans, analysts, journalists, coaches, and anyone interested in how women's football is judged and valued.
+
+The tournament ended with the final match at St. Jakob on the 27th of July 2025, where England faced Spain. England entered the tournament as the defending title holders, whereas Spain were the reigning World Cup holders. Spain's Aitana Bonmatí was named Player of the Tournament, while Esther González finished as the tournament's top scorer with four goals (cite: uefa top scorer article, uefa team of tournament article). Following a 1-1 draw after extra time, England won 3-1 on penalties to retain their European title (cite bbc sport final article).
+
+The result, however, raised an immediate analytical question: did the scoreline reflect the balance of the play throughout the tournament and in the final itself? This project uses StatsBomb open event data to directly compare England and Spain's performances across the tournament and in the final itself, through metrics including expected goals (xG), pressing intensity, and ball progression. The central research question is:
+
+**Did England deserve to win the Women's Euro 2025?**
+
+This question matters because women's football is undergoing clear professionalisation, yet there are still major gaps with the men's game regarding visibility, financial conditions, and commercial value (cite: tjondall). Recent research also shows that professional women's football has evolved technically and tactically, with event data revealing longer possession sequences, fewer long-distance shots, and more difficult, valuable passes (cite bransen and davis). This makes event data a useful basis for assessing whether the result reflected the balance of play. For that reason, this project evaluates whether England's title win in 2025 was deserved on performance as well as on the scoreboard.
 
 # Data Collection and Preparation
 
+## Source and Access
+
+For this project, event data for the UEFA Women's EURO 2025 was sourced via the `StatsBombR` package in R (cite: statsbomb open data). Recently, StatsBomb was incorporated into Hudl's industry-leading ecosystem of integrated video and analytic solutions (source hudl + statsbomb 2024). They are an established provider of football event data, recording over 3,400 events per match across more than 190 competitions and thus providing a wide range of data free of charge (hudl statsbomb source)
+
+## Dataset Structure and Granularity
+
+The raw data is structured at the event level, meaning that each row represents a single action during a match. This includes actions such as passes, carries, shots, pressures, and ball receipts. Each event has information on the player, team, match, time, pitch location (x, y coordinates), and action-specific attributes such as shot outcome and xG value for shots.
+
+The full dataset covers 31 matches across the group stage and knockout rounds, including 875 shots after cleaning. Key variables used in this analysis include:
+
+-   **location_x, location_y:** pitch coordinates of the action
+
+-   **shot.statsbomb.xg:** expected goals value for each shot
+
+-   **shot.outcome.name:** outcome of the shot (goal, saved, off target, etc.)
+
+-   **type.name:** event type (shot, pass, carry, pressure, etc.)
+
+-   **team.name:** the team performing the action
+
+-   **player.name:** the player performing the action
+
+-   **minute, period:** time context of the action
+
+## Cleaning and Preparation
+
+Several cleaning steps were applied to prepare the data for the analysis:
+
+**Period filter:** StatsBomb records penalty shootouts as period 5. As penalty shootouts are based on individual shots rather than open play performance, all period 5 events were excluded from the analysis. This affected a total of three matches: the Sweden vs England semi-final, the France vs Germany quarter final, and the England vs Spain final.
+
+**Own goals:** Own goals were excluded from the shot and xG analysis as they do not reflect the performance of the attacking team. This means goals from the analytical shot count (875 shots) differs slightly from the total goals shown in the dashboard (103 vs 106).
+
+**Team name standardisation:** Team names were cleaned and standardised to ensure consistency across all tables and visualisations. Prefixes and Suffixes like "Women's" or "WNT" (for Finland) were removed.
+
+**Pre-aggregation:** Summary tables for the different metrics analysed in this project were computed in advance and saved as `.rds` files. They are loaded directly by the Shiny dashboard. This approach improves loading speed and separates the data preparation from the app itself.
+
+## Coverage and Caveats
+As shown in @tbl-data-summary, the dataset covers all 31 matches of the UEFA Women's Euro 2025 tournament from the group stage through to the final. As coverage is subject to StatsBomb's data collection methodology, any recording errors cannot be ruled out. 
+
+This project analysed on-ball actions only. Off-ball movements and physical metrics such as distance covered are not included. This means that some aspects of performance, especially defensive organisation away from the ball, were not covered in this analysis. StatsBomb's freeze frame data, which records the location of all players involved in the event, including goalkeeper and defender positions at the moment of each shot (hudl statsbomb 2021 freeze frames) was not used in this analysis. However, it informed the pre-computed xG values available in the dataset, which makes them more contextually accurate. This directly represents a potential aspect, that future work could incorporate in the analysis. Across the full dataset, a total of 105,525 individual events were recorded.
+
+StatsBomb records concrete pressing events when a player applies pressure to an opponent in possession, instead of computing pressure through combining multiple defensive actions (cite: dorrington pressure data in football 2025). This is an advantage, as it allows pressing intensity to be evaluated directly from recorded events. 
+
+```{r}
+#| label: tbl-data-summary
+#| tbl-cap: "Table 1: Dataset Summary - UEFA Women's Euro 2025"
+
+library(dplyr)
+library(knitr)
+
+data_summary <- data.frame(
+  Item = c(
+    "Source",
+    "Access method",
+    "Competition",
+    "Matches",
+    "Shots",
+    "Granularity",
+    "Period 5 excluded",
+    "Own goals excluded"
+  ),
+  Detail = c(
+    "StatsBomb open event data",
+    "StatsBomb R package",
+    "UEFA Women's Euro 2025 (ID: 53, Season: 315)",
+    "31",
+    "875",
+    "Event level (one row per action), a total of 105,525 events",
+    "Yes (penalty shootouts)",
+    "Yes (from xG analysis)"
+  )
+)
+
+knitr::kable(data_summary, col.names = c("Item", "Detail"))
+```
 
 # Methodology
 
-
 # Findings
 
-
 # Discussion, Limitations, and Conclusion
-
 
 # List of Tools Used {.unnumbered}
 
