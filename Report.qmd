@@ -1,0 +1,77 @@
+---
+title: "Did England Deserve to Win? A Data Dashboard Analysis of UEFA Women's Euro 2025"
+  
+author: "Janine Buergler (201944190)"
+date: today
+
+format:
+  typst:
+    toc: true
+    number-sections: true
+    fontsize: 11pt
+    mainfont: "Calibri"
+    monofont: "Consolas"
+    margin-left: 2.54cm
+    margin-right: 2.54cm
+    margin-top: 2.54cm
+    margin-bottom: 2.54cm
+    linestretch: 1.15
+    papersize: a4
+
+knitr:
+  opts_chunk:
+    dev: svglite
+    
+bibliography: references.bib
+csl: harvard-cite-them-right.csl
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+**Live dashboard:** <https://jbuergler.github.io/football-analytics/>
+
+**Repository:** <https://github.com/jbuergler/football-analytics>
+
+# Introduction and Research Question
+
+
+# Data Collection and Preparation
+
+
+# Methodology
+
+
+# Findings
+
+
+# Discussion, Limitations, and Conclusion
+
+
+# List of Tools Used {.unnumbered}
+
+Anara Technologies (2026) *Anara* (Pro Version). Available at: <https://anara.com>
+
+-   Assisted in understanding and summarising academic literature
+-   Facilitated the organisation of research findings
+
+Anthropic (2026) *Claude* (Version claude-sonnet-4-6). Available at: <https://claude.ai>
+
+-   Assisted in debugging R code and Shiny app development
+-   Support with structuring report sections
+-   Proofreading and grammar check for cohesion and readability
+
+Grammarly Inc. (2026) *Grammarly* (Free Version). Available at: <https://www.grammarly.com>
+
+-   Support with spelling and grammar checks, including punctuation and preposition use
+
+QuillBot (2026) *Paraphrasing Tool* (Free Version). Available at: <https://quillbot.com/paraphrasing-tool>
+
+-   Assisting with paraphrasing sentences and sentence structures
+-   Finding synonyms
+
+Zotero (2026) *Zotero* (MacOS Version). Available at: <https://www.zotero.org/>
+
+-   Assisting in the organisation of references and citations
+
+# Appendices {.unnumbered}
