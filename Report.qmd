@@ -86,11 +86,12 @@ Several cleaning steps were applied to prepare the data for the analysis:
 **Pre-aggregation:** Summary tables for the different metrics analysed in this project were computed in advance and saved as `.rds` files. They are loaded directly by the Shiny dashboard. This approach improves loading speed and separates the data preparation from the app itself.
 
 ## Coverage and Caveats
-As shown in @tbl-data-summary, the dataset covers all 31 matches of the UEFA Women's Euro 2025 tournament from the group stage through to the final. As coverage is subject to StatsBomb's data collection methodology, any recording errors cannot be ruled out. 
+
+As shown in @tbl-data-summary, the dataset covers all 31 matches of the UEFA Women's Euro 2025 tournament from the group stage through to the final. As coverage is subject to StatsBomb's data collection methodology, any recording errors cannot be ruled out.
 
 This project analysed on-ball actions only. Off-ball movements and physical metrics such as distance covered are not included. This means that some aspects of performance, especially defensive organisation away from the ball, were not covered in this analysis. StatsBomb's freeze frame data, which records the location of all players involved in the event, including goalkeeper and defender positions at the moment of each shot (hudl statsbomb 2021 freeze frames) was not used in this analysis. However, it informed the pre-computed xG values available in the dataset, which makes them more contextually accurate. This directly represents a potential aspect, that future work could incorporate in the analysis. Across the full dataset, a total of 105,525 individual events were recorded.
 
-StatsBomb records concrete pressing events when a player applies pressure to an opponent in possession, instead of computing pressure through combining multiple defensive actions (cite: dorrington pressure data in football 2025). This is an advantage, as it allows pressing intensity to be evaluated directly from recorded events. 
+StatsBomb records concrete pressing events when a player applies pressure to an opponent in possession, instead of computing pressure through combining multiple defensive actions (cite: dorrington pressure data in football 2025). This is an advantage, as it allows pressing intensity to be evaluated directly from recorded events.
 
 ```{r}
 #| label: tbl-data-summary
@@ -127,6 +128,42 @@ knitr::kable(data_summary, col.names = c("Item", "Detail"))
 
 # Methodology
 
+## From Raw Data to Dashboard
+
+This project follows a structured pipeline of five scripts, moving from raw data collection through to the interactive dashboard. Raw event data was pulled from StatsBomb in script `01_data.R`, explored in `02_explore.R`, cleaned in `03_clean.R`, aggregated into summary tables in `04_analyse.R`, and visualised in `05_visualise.R`. As a first step, only the planned static visuals were created, before moving them as interactive elements in `app/app.R`. After the app successfully ran locally on R, it was then deployed as the dashboard itself via Shinylive to GitHub. This ensures the analysis is reproducible and the dashboard only uses smaller, cleaned data tables, that are easier to load through Shiny.
+
+## Metrics
+
+All metrics were computed from the cleaned event data and aggregated into summary tables. The following metrics were used across the dashboard:
+
+**Expected goals difference (xG diff):** For each match, xG difference was calculated as a team's total xG minus their opponent's total xG. Averaging this across all matches gives a tournament-wide measure to see whether a team consistently created better chances than they conceded. This is the primary metric for the Tournament Overview tab of the Dashboard.
+
+**High press rate:** The high press rate was defined as the proportion of all pressure events happening in the opponent's half of the pitch (`location_x > 60` on the StatsBomb coordinate system, where the pitch runs from 0 to 120). StatsBomb records a pressure event each time a player actively applies pressure to an opponent in possession, which is a direct measure of pressing behaviour.
+
+**Counter-press rate:** The counter-press rate was defined as the proportion of events that StatsBomb flagged as counter pressing. This refers to pressures applied within a short window of losing the ball. Missing values were recoded to `FALSE` so the full pressure count could be used to compute the rate in %.
+
+Pass completion rate: The proportion of attempted passes that successfully reached a teammate from all open play passes. Unknown outcomes and injury clearances from `pass.outcome.name` were excluded. It is worth noting that in the StatsBomb data, `NA` values in `pass.outcome.name` refer to completed passes (statsbomb pdf source).
+
+**Final third carry rate:** This refers to the proportion of all carries ending beyond `x = 80` on the StatsBomb coordinate system, which represents the final third of the pitch. This metric was chosen over the standard StatsBomb progressive carry definition (carries advancing the ball by at least 10 units). As it directly shows penetration into the attacking third instead of forward progress from any location, this was chosen as a more meaningful metric to analyse the attacking play.
+
+**Final third pass rate:** The proportion of completed passes that ended beyond `x = 80` to measure how frequently each team moved the ball into the attacking third through passing.
+
+**Shots faced per match:** The average number of shots conceded per match, used as a measure for defensive solidity alongside average xG conceded.
+
+## Grouping and Filtering Decisions
+
+All pressing metrics were split by stage type (group stage vs knockout rounds) to capture if there were any tactical shifts as the tournament progressed. The final match was isolated by selecting only the match ID of the final itself using `competition_stage == "Final"` and analysed separately across the tabs that focused on a detailed analysis of the events in the final between England and Spain. Actions of the best players were filtered to Bonmatí and Hemp specifically. They accumulated the most final third passes and carries for their teams.
+
+## Dashboard Design
+
+The dashboard was built using R Shiny with the `bslib` package for the layout and theme. A consistent colour palette was applied for the entire dashboard based on the official hex colours of Spain (`#F1BF00`) and England (`#CE1124`). All other teams were highlighted in grey to ensure England and Spain can be immediately identified across every chart.
+
+The dashboard was structured across a total of six tabs that guides the reader through the story of the tournament and ultimately answering the research question. First, Tournament Facts and Context was provided about the competition itself, as well as manager, formation, and high-performing player information for England and Spain. After that, the Tournament Overview provided context of the team's performance regarding their expected goals (scored and conceded). Moving on, the Journey Tab shows the development of the two finalists throughout the tournament across metrics like accumulated xG, match-by-match xG and pressing. Afterwards, the final was analysed in more detail across two tabs to analyse the shot and xG situation, as well as the Possession in separate windows. The final was split across two tabs deliberately, as otherwise the plots would be too visually cluttered and overwhelming. Finally, an analytical decision was made based on the analysed metrics to answer the research question. This ensures that the reader is guided from a broad to specific context. Each tab includes a navigation sidebar that can be collapsed if need be, to give some initial context of what each tab is trying to show. A preview of the Dashboard can be found in Appendix A.
+
+The individual chart types were chosen based on the analytical question each visualisation attempted to address. A horizontal bar chart (Tab 1) ranks all 16 teams by xG dominance, making the ranking immediately readable. A scatter plot (Tab 1) compares total xG against goals scored, showing which teams over- or underperformed in terms of goals. Cumulative line charts show how the xG and momentum changes across the tournament, while step charts show the xG accumulated shot by shot in the final. Pitch-based plots like shot maps (scatter plot) and player passmaps (arrow maps) use spatial data to show where on the pitch certain actions happened.
+
+All plotly charts include hover tooltips providing exact values for each elements of the plots. Two plots (xG Difference horizontal bar chart and player passmaps), however, were deliberately kept as static plots using `renderPlot` instead of `plotly`. This was due to compatability constraints between the plots and the rendering mechanism of `plotly` in the Shinylive WebAssembly environment.
+
 # Findings
 
 # Discussion, Limitations, and Conclusion
@@ -158,3 +195,5 @@ Zotero (2026) *Zotero* (MacOS Version). Available at: <https://www.zotero.org/>
 -   Assisting in the organisation of references and citations
 
 # Appendices {.unnumbered}
+
+## Appendix A: Dashboard Preview
