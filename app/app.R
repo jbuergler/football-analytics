@@ -72,7 +72,6 @@ theme_euro <- function() {
   theme_minimal(base_size = 12) +
     theme(
       plot.title = element_text(face = "bold", size = 13, colour = "#1F2937"),
-      plot.subtitle = element_text(size = 10, colour = "#6B7280", margin = margin(b = 10)),
       axis.title = element_text(size = 10, colour = "#1F2937"),
       axis.text = element_text(size = 9,  colour = "#6B7280"),
       panel.grid.major = element_line(colour = "#E5E7EB", linewidth = 0.3),
@@ -375,7 +374,11 @@ ui <- page_navbar(
         card(
           full_screen = TRUE,
           card_header("Shot Map - Final"),
-          p("Spain registered 23 shots to England's 8, with higher-quality chances concentrated centrally. Zoom in to see the shot and pitch dimensions more clearly.",
+          p("Circle size = xG value. England attack shown on the left 
+          and Spain attack shown on the right.
+          Spain registered 23 shots to England's 8, 
+          with higher-quality chances concentrated centrally. 
+            Zoom in to see the shot and pitch dimensions more clearly.",
             style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
           plotlyOutput("shot_map", height = "400px")
         ),
@@ -529,7 +532,7 @@ server <- function(input, output, session) {
           team == "England" ~ "England",
           TRUE ~ "Other"
         ),
-        team = fct_reorder(team, avg_xg_diff),
+        team = reorder(team, avg_xg_diff),
         tooltip    = paste0(
           team, "\n",
           "Avg xG diff: ", sprintf("%+.2f", avg_xg_diff)
@@ -856,17 +859,12 @@ server <- function(input, output, session) {
           override.aes = list(size = 5, alpha = 1))
       ) +
       coord_cartesian(xlim = c(0, 120), ylim = c(0, 80)) +
-      labs(
-        subtitle = "Circle size = xG value · England attack left · Spain attack right · white ring = goal"
-      ) +
       theme_pitch() +
       theme(
-        plot.subtitle = element_text(size = 9, colour = "#6B7280",
-                                       margin = margin(b = 6)),
         legend.position = "bottom",
         legend.text = element_text(size = 10, colour = "#1F2937"),
-        plot.background = element_rect(fill = "white", colour = NA)
-      )
+        plot.background = element_rect(fill = "white", colour = NA))
+        
     
     ggplotly(p, tooltip = "text") %>%
       layout(showlegend = TRUE,
