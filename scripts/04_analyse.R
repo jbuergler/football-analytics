@@ -229,10 +229,6 @@ saveRDS(tbl_team_xg_summary,        "data/cleaned/tbl_team_xg_summary.rds")
 saveRDS(tbl_press_summary, "data/cleaned/tbl_press_summary.rds")
 saveRDS(tbl_ball_progression, "data/cleaned/tbl_ball_progression.rds")
 
-
-## Commit and Push ----
-# ./_publish.sh "04_analyse: tournament picture tables for Tab 1 finalised"
-
 # ---- ROUTES TO THE FINAL ----
 # Tab 2: how did teams get to the final, match by match?
 
@@ -301,9 +297,6 @@ tbl_team_journey <- tbl_stage_breakdown %>%
 ## Save Part 2 Tables ----
 saveRDS(tbl_stage_breakdown, "data/cleaned/tbl_stage_breakdown.rds")
 saveRDS(tbl_cumulative_xg, "data/cleaned/tbl_cumulative_xg.rds")
-
-## Commit and Push ----
-# ./_publish.sh "04_analyse: routes to the final tables for Tab 2 finalised"
 
 # ---- THE FINAL IN DETAIL ----
 # Tab 3: what happened in the England vs Spain final?
@@ -431,9 +424,6 @@ saveRDS(tbl_final_shots, "data/cleaned/tbl_final_shots.rds")
 saveRDS(tbl_final_timeline, "data/cleaned/tbl_final_timeline.rds")
 saveRDS(tbl_final_player_actions,"data/cleaned/tbl_final_player_actions.rds")
 saveRDS(tbl_final_pass_thirds, "data/cleaned/tbl_final_pass_thirds.rds")
-
-## Commit and Push ----
-# ./_publish.sh "04_analyse: the final in detail tables for Tab 3 finalised"
 
 # ---- EVIDENCE FOR THE VERDICT ----
 # Tab 4: did England deserve to win?
