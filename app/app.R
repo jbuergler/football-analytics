@@ -263,7 +263,7 @@ ui <- page_navbar(
           card_header("xG Dominance - Tournament Ranking"),
           p("Spain top the tournament in xG dominance (+1.98), ahead of England (+1.20) and the rest of the field.",
             style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
-          plotlyOutput("xg_lollipop", height = "380px")
+          plotOutput("xg_ranking", height = "380px")
         )
       )
     )
@@ -528,7 +528,7 @@ ui <- page_navbar(
 # SERVER ----
 server <- function(input, output, session) {
   # TAB 1 OUTPUTS ----
-  ## xG scatter ----
+  ## xG Scatter ----
   output$xg_scatter <- renderPlotly({
     p <- tbl_team_xg_summary %>%
       mutate(
@@ -568,9 +568,9 @@ server <- function(input, output, session) {
       layout(showlegend = FALSE)
   })
   
-  ## xG lollipop ----
-  output$xg_lollipop <- renderPlotly({
-    p <- tbl_team_xg_summary %>%
+  ## xG Dominance ----
+  output$xg_ranking <- renderPlot({
+    tbl_team_xg_summary %>%
       arrange(avg_xg_diff) %>%
       mutate(
         team_highlight = case_when(
@@ -578,23 +578,40 @@ server <- function(input, output, session) {
           team == "England" ~ "England",
           TRUE              ~ "Other"
         ),
-        team    = factor(team, levels = unique(team)),
-        tooltip = paste0(team, "\nAvg xG diff: ", sprintf("%+.2f", avg_xg_diff))
+        team = factor(team, levels = unique(team)),
+        label = if_else(
+          team %in% c("Spain", "England"),
+          sprintf("%+.2f", avg_xg_diff),
+          NA_character_
+        )
       ) %>%
-      ggplot(aes(x = avg_xg_diff, y = team,
-                 fill = team_highlight, text = tooltip)) +
-      geom_bar(stat = "identity", colour = NA) +
-      geom_vline(xintercept = 0, colour = "black", alpha = 0.5,
+      ggplot(aes(x = avg_xg_diff, y = team, fill = team_highlight)) +
+      geom_col(colour = NA) +
+      geom_vline(xintercept =  0, colour = "black", alpha = 0.5,
                  linewidth = 0.4, linetype = "dashed") +
+      geom_vline(xintercept =  1, colour = "#4a7c3f", alpha = 0.7,
+                 linewidth = 0.8, linetype = "dotted") +
+      geom_vline(xintercept = -1, colour = "#CE1124", alpha = 0.7,
+                 linewidth = 0.8, linetype = "dotted") +
+      annotate("text", x =  1.05, y = 17, label = "+1", 
+               colour = "#2E7D32", size = 4, fontface = "bold", hjust = -0.2) +
+      annotate("text", x = -1.05, y = 17, label = "-1", 
+               colour = "#CE1124", size = 4, fontface = "bold", hjust =  1.2) +
+      geom_text(
+        aes(label = label,
+            hjust = if_else(avg_xg_diff >= 0, -0.2, 1.2)),
+        size = 4, fontface = "bold", na.rm = TRUE
+      ) +
       scale_fill_manual(values = euro_colours) +
       scale_x_continuous(expand = c(0.2, 0.25)) +
+      coord_cartesian(clip = "off") +
       labs(x = "Avg xG difference per match", y = NULL) +
       theme_euro() +
-      theme(panel.grid.major.y = element_blank())
-    
-    ggplotly(p, tooltip = "text") %>%
-      layout(showlegend = FALSE)
-  })
+      theme(
+        panel.grid.major.y = element_blank(),
+        legend.position    = "none"
+      )
+  }, bg = "white")
   
   # TAB 2 OUTPUTS ----
   ## Cumulative xG ----
@@ -906,7 +923,7 @@ server <- function(input, output, session) {
       geom_point(
         data = ~ filter(.x, shot_outcome == "Goal"),
         size = 3, shape = 21,
-        fill = NA, colour = "#2E7D32", stroke = 1.5
+        fill = NA, colour = "#4a7c3f", stroke = 1.5
       ) +
       scale_colour_manual(values = euro_colours, name = NULL) +
       scale_x_continuous(

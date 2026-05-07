@@ -52,42 +52,6 @@ theme_euro <- function() {
 
 # ---- TAB 1: TOURNAMENT PICTURE ----
 
-## fig_xg_lollipop ----
-# One takeaway: Spain dominated on chance quality; England ranked 3rd
-fig_xg_lollipop <- tbl_team_xg_summary %>%
-  mutate(
-    team_highlight = case_when(
-      team == "Spain" ~ "Spain",
-      team == "England" ~ "England",
-      TRUE ~ "Other"
-    ),
-    team = fct_reorder(team, avg_xg_diff)
-  ) %>%
-  ggplot(aes(x = avg_xg_diff, y = team, colour = team_highlight)) +
-
-  geom_vline(xintercept = 0, colour = "grey69",
-             linewidth = 0.5, linetype = "dashed") +
-
-  geom_segment(aes(x = 0, xend = avg_xg_diff,
-                   y = team, yend = team),
-               linewidth = 0.8, alpha = 0.6) +
-
-  geom_point(size = 3.5) +
-  # Value label — sits just outside each point
-  geom_text(aes(label = sprintf("%+.2f", avg_xg_diff),
-                hjust = ifelse(avg_xg_diff >= 0, -0.3, 1.3)),
-            size = 2.8, colour = "#1F2937") +
-  scale_colour_manual(values = euro_colours) +
-  # Expand x axis so labels at the extremes are not clipped
-  scale_x_continuous(expand = expansion(mult = c(0.2, 0.25))) +
-  labs(
-    title = "xG Difference per match — Women's Euro 2025",
-    x = "Average xG difference per match",
-    y = NULL
-  ) +
-  theme_euro() +
-  theme(panel.grid.major.y = element_blank())
-
 ## fig_xg_scatter ----
 # One takeaway: both finalists' goals broadly matched their xG —
 # the xG differential reflects genuine quality, not finishing luck.
@@ -98,7 +62,7 @@ fig_xg_scatter <- tbl_team_xg_summary %>%
       team == "England" ~ "England",
       TRUE ~ "Other"
     )
-    ) %>%
+  ) %>%
   ggplot(aes(x = total_xg, y = total_goals, colour = team_highlight)) +
   geom_abline(slope = 1, intercept = 0,
               colour = "grey69", linewidth = 0.5, linetype = "dashed") +
@@ -129,6 +93,53 @@ fig_xg_scatter <- tbl_team_xg_summary %>%
     y        = "Total goals scored",
   ) +
   theme_euro()
+
+## fig_xg_ranking ----
+# Horizontal bar chart ranking all 16 teams by avg xG difference per match
+# Spain and England highlighted in team colours, others in grey
+# Reference lines at +1 and -1 to contextualise the rankings
+# One takeaway: Spain dominated on chance quality; England ranked 3rd
+fig_xg_ranking <- tbl_team_xg_summary %>%
+  arrange(avg_xg_diff) %>%
+  mutate(
+    team_highlight = case_when(
+      team == "Spain"   ~ "Spain",
+      team == "England" ~ "England",
+      TRUE              ~ "Other"
+    ),
+    team  = factor(team, levels = unique(team)),
+    label = if_else(
+      team %in% c("Spain", "England"),
+      sprintf("%+.2f", avg_xg_diff),
+      NA_character_
+    )
+  ) %>%
+  ggplot(aes(x = avg_xg_diff, y = team, fill = team_highlight)) +
+  geom_col(colour = NA) +
+  geom_vline(xintercept =  0, colour = "black", alpha = 0.5,
+             linewidth = 0.4, linetype = "dashed") +
+  geom_vline(xintercept =  1, colour = "#2E7D32", alpha = 0.7,
+             linewidth = 0.8, linetype = "dotted") +
+  geom_vline(xintercept = -1, colour = "#CE1124", alpha = 0.7,
+             linewidth = 0.8, linetype = "dotted") +
+  annotate("text", x =  1, y = 0.4, label = "+1",
+           colour = "#2E7D32", size = 4, fontface = "bold", hjust = -0.2) +
+  annotate("text", x = -1, y = 0.4, label = "-1",
+           colour = "#CE1124", size = 4, fontface = "bold", hjust =  1.2) +
+  geom_text(
+    aes(label = label,
+        hjust = if_else(avg_xg_diff >= 0, -0.2, 1.2)),
+    size = 4, fontface = "bold", na.rm = TRUE
+  ) +
+  scale_fill_manual(values = euro_colours) +
+  scale_x_continuous(expand = c(0.2, 0.25)) +
+  coord_cartesian(clip = "off") +
+  labs(x = "Avg xG difference per match", y = NULL) +
+  theme_euro() +
+  theme(
+    panel.grid.major.y = element_blank(),
+    legend.position    = "none"
+  )
 
 # ---- TAB 2: THE JOURNEY ----
 
