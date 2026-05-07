@@ -526,6 +526,7 @@ server <- function(input, output, session) {
   ## xG lollipop ----
   output$xg_lollipop <- renderPlotly({
     p <- tbl_team_xg_summary %>%
+      arrange(desc(avg_xg_diff)) %>%
       mutate(
         team_highlight = case_when(
           team == "Spain" ~ "Spain",
@@ -544,7 +545,7 @@ server <- function(input, output, session) {
       geom_vline(xintercept = 0, colour = "black", alpha = 0.5,
                  linewidth = 0.4, linetype = "dashed") +
       scale_fill_manual(values = euro_colours) +
-      scale_x_continuous(expand = expansion(mult = c(0.2, 0.25))) +
+      scale_x_continuous(expand = c(0.2, 0.25)) +
       labs(x = "Avg xG difference per match", y = NULL) +
       theme_euro() +
       theme(panel.grid.major.y = element_blank())
