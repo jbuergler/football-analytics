@@ -34,7 +34,7 @@ library(StatsBombR)
 shots_clean <- readRDS("data/cleaned/weuro2025_shots_clean.rds")
 events_clean <- readRDS("data/cleaned/weuro2025_events_clean.rds")
 
-# ---- TOURNAMENT PICTURE ----
+# ---- TOURNAMENT OVERVIEW ----
 # Tab 1: who performed best across the whole tournament?
 # Build order: tbl_match_xg first; tbl_team_xg_summary derives from it
 
@@ -229,7 +229,7 @@ saveRDS(tbl_team_xg_summary,        "data/cleaned/tbl_team_xg_summary.rds")
 saveRDS(tbl_press_summary, "data/cleaned/tbl_press_summary.rds")
 saveRDS(tbl_ball_progression, "data/cleaned/tbl_ball_progression.rds")
 
-# ---- ROUTES TO THE FINAL ----
+# ---- THE JOURNEY ----
 # Tab 2: how did teams get to the final, match by match?
 
 ## tbl_stage_breakdown ----
@@ -298,8 +298,8 @@ tbl_team_journey <- tbl_stage_breakdown %>%
 saveRDS(tbl_stage_breakdown, "data/cleaned/tbl_stage_breakdown.rds")
 saveRDS(tbl_cumulative_xg, "data/cleaned/tbl_cumulative_xg.rds")
 
-# ---- THE FINAL IN DETAIL ----
-# Tab 3: what happened in the England vs Spain final?
+# ---- THE FINAL PART A (SHOTS) ----
+# Tab 3A: what happened in the England vs Spain final (shots)?
 
 ## tbl_final_shots ----
 # Shot-level detail for the final match only — used for the shot map
@@ -320,13 +320,6 @@ tbl_final_shots <- shots_clean %>%
   ) %>%
   arrange(period, minute)
 
-tbl_final_shots %>%
-  group_by(team) %>%
-  summarise(
-    shots = n()
-  )
-
-
 # Key finding: both goals were headers 
 # England: Russo, min 56, 0.213 xG. Spain: Caldentey, min 24, 0.396 xG
 
@@ -344,6 +337,9 @@ tbl_final_timeline <- tbl_final_shots %>%
     team, shot_number, minute, period,
     player, xg, cumulative_xg, shot_outcome
   )
+
+# ---- THE FINAL PART B (POSSESSION) ----
+# Tab 3B: what happened in the England vs Spain final (possession)?
 
 ## tbl_final_player_actions ----
 # Completed passes and progressive carries for Bonmatí and Hemp in the final.
@@ -486,7 +482,7 @@ tbl_final_pressures <- events_clean %>%
 # England 393 pressures vs Spain 253
 # England pressed significantly more despite being the lower xG team
 
-## Save Part 4 Table ----
+## Save Part 4 Tables ----
 saveRDS(tbl_verdict_summary, "data/cleaned/tbl_verdict_summary.rds")
 saveRDS(tbl_final_pressures, "data/cleaned/tbl_final_pressures.rds")
 

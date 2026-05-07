@@ -50,7 +50,7 @@ theme_euro <- function() {
     )
 }
 
-# ---- TAB 1: TOURNAMENT PICTURE ----
+# ---- TAB 1: TOURNAMENT OVERVIEW ----
 
 ## fig_xg_scatter ----
 # One takeaway: both finalists' goals broadly matched their xG —
@@ -68,11 +68,9 @@ fig_xg_scatter <- tbl_team_xg_summary %>%
               colour = "grey69", linewidth = 0.5, linetype = "dashed") +
   geom_point(aes(size = team_highlight == "Other"), show.legend = FALSE) +
   geom_text_repel(
-    data = ~ filter(.x, team_highlight %in% c("Spain", "England")),
     aes(label = team),
-    size = 3.2, fontface = "bold",
-    nudge_y = 0.8,
-    show.legend = FALSE
+    size = 2.8, show.legend = FALSE,
+    max.overlaps = 20
   ) +
   scale_colour_manual(values = euro_colours) +
   scale_size_manual(values = c("TRUE" = 2.5, "FALSE" = 3.8)) +
@@ -87,10 +85,10 @@ fig_xg_scatter <- tbl_team_xg_summary %>%
            label = "below line = scored less than xG predicted",
            size = 2.8, colour = "grey69", hjust = 0) +
   labs(
-    title    = "Goals scored vs expected goals — Women's Euro 2025",
+    title = "Goals scored vs expected goals — Women's Euro 2025",
     subtitle = "Teams above the dashed line scored more than their chance quality predicted",
-    x        = "Total expected goals (xG)",
-    y        = "Total goals scored",
+    x = "Total expected goals (xG)",
+    y = "Total goals scored",
   ) +
   theme_euro()
 
@@ -105,9 +103,9 @@ fig_xg_ranking <- tbl_team_xg_summary %>%
     team_highlight = case_when(
       team == "Spain"   ~ "Spain",
       team == "England" ~ "England",
-      TRUE              ~ "Other"
+      TRUE ~ "Other"
     ),
-    team  = factor(team, levels = unique(team)),
+    team = factor(team, levels = unique(team)),
     label = if_else(
       team %in% c("Spain", "England"),
       sprintf("%+.2f", avg_xg_diff),
@@ -134,11 +132,15 @@ fig_xg_ranking <- tbl_team_xg_summary %>%
   scale_fill_manual(values = euro_colours) +
   scale_x_continuous(expand = c(0.2, 0.25)) +
   coord_cartesian(clip = "off") +
-  labs(x = "Avg xG difference per match", y = NULL) +
+  labs(
+    title = "xG Dominance — Tournament Ranking",
+    x = "Avg xG Difference per Match", 
+    y = NULL
+  ) +
   theme_euro() +
   theme(
     panel.grid.major.y = element_blank(),
-    legend.position    = "none"
+    legend.position = "none"
   )
 
 # ---- TAB 2: THE JOURNEY ----
@@ -157,30 +159,24 @@ fig_cumulative_xg <- tbl_cumulative_xg %>%
   ) %>%
   ggplot(aes(x = match_number, y = cumulative_xg,
              group = team, colour = team_highlight)) +
-
   geom_line(
     data = ~ filter(.x, team_highlight == "Other"),
     linewidth = 0.5, alpha = 0.25
   ) +
-
   geom_line(
     data = ~ filter(.x, team_highlight != "Other"),
     linewidth = 1.8
   ) +
-
   geom_point(
     data = ~ filter(.x, team_highlight != "Other"),
     size = 2.5
   ) +
-
   geom_vline(xintercept = 3.5, colour = "grey69",
              linewidth = 0.5, linetype = "dashed") +
-
   annotate("text", x = 2, y = max(tbl_cumulative_xg$cumulative_xg) * 0.95,
            label = "Group Stage", size = 4, colour = "grey69", hjust = 0.5) +
   annotate("text", x = 4.5, y = max(tbl_cumulative_xg$cumulative_xg) * 0.95,
            label = "Knockout", size = 4, colour = "grey69", hjust = 0.5) +
-
   geom_text(
     data = ~ filter(.x, team_highlight != "Other") %>%
       group_by(team) %>%
@@ -221,12 +217,12 @@ fig_match_xg_bars_eng <- tbl_stage_breakdown %>%
   ) %>%
   select(match_label, stage_type, xg_total, opp_xg) %>%
   pivot_longer(
-    cols      = c(xg_total, opp_xg),
+    cols = c(xg_total, opp_xg),
     names_to  = "metric",
     values_to = "xg"
   ) %>%
   mutate(
-    bar_colour   = if_else(metric == "xg_total", "England", "Opponent")
+    bar_colour = if_else(metric == "xg_total", "England", "Opponent")
   ) %>%
   ggplot(aes(x = match_label, y = xg, fill = bar_colour)) +
   annotate("rect",
@@ -250,17 +246,17 @@ fig_match_xg_bars_eng <- tbl_stage_breakdown %>%
   ) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
   labs(
-    title    = "Match-by-match xG — England",
+    title = "Match-by-match xG — England",
     subtitle = "Red = England xG · Grey = Opponent xG · Red Background = Knockout Stage",
-    x        = NULL,
-    y        = "Expected Goals (xG)",
-    fill     = NULL,
+    x = NULL,
+    y = "Expected Goals (xG)",
+    fill = NULL,
   ) +
   scale_x_discrete() +
   theme_euro() +
   theme(
     legend.position = "top",
-    axis.text.x     = element_text(size = 8)
+    axis.text.x = element_text(size = 8)
   )
 
 ### Spain ----
@@ -273,12 +269,12 @@ fig_match_xg_bars_esp <- tbl_stage_breakdown %>%
   ) %>%
   select(match_label, stage_type, xg_total, opp_xg) %>%
   pivot_longer(
-    cols      = c(xg_total, opp_xg),
+    cols = c(xg_total, opp_xg),
     names_to  = "metric",
     values_to = "xg"
   ) %>%
   mutate(
-    bar_colour   = if_else(metric == "xg_total", "Spain", "Opponent")
+    bar_colour = if_else(metric == "xg_total", "Spain", "Opponent")
   ) %>%
   ggplot(aes(x = match_label, y = xg, fill = bar_colour))+
   annotate("rect",
@@ -302,17 +298,17 @@ fig_match_xg_bars_esp <- tbl_stage_breakdown %>%
   ) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
   labs(
-    title    = "Match-by-match xG — Spain",
+    title = "Match-by-match xG — Spain",
     subtitle = "Yellow = Spain xG · Grey = Opponent xG · Yellow background = Knockout Stage",
-    x        = NULL,
-    y        = "Expected Goals (xG)",
-    fill     = NULL
+    x = NULL,
+    y = "Expected Goals (xG)",
+    fill = NULL
   ) +
   scale_x_discrete() +
   theme_euro() +
   theme(
     legend.position = "top",
-    axis.text.x     = element_text(size = 8)
+    axis.text.x = element_text(size = 8)
   )
 
 ## fig_press_shift ----
@@ -332,7 +328,7 @@ fig_press_shift <- tbl_press_summary %>%
   ) %>%
   mutate(
     metric = case_when(
-      metric == "high_press_rate"   ~ "High-press rate",
+      metric == "high_press_rate" ~ "High-press rate",
       metric == "counterpress_rate" ~ "Counter-press rate"
     ),
     metric = fct_relevel(metric, "High-press rate", "Counter-press rate")
@@ -359,7 +355,7 @@ fig_press_shift <- tbl_press_summary %>%
     panel.spacing = unit(1.5, "lines")
   )
 
-# ---- TAB 3: THE FINAL ----
+# ---- TAB 3A: THE FINAL (SHOTS) ----
 
 ## fig_shot_map ----
 # One takeaway: Spain generated far more shots and from better positions —
@@ -374,15 +370,15 @@ fig_shot_map <- tbl_final_shots %>%
   annotate_pitch(dimensions = pitch_statsbomb,
                  colour = "white", fill = "#4a7c3f") +
   geom_point(
-    aes(size   = xg,
+    aes(size = xg,
         colour = team),
     alpha = 0.9
   ) +
   geom_point(
     data = ~ filter(.x, shot_outcome == "Goal"),
     aes(size = xg),
-    shape  = 21,
-    fill   = NA,
+    shape = 21,
+    fill = NA,
     colour = "white",
     stroke = 1.5
   ) +
@@ -398,7 +394,7 @@ fig_shot_map <- tbl_final_shots %>%
   ) +
   coord_cartesian(xlim = c(0, 120), ylim = c(0, 80)) +
   labs(
-    title    = "Shot map — Women's Euro 2025 Final",
+    title = "Shot map — Women's Euro 2025 Final",
     subtitle = "England attack left · Spain attack right · circle size = xG · white ring = goal"
   ) +
   theme_pitch() +
@@ -421,21 +417,18 @@ fig_shot_map <- tbl_final_shots %>%
 fig_xg_timeline <- tbl_final_timeline %>%
   ggplot(aes(x = minute, y = cumulative_xg,
              colour = team, group = team)) +
-  # Halftime and full time reference lines
-  geom_vline(xintercept = 45,  colour = "#9CA3AF", 
+  geom_vline(xintercept = 45,  colour = "grey69", 
              linewidth = 0.4, linetype = "dashed") +
-  geom_vline(xintercept = 90,  colour = "#9CA3AF", 
+  geom_vline(xintercept = 90,  colour = "grey69", 
              linewidth = 0.4, linetype = "dashed") +
-  geom_vline(xintercept = 105, colour = "#9CA3AF", 
+  geom_vline(xintercept = 105, colour = "grey69", 
              linewidth = 0.4, linetype = "dashed") +
-  # Period labels
   annotate("text", x = 22,  y = 2.2, label = "1st half",
-           size = 2.8, colour = "#9CA3AF") +
+           size = 2.8, colour = "grey69") +
   annotate("text", x = 67,  y = 2.2, label = "2nd half",
-           size = 2.8, colour = "#9CA3AF") +
+           size = 2.8, colour = "grey69") +
   annotate("text", x = 100, y = 2.2, label = "ET",
-           size = 2.8, colour = "#9CA3AF") +
-  # Step line — rises only when a shot is taken
+           size = 2.8, colour = "grey69") +
   geom_step(linewidth = 1.2) +
   geom_point(size = 2) +
   geom_point(
@@ -454,12 +447,13 @@ fig_xg_timeline <- tbl_final_timeline %>%
   ) +
   labs(
     title = "Cumulative xG timeline — Women's Euro 2025 Final",
-    x  = "Minute",
+    x = "Minute",
     y = "Cumulative xG"
   ) +
   theme_euro() +
   theme(legend.position = "top")
 
+# ---- TAB 3B: THE FINAL (POSSESSION) ----
 ## fig_final_pass_thirds ----
 # how the passes were distributed by pitch third (def, mid, att)
 # takeaway: Spain in attacking third (29.2%) vs England's 15.2%
@@ -497,20 +491,20 @@ fig_player_passmap <- tbl_final_player_actions %>%
                  colour = "white", fill = "#4a7c3f") +
   geom_segment(
     aes(x = location_x, y = location_y,
-        xend = end_x,    yend = end_y,
+        xend = end_x, yend = end_y,
         colour = action_type),
     linewidth = 0.6, alpha = 0.7,
     arrow = arrow(length = unit(0.15, "cm"), type = "closed")
   ) +
   facet_wrap(~ player_label) +
   scale_colour_manual(
-    values = c("Pass" = "#4E2CA3", "Carry" = "#9CA3AF"),# neutral colours here
+    values = c("Pass" = "#1F2937", "Carry" = "grey69"),
     name   = NULL,
     labels = c("Pass" = "Final-third pass", "Carry" = "Final-third carry")
   ) +
   coord_cartesian(xlim = c(60, 121), ylim = c(0, 80)) +
   labs(
-    title    = "Final-third actions — Women's Euro 2025 Final",
+    title = "Final-third actions — Women's Euro 2025 Final",
   ) +
   theme_pitch() +
   theme(
@@ -534,7 +528,7 @@ tbl_verdict_gt <- tbl_verdict_summary %>%
   gt(groupname_col = "Dimension") %>%
   tab_header(
     title = md("**England vs Spain — Key Metrics**"),
-    subtitle = "Tournament averages · Women's Euro 2025"
+    subtitle = "Tournament Averages · Women's Euro 2025"
   ) %>%
   tab_spanner(
     label = "Team",
@@ -583,4 +577,17 @@ tbl_verdict_gt <- tbl_verdict_summary %>%
     table.width = pct(80)
   )
 
+# ---- SAVE FIGURES FOR REPORT ----
+dir.create("data/figures", recursive = TRUE, showWarnings = FALSE)
 
+saveRDS(fig_xg_ranking, "data/figures/fig_xg_ranking.rds")
+saveRDS(fig_xg_scatter, "data/figures/fig_xg_scatter.rds")
+saveRDS(fig_cumulative_xg, "data/figures/fig_cumulative_xg.rds")
+saveRDS(fig_match_xg_bars_eng, "data/figures/fig_match_xg_bars_eng.rds")
+saveRDS(fig_match_xg_bars_esp, "data/figures/fig_match_xg_bars_esp.rds")
+saveRDS(fig_press_shift, "data/figures/fig_press_shift.rds")
+saveRDS(fig_shot_map, "data/figures/fig_shot_map.rds")
+saveRDS(fig_xg_timeline, "data/figures/fig_xg_timeline.rds")
+saveRDS(fig_final_pass_thirds, "data/figures/fig_final_pass_thirds.rds")
+saveRDS(fig_player_passmap, "data/figures/fig_player_passmap.rds")
+saveRDS(tbl_verdict_gt, "data/figures/fig_verdict_table.rds")

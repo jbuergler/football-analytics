@@ -6,10 +6,13 @@ date: today
 format:
   typst:
     toc: true
+    lof: true
+    lot: true
     number-sections: true
     fontsize: 11pt
     mainfont: "Calibri"
     monofont: "Consolas"
+    monocolour: "blue" 
     margin-left: 2.54cm
     margin-right: 2.54cm
     margin-top: 2.54cm
@@ -95,7 +98,7 @@ StatsBomb records concrete pressing events when a player applies pressure to an 
 
 ```{r}
 #| label: tbl-data-summary
-#| tbl-cap: "Table 1: Dataset Summary - UEFA Women's Euro 2025"
+#| tbl-cap: "Dataset Summary - UEFA Women's Euro 2025"
 
 library(dplyr)
 library(knitr)
@@ -160,13 +163,127 @@ The dashboard was built using R Shiny with the `bslib` package for the layout an
 
 The dashboard was structured across a total of six tabs that guides the reader through the story of the tournament and ultimately answering the research question. First, Tournament Facts and Context was provided about the competition itself, as well as manager, formation, and high-performing player information for England and Spain. After that, the Tournament Overview provided context of the team's performance regarding their expected goals (scored and conceded). Moving on, the Journey Tab shows the development of the two finalists throughout the tournament across metrics like accumulated xG, match-by-match xG and pressing. Afterwards, the final was analysed in more detail across two tabs to analyse the shot and xG situation, as well as the Possession in separate windows. The final was split across two tabs deliberately, as otherwise the plots would be too visually cluttered and overwhelming. Finally, an analytical decision was made based on the analysed metrics to answer the research question. This ensures that the reader is guided from a broad to specific context. Each tab includes a navigation sidebar that can be collapsed if need be, to give some initial context of what each tab is trying to show. A preview of the Dashboard can be found in Appendix A.
 
-The individual chart types were chosen based on the analytical question each visualisation attempted to address. A horizontal bar chart (Tab 1) ranks all 16 teams by xG dominance, making the ranking immediately readable. A scatter plot (Tab 1) compares total xG against goals scored, showing which teams over- or underperformed in terms of goals. Cumulative line charts show how the xG and momentum changes across the tournament, while step charts show the xG accumulated shot by shot in the final. Pitch-based plots like shot maps (scatter plot) and player passmaps (arrow maps) use spatial data to show where on the pitch certain actions happened.
+The individual chart types were chosen based on the analytical question each visualisation attempted to address. A horizontal bar chart (Tab 1) ranks all 16 teams by xG dominance, making the ranking immediately readable. A scatter plot (Tab 1) compares total xG against goals scored, showing which teams over- or underperformed in terms of goals. Cumulative line charts show how the xG and momentum changes across the tournament, while step charts show the xG accumulated shot by shot in the final. Pitch-based plots like shot maps (scatter plot) and player passmaps (arrow maps) use spatial data to show where on the pitch certain actions happened. Reference lines at +1 and -1 are added to the xG ranking chart to provide context to what refers to a meaningfully positive or negative xG difference per match.
 
-All plotly charts include hover tooltips providing exact values for each elements of the plots. Two plots (xG Difference horizontal bar chart and player passmaps), however, were deliberately kept as static plots using `renderPlot` instead of `plotly`. This was due to compatability constraints between the plots and the rendering mechanism of `plotly` in the Shinylive WebAssembly environment.
+Apart from two exceptions, all plotly charts include hover tooltips providing exact values for each elements of the plots. The xG Dominance ranking chart and player passmaps use static `renderPlot` instead of `plotly`. For the passmaps, this was due to a compatibility constraint between the `ggsoccer` package and the rendering mechanism of `plotly` in the Shinylive WebAssembly environment. For the xG ranking chart, the static approach was chosen, as interactivity does not add meaningful value to a ranked chart. The relative positions and reference lines at ±1 communicate the findings clearly without tooltips.
 
 # Findings
 
+## Tournament Picture
+
+As shown in @fig-xg-ranking both England and Spain outperformed their expected goals across the tournament. Spain scored 18 goals from 15.91xG (+2.09) and England scored 16 goals from 14.68xG (+1.32). This suggests that both teams were clinical in front of goal, with Spain being slightly more clinical and also generating more chance quality.
+
+```{r}
+#| label: fig-xg-ranking
+#| fig-cap: "xG Dominance Tournament Ranking — all 16 teams ranked by average xG difference per match. Spain led the tournament (+1.98), ahead of England (+1.20)."
+#| fig-width: 6
+#| fig-height: 3
+
+readRDS("data/figures/fig_xg_ranking.rds")
+```
+
+Looking at the average xG difference in @fig-xg-scatter, Spain outperformed all other teams, having an average xG difference of +1.98 per match. This means that across all their six matches, they created significantly better chances than they conceded. England came third, having an average xG difference of +1.20 per match, just behind Sweden. This figure shows that both teams who reached the final performed above the +1 reference line, creating more quality chances in attack than conceding them. Wales had the lowest average xG difference per match (-2.65), which is reflected in their early group stage exit. However, this number is slightly inflated, due to their 1-6 loss against England on Matchday 3.
+
+```{r}
+#| label: fig-xg-scatter
+#| fig-cap: "Goals scored vs total xG for all 16 teams. Teams above the dashed line scored more than expected and teams below the dashed line scored less than expected. Both England and Spain outperformed their xG, with Spain generating greater overall chance quality."
+#| fig-width: 6
+#| fig-height: 4
+
+readRDS("data/figures/fig_xg_scatter.rds")
+```
+
+## The Journey to the Final
+
+To compare England's and Spain's routes to the final and how they performed one by one until playing each other in Basel, several metrics were analysed.
+
+@fig-cumulative-xg shows how both teams' cumulative xG increased over the whole tournament. The data shows that Spain had a consistent increase in xG, whereas England had a big increase on Matchday 3, due to their 6-1 win against Wales. Over the rest of the tournament both teams' values were at \~ 13.80 after the semi-finals, before Spain taking the lead after the final on July 27th. The overall difference, is at +1.23 for Spain. Overall, the figure shows that Spain had a more consistent attacking output throughout the tournament compared to England.
+
+```{r}
+#| label: fig-cumulative-xg
+#| fig-cap: "Cumulative xG across the tournament for England and Spain. Spain built xG at a consistently higher rate, pulling clear from Match 4 onwards. Grey lines show all other teams."
+#| fig-width: 6
+#| fig-height: 3
+
+readRDS("data/figures/fig_cumulative_xg.rds")
+```
+
+@fig-pressing shows the pressing intensity across high pressing and counter pressing. Evaluating both these metrics, Spain is ahead of England in the group stages and knockouts. They achieved their highest rates in the group stages with 76.6% (high-press rate) and 32.3% (counter-press rate). This reflects Spain's tactical approach of high-intensity, ball-oriented pressing. The data, however, shows that Spain in particular, reduced their pressing intensity in the knockouts, compared to the group stages. This is not surprising, considering the margins to win in the knockouts are usually higher, and a pressing done wrong could lead to a fatal counterattack. Surprisingly, England's counterpressing only marginally reduced in the later stages of the tournament (-2.50%). This shows that there was a smaller tactical change compared to Spain.
+
+```{r}
+#| label: fig-pressing
+#| fig-cap: "Pressing intensity by stage — high press rate and counter-press rate for England and Spain across group stage and knockout rounds. Spain pressed higher at every stage."
+#| fig-width: 6
+#| fig-height: 3
+
+readRDS("data/figures/fig_press_shift.rds")
+```
+
+## The Final
+
+Looking at the attacking output in the final, Spain clearly dominated England on both analysed metrics. @fig-shot-map shows Spain had 23 shots compared to England's 8, demonstrating their will to create attacking threat. The location of Spain's attempts was also more centrally located around the penalty area, compared to England's more dispersed shot ranges. Both goals in the match were headers. Spain's Caldentey headed in from close range in the 24th minute (0.396 xG), while England's Russo equalised with a header in the 56th minute (0.213 xG).
+
+```{r}
+#| label: fig-shot-map
+#| fig-cap: "Shot map for the Women's Euro 2025 Final. England attack from the left, Spain attack from the right. Circle size represents xG value. White ring indicates a goal. Spain registered 23 shots to England's 8."
+#| fig-width: 6
+#| fig-height: 3
+
+readRDS("data/figures/fig_shot_map.rds")
+```
+
+As further shown in @fig-xg-timeline, Spain was dominating the attack from the opening minutes of the match, accumulating a total of 2.14 xG across their 23 shots by the end of extra time. England only reached a total xG of 0.88 from their 8 shots, but having a higher xG per shot (0.11 xG vs 0.09 xG). England recorded their last shot in the 68th minute, meaning that they created no further chances during the final 52 minutes of the match, including extra time. However, despite this xG gap, the match ended 1-1 after 120 minutes, with England winning 3-1 on penalties.
+
+```{r}
+#| label: fig-xg-timeline
+#| fig-cap: "Cumulative xG Timeline for the Women's Euro 2025 Final. Spain dominated throughout, finishing with 2.14 xG. England's last shot was in the 68th minute. Green rings indicate goals."
+#| fig-width: 6
+#| fig-height: 3
+
+readRDS("data/figures/fig_xg_timeline.rds")
+```
+
+When looking at the possession in the final, a few things stand out. First, Spain dominated the pass distribution into the attacking third of the pitch (29.2%) compared to England's 15.2% as shown in @fig-pass-thirds. England, however, made more passes within the defensive area of the pitch (37% vs 22.5%). This data illustrates Spain did not only had more shots, but also attempted to create more attacking threat as a team, showcasing their drive to win the match. Whereas, England's defensive dominance reflects their more conservative and compact approach in the final.
+
+```{r}
+#| label: fig-pass-thirds
+#| fig-cap: "Completed pass distribution by pitch third in the final. Spain directed more passes into the attacking third, while England were more concentrated in the defensive third."
+#| fig-width: 6
+#| fig-height: 3
+
+readRDS("data/figures/fig_final_pass_thirds.rds")
+```
+
+When looking at the most creative players for each team in the Final, there are also clear differences between Bonmatí's (Spain) and Hemps' (England) final-third actions. Despite both players playing the full 120 minutes, Bonmatí generated significantly more individual attacking threat. As shown in @fig-passmap, Bonmatí operated across the full width of the attacking third, completing final-third passes and carries from both central and wide positions. Hemp's actions were more concentrated on the left channel, which further reflects England's more conservative and positionally disciplined attacking approach.
+
+```{r}
+#| label: fig-passmap
+#| fig-cap: "Final-third actions for Bonmatí (Spain) and Hemp (England) in the final. Arrows show completed passes and carries ending in the final third. Bonmatí operated across the full width of the attacking third while Hemp was concentrated through the left channel."
+#| fig-width: 6
+#| fig-height: 3
+
+readRDS("data/figures/fig_player_passmap.rds")
+```
+
+## Analytical Outcome
+
+As shown in @fig-verdict-table Spain led England on all seven performance metrics across the tournament. Spain averaged 2.65 xG per match compared to England's 2.45, while conceding considerably less (0.67 vs 1.25 xG per match). Moreover, their pass completion was notably higher (87.2% vs 79.4%). Pass completion only, however, does not directly mean better possession. But, Spain showed their attacking threat through other metrics. Particularly, for final third carries Spain had a 6.6 percentage point lead compared to England. Consequently, by attacking more, this also led to less shots faced per match (8.7 vs 11.8).
+
+One finding that complicates this picture is England's pressing in the final itself. England applied 393 pressures compared to Spain's 253, even though Spain had a significantly higher high press rate across the tournament (67.8% vs 51.5%). This suggests that England's tactical approach in the final was more aggressive than the xG gap implies and their defensive resilience was a key factor. However, based on the data, Spain were the stronger side across all seven tournament-wide metrics.
+
+```{r}
+#| label: fig-verdict-table
+#| fig-cap: "Key performance metrics — England vs Spain across the tournament. Spain led on all seven metrics. Highlighted cells indicate the leading team for each metric."
+#| fig-width: 6
+#| out-width: "80%"
+#| fig-align: center
+
+knitr::include_graphics("data/figures/fig_verdict_table.png")
+```
+
 # Discussion, Limitations, and Conclusion
+
+placeholder
 
 # List of Tools Used {.unnumbered}
 
@@ -196,4 +313,4 @@ Zotero (2026) *Zotero* (MacOS Version). Available at: <https://www.zotero.org/>
 
 # Appendices {.unnumbered}
 
-## Appendix A: Dashboard Preview
+## Appendix A: Dashboard Preview {.unnumbered}
