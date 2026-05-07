@@ -532,21 +532,18 @@ server <- function(input, output, session) {
           team == "England" ~ "England",
           TRUE ~ "Other"
         ),
-        team = reorder(team, avg_xg_diff),
+        team = factor(team, levels = rev(unique(team))),
         tooltip    = paste0(
           team, "\n",
           "Avg xG diff: ", sprintf("%+.2f", avg_xg_diff)
         )
       ) %>%
       ggplot(aes(x = avg_xg_diff, y = team,
-                 colour = team_highlight, text = tooltip)) +
-      geom_vline(xintercept = 0, colour = "#9CA3AF",
-                 linewidth = 0.5, linetype = "dashed") +
-      geom_segment(aes(x = 0, xend = avg_xg_diff,
-                       y = team, yend = team),
-                   linewidth = 0.8, alpha = 0.6) +
-      geom_point(size = 3.5) +
-      scale_colour_manual(values = euro_colours) +
+                 fill = team_highlight, text = tooltip)) +
+      geom_col(colour = NA) +
+      geom_vline(xintercept = 0, colour = "black", alpha = 0.5,
+                 linewidth = 0.4, linetype = "dashed") +
+      scale_fill_manual(values = euro_colours) +
       scale_x_continuous(expand = expansion(mult = c(0.2, 0.25))) +
       labs(x = "Avg xG difference per match", y = NULL) +
       theme_euro() +
