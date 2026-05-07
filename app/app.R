@@ -208,6 +208,11 @@ ui <- page_navbar(
           Analytical Decision: Did England deserve to win?",
           style = "font-size: 0.78rem; color: #6B7280;"
         ),
+        tags$p(
+          "This tab provides a tournament-wide overview of all 16 teams,  
+          showing xG performance and goal-scoring patterns across 31 matches.",
+          style = "font-size: 0.78rem; color: #6B7280;"
+        ),
         tags$hr(),
         tags$p(
           "Based on StatsBomb open event data of
@@ -248,17 +253,17 @@ ui <- page_navbar(
         col_widths = c(6, 6),
         card(
           full_screen = TRUE,
-          card_header("xG Dominance - Tournament Ranking"),
-          p("Spain top the tournament in xG dominance (+1.98), ahead of England (+1.20) and the rest of the field.",
-            style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
-          plotlyOutput("xg_lollipop", height = "380px")
-        ),
-        card(
-          full_screen = TRUE,
           card_header("Goals vs Expected Goals"),
           p("Spain and England both outscored their xG, with Spain generating slightly more overall chance quality.",
             style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
           plotlyOutput("xg_scatter", height = "380px")
+        ),
+        card(
+          full_screen = TRUE,
+          card_header("xG Dominance - Tournament Ranking"),
+          p("Spain top the tournament in xG dominance (+1.98), ahead of England (+1.20) and the rest of the field.",
+            style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
+          plotlyOutput("xg_lollipop", height = "380px")
         )
       )
     )
@@ -523,37 +528,6 @@ ui <- page_navbar(
 # SERVER ----
 server <- function(input, output, session) {
   # TAB 1 OUTPUTS ----
-  ## xG lollipop ----
-  output$xg_lollipop <- renderPlotly({
-    p <- tbl_team_xg_summary %>%
-      arrange(desc(avg_xg_diff)) %>%
-      mutate(
-        team_highlight = case_when(
-          team == "Spain" ~ "Spain",
-          team == "England" ~ "England",
-          TRUE ~ "Other"
-        ),
-        team = factor(team, levels = rev(unique(team))),
-        tooltip    = paste0(
-          team, "\n",
-          "Avg xG diff: ", sprintf("%+.2f", avg_xg_diff)
-        )
-      ) %>%
-      ggplot(aes(x = avg_xg_diff, y = team,
-                 fill = team_highlight, text = tooltip)) +
-      geom_col(colour = NA) +
-      geom_vline(xintercept = 0, colour = "black", alpha = 0.5,
-                 linewidth = 0.4, linetype = "dashed") +
-      scale_fill_manual(values = euro_colours) +
-      scale_x_continuous(expand = c(0.2, 0.25)) +
-      labs(x = "Avg xG difference per match", y = NULL) +
-      theme_euro() +
-      theme(panel.grid.major.y = element_blank())
-    
-    ggplotly(p, tooltip = "text") %>%
-      layout(showlegend = FALSE)
-  })
-  
   ## xG scatter ----
   output$xg_scatter <- renderPlotly({
     p <- tbl_team_xg_summary %>%
@@ -589,6 +563,34 @@ server <- function(input, output, session) {
                          expand = expansion(mult = c(0, 0.1))) +
       labs(x = "Total xG", y = "Total goals scored") +
       theme_euro()
+    
+    ggplotly(p, tooltip = "text") %>%
+      layout(showlegend = FALSE)
+  })
+  
+  ## xG lollipop ----
+  output$xg_lollipop <- renderPlotly({
+    p <- tbl_team_xg_summary %>%
+      arrange(avg_xg_diff) %>%
+      mutate(
+        team_highlight = case_when(
+          team == "Spain"   ~ "Spain",
+          team == "England" ~ "England",
+          TRUE              ~ "Other"
+        ),
+        team    = factor(team, levels = unique(team)),
+        tooltip = paste0(team, "\nAvg xG diff: ", sprintf("%+.2f", avg_xg_diff))
+      ) %>%
+      ggplot(aes(x = avg_xg_diff, y = team,
+                 fill = team_highlight, text = tooltip)) +
+      geom_bar(stat = "identity", colour = NA) +
+      geom_vline(xintercept = 0, colour = "black", alpha = 0.5,
+                 linewidth = 0.4, linetype = "dashed") +
+      scale_fill_manual(values = euro_colours) +
+      scale_x_continuous(expand = c(0.2, 0.25)) +
+      labs(x = "Avg xG difference per match", y = NULL) +
+      theme_euro() +
+      theme(panel.grid.major.y = element_blank())
     
     ggplotly(p, tooltip = "text") %>%
       layout(showlegend = FALSE)
