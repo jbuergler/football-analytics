@@ -482,6 +482,11 @@ tbl_final_pressures <- events_clean %>%
 # England 393 pressures vs Spain 253
 # England pressed significantly more despite being the lower xG team
 
+## tbl_verdict_kable ----
+# Simple two-column version for the typst report
+tbl_verdict_kable <- tbl_verdict_summary %>%
+  select(Dimension, Metric, England, Spain)
+
 ## Save Part 4 Tables ----
 saveRDS(tbl_verdict_summary, "data/cleaned/tbl_verdict_summary.rds")
 saveRDS(tbl_final_pressures, "data/cleaned/tbl_final_pressures.rds")

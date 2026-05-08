@@ -21,6 +21,7 @@ library(tidyverse)
 library(ggrepel)
 library(ggsoccer)
 library(gt)
+library(webshot2)
 
 ## COLOURS —---- 
 # defined once, used in both ggplot charts and bslib theme
@@ -78,15 +79,15 @@ fig_xg_scatter <- tbl_team_xg_summary %>%
                      expand = expansion(mult = c(0, 0.1))) +
   scale_y_continuous(limits = c(0, NA),
                      expand = expansion(mult = c(0, 0.1))) +
-  annotate("text", x = 1, y = 19,
-           label = "above line = scored more than xG predicted",
-           size = 2.8, colour = "grey69", hjust = 0) +
-  annotate("text", x = 8, y = 1,
-           label = "below line = scored less than xG predicted",
-           size = 2.8, colour = "grey69", hjust = 0) +
+  #annotate("text", x = 1, y = 19,
+          # label = "above line = scored more than xG predicted",
+           #size = 2.8, colour = "grey69", hjust = 0) +
+  #annotate("text", x = 8, y = 1,
+          # label = "below line = scored less than xG predicted",
+           #size = 2.8, colour = "grey69", hjust = 0) +
   labs(
     title = "Goals scored vs expected goals — Women's Euro 2025",
-    subtitle = "Teams above the dashed line scored more than their chance quality predicted",
+    # subtitle = "Teams above the dashed line scored more than their chance quality predicted",
     x = "Total expected goals (xG)",
     y = "Total goals scored",
   ) +
@@ -192,11 +193,11 @@ fig_cumulative_xg <- tbl_cumulative_xg %>%
   ) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
   labs(
-    title = "Cumulative xG across the tournament",
-    subtitle = "Spain builds up consistently · England's line is inflated by a 5.71 xG group stage match against Wales.",
+    title = "Cumulative xG across the Tournament",
+    # subtitle = "Spain builds up consistently · England's line is inflated by a 5.71 xG group stage match against Wales.",
     x = NULL,
     y = "Cumulative expected goals (xG)",
-    caption = "grey lines = other teams"
+    # caption = "grey lines = other teams"
   ) +
   theme_euro() +
   theme(legend.position = "none")
@@ -335,6 +336,11 @@ fig_press_shift <- tbl_press_summary %>%
   ) %>%
   ggplot(aes(x = stage_label, y = rate, fill = team))+
   geom_col(position = position_dodge(width = 0.7), width = 0.6) +
+  geom_text(
+    aes(label = paste0(round(rate), "%")),
+    position = position_dodge(width = 0.7),
+    vjust = -0.5, size = 2.8, fontface = "bold"
+  ) +
   facet_wrap(~ metric) +
   scale_fill_manual(values = euro_colours, name = NULL) +
   scale_y_continuous(
@@ -343,7 +349,7 @@ fig_press_shift <- tbl_press_summary %>%
   ) +
   labs(
     title = "Pressing Intensity — Group Stage vs Knockout",
-    subtitle = "Spain pressed higher and counter-pressed more aggressively than England at every stage",
+   # subtitle = "Spain pressed higher and counter-pressed more aggressively than England at every stage",
     x = NULL,
     y = "Rate (%)"
   ) +
@@ -395,15 +401,15 @@ fig_shot_map <- tbl_final_shots %>%
   coord_cartesian(xlim = c(0, 120), ylim = c(0, 80)) +
   labs(
     title = "Shot map — Women's Euro 2025 Final",
-    subtitle = "England attack left · Spain attack right · circle size = xG · white ring = goal"
+   # subtitle = "England attack left · Spain attack right · circle size = xG · white ring = goal"
   ) +
   theme_pitch() +
   theme(
     plot.title = element_text(face = "bold", size = 13,
                                    colour = "#1F2937",
                                    margin = margin(b = 4)),
-    plot.subtitle = element_text(size = 10, colour = "#6B7280",
-                                   margin = margin(b = 8)),
+    #plot.subtitle = element_text(size = 10, colour = "#6B7280",
+                                  # margin = margin(b = 8)),
     legend.position = "bottom",
     legend.box = "horizontal",
     legend.spacing.x = unit(1, "cm"),
@@ -414,6 +420,13 @@ fig_shot_map <- tbl_final_shots %>%
 ## fig_xg_timeline ----
 # One takeaway: Spain's xG accumulated steadily throughout
 # England's line barely moved after the first half.
+
+# create end-point labels (last row per team) - added for the report
+tbl_timeline_labels <- tbl_final_timeline %>%
+  group_by(team) %>%
+  slice_max(minute, n = 1) %>%
+  ungroup()
+
 fig_xg_timeline <- tbl_final_timeline %>%
   ggplot(aes(x = minute, y = cumulative_xg,
              colour = team, group = team)) +
@@ -436,17 +449,22 @@ fig_xg_timeline <- tbl_final_timeline %>%
     size = 3, shape  = 21,
     fill = NA, colour = "#2E7D32", stroke = 1.5
   ) +
+  geom_text(
+    data = tbl_timeline_labels,
+    aes(label = paste0(team, " ", round(cumulative_xg, 2))),
+    hjust = -0.15, fontface = "bold", size = 3
+  ) +
   scale_colour_manual(values = euro_colours, name = NULL) +
   scale_x_continuous(
     breaks = c(0, 45, 90, 105, 120),
     labels = c("0'", "45'", "90'", "105'", "120'"),
-    expand = expansion(mult = c(0.02, 0.05))
+    expand = expansion(mult = c(0.02, 0.18))  # increase from 0.12 to 0.18
   ) +
   scale_y_continuous(
     expand = expansion(mult = c(0.02, 0.08))
   ) +
   labs(
-    title = "Cumulative xG timeline — Women's Euro 2025 Final",
+    title = "Cumulative xG Timeline — Women's Euro 2025 Final",
     x = "Minute",
     y = "Cumulative xG"
   ) +
@@ -461,6 +479,11 @@ fig_final_pass_thirds <- tbl_final_pass_thirds %>%
   ggplot(aes(x = pitch_third, y = pct,
              fill = team)) +
   geom_col(position = position_dodge(width = 0.7), width = 0.6) +
+  geom_text(
+    aes(label = paste0(round(pct), "%")),
+    position = position_dodge(width = 0.7),
+    vjust = -0.5, size = 2.8, fontface = "bold"
+  ) +
   scale_fill_manual(values = euro_colours, name = NULL) +
   scale_y_continuous(
     limits = c(0, 60),
@@ -590,4 +613,5 @@ saveRDS(fig_shot_map, "data/figures/fig_shot_map.rds")
 saveRDS(fig_xg_timeline, "data/figures/fig_xg_timeline.rds")
 saveRDS(fig_final_pass_thirds, "data/figures/fig_final_pass_thirds.rds")
 saveRDS(fig_player_passmap, "data/figures/fig_player_passmap.rds")
-saveRDS(tbl_verdict_gt, "data/figures/fig_verdict_table.rds")
+gtsave(tbl_verdict_gt, "data/figures/fig_verdict_table.png", 
+       vwidth = 900, vheight = 400, zoom = 2)
