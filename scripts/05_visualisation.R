@@ -241,6 +241,11 @@ fig_match_xg_bars_eng <- tbl_stage_breakdown %>%
            label = "Knockout", size = 3,
            colour = "grey69", hjust = 0.5) +
   geom_col(position = position_dodge(width = 0.75), width = 0.65) +
+  geom_text(
+    aes(label = round(xg, 2)),
+    position = position_dodge(width = 0.75),
+    vjust = -0.4, size = 2.5, fontface = "bold"
+  ) +
   scale_fill_manual(
     values = c("England" = "#CE1124", "Opponent" = "grey69"),
     labels = c("England" = "England xG", "Opponent" = "Opponent xG")
@@ -248,7 +253,7 @@ fig_match_xg_bars_eng <- tbl_stage_breakdown %>%
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
   labs(
     title = "Match-by-match xG — England",
-    subtitle = "Red = England xG · Grey = Opponent xG · Red Background = Knockout Stage",
+    #subtitle = "Red = England xG · Grey = Opponent xG · Red Background = Knockout Stage",
     x = NULL,
     y = "Expected Goals (xG)",
     fill = NULL,
@@ -293,6 +298,11 @@ fig_match_xg_bars_esp <- tbl_stage_breakdown %>%
            label = "Knockout", size = 3,
            colour = "grey69", hjust = 0.5) +
   geom_col(position = position_dodge(width = 0.75), width = 0.65) +
+  geom_text(
+    aes(label = round(xg, 2)),
+    position = position_dodge(width = 0.75),
+    vjust = -0.4, size = 2.5, fontface = "bold"
+  ) +
   scale_fill_manual(
     values = c("Spain" = "#F1BF00", "Opponent" = "grey69"),
     labels = c("Spain" = "Spain xG", "Opponent" = "Opponent xG")
@@ -300,7 +310,7 @@ fig_match_xg_bars_esp <- tbl_stage_breakdown %>%
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
   labs(
     title = "Match-by-match xG — Spain",
-    subtitle = "Yellow = Spain xG · Grey = Opponent xG · Yellow background = Knockout Stage",
+    #subtitle = "Yellow = Spain xG · Grey = Opponent xG · Yellow background = Knockout Stage",
     x = NULL,
     y = "Expected Goals (xG)",
     fill = NULL
