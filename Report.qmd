@@ -6,8 +6,6 @@ date: today
 format:
   typst:
     toc: true
-    lof: true
-    lot: true
     number-sections: true
     fontsize: 11pt
     mainfont: "Calibri"
@@ -30,7 +28,8 @@ execute:
   
 bibliography: references.bib
 csl: harvard-cite-them-right.csl
-suppress-bibliography: false
+suppress-bibliography: true
+
 ---
 
 **Live dashboard:** <https://jbuergler.github.io/football-analytics/>
@@ -41,11 +40,11 @@ suppress-bibliography: false
 
 # Introduction and Research Question
 
-The UEFA Women's European Championship (Euro) is one of the most important tournaments in women's football. The 2025 edition, hosted in in Switzerland from 2nd to 27th July 2025, came at a moment when the sport continues to grow in visibility, commercial value and public attention. The tournament has achieved record television audiences in the United Kingdom [@womensSportTrust2026]. Sixteen nations competed across the group stage and knockout rounds, producing 106 goals across 31 matches and setting multiple tournament records [@uefaRecords2025].(UEFA, 2025c).
+The UEFA Women's European Championship (Euro) is one of the most important tournaments in women's football. The 2025 edition, hosted in in Switzerland from 2nd to 27th July 2025, came at a moment when the sport continues to grow in visibility, commercial value and public attention. The tournament has achieved record television audiences in the United Kingdom [@womensSportTrust2026]. Sixteen nations competed across the group stage and knockout rounds, producing 106 goals across 31 matches and setting multiple tournament records [@salley2025].
 
 Research on women's football shows that this growth is part of a broader professionalisation, but that major gaps between the women's and men's game remain in areas such as commercial investment, media coverage, and resources [@tjonndal2024]. This makes the tournament interesting not just because of who won, but about whether performance data supports the results. This is something that matters to fans, analysts, journalists, coaches, and anyone interested in how women's football is judged and valued.
 
-The tournament ended with the final match at St. Jakob on the 27th of July 2025, where England faced Spain. England entered the tournament as the defending title holders, whereas Spain were the reigning World Cup holders. Spain's Aitana Bonmatí was named Player of the Tournament, while Esther González finished as the tournament's top scorer with four goals [@uefaTopScorer2025; @uefaTeamTournament2025]. (UEFA, 2025d, 2025a). Following a 1-1 draw after extra time, England won 3-1 on penalties to retain their European title [@sanders2025]. (Sanders, 2025).
+The tournament ended with the final match at St. Jakob on the 27th of July 2025, where England faced Spain. England entered the tournament as the defending title holders, whereas Spain were the reigning World Cup holders. Spain's Aitana Bonmatí was named Player of the Tournament, while Esther González finished as the tournament's top scorer with four goals [@schwagerpatel2025]. Following a 1-1 draw after extra time, England won 3-1 on penalties to retain their European title [@sanders2025].
 
 The result, however, raised an immediate analytical question: did the scoreline reflect the balance of the play throughout the tournament and in the final itself? This project uses StatsBomb open event data to directly compare England and Spain's performances across the tournament and in the final itself, through metrics including expected goals (xG), pressing intensity, and ball progression. The central research question is:
 
@@ -162,7 +161,7 @@ All pressing metrics were split by stage type (group stage vs knockout rounds) t
 
 The dashboard was built using R Shiny with the `bslib` package for the layout and theme [@sievert2023]. A consistent colour palette was applied for the entire dashboard based on the official hex colours of Spain in gold (`#F1BF00`) and England in red (`#CE1124`). All other teams were highlighted in grey to ensure England and Spain can be immediately identified across every chart.
 
-The dashboard was structured across a total of six tabs that guides the reader through the story of the tournament and ultimately answering the research question. First, Tournament Facts and Context was provided about the competition itself, as well as manager, formation, and high-performing player information for England and Spain. After that, the Tournament Overview provided context of the team's performance regarding their expected goals (scored and conceded). Moving on, the Journey Tab shows the development of the two finalists throughout the tournament across metrics like accumulated xG, match-by-match xG and pressing. Afterwards, the final was analysed in more detail across two tabs to analyse the shot and xG situation, as well as the Possession in separate windows. The final was split across two tabs deliberately, as otherwise the plots would be too visually cluttered and overwhelming. Finally, an analytical decision was made based on the analysed metrics to answer the research question. This ensures that the reader is guided from a broad to specific context. Each tab includes a navigation sidebar that can be collapsed if need be, to give some initial context of what each tab is trying to show. A preview of the Dashboard can be found in Appendix A.
+The dashboard was structured across a total of six tabs that guides the reader through the story of the tournament and ultimately answering the research question. First, Tournament Facts and Context was provided about the competition itself, as well as manager, formation, and high-performing player information for England and Spain. After that, the Tournament Overview provided context of the team's performance regarding their expected goals (scored and conceded). Moving on, the Journey Tab shows the development of the two finalists throughout the tournament across metrics like accumulated xG, match-by-match xG and pressing. Afterwards, the final was analysed in more detail across two tabs to analyse the shot and xG situation, as well as the Possession in separate windows. The final was split across two tabs deliberately, as otherwise the plots would be too visually cluttered and overwhelming. Finally, an analytical decision was made based on the analysed metrics to answer the research question. This ensures that the reader is guided from a broad to specific context. Each tab includes a navigation sidebar that can be collapsed if need be, to give some initial context of what each tab is trying to show. 
 
 The individual chart types were chosen based on the analytical question each visualisation attempted to address. A horizontal bar chart (Tab 1) ranks all 16 teams by xG dominance, making the ranking immediately readable. A scatter plot (Tab 1) compares total xG against goals scored, showing which teams over- or underperformed in terms of goals. Cumulative line charts show how the xG and momentum changes across the tournament, while step charts show the xG accumulated shot by shot in the final. Pitch-based plots like shot maps (scatter plot) and player passmaps (arrow maps) use spatial data to show where on the pitch certain actions happened. Reference lines at +1 and -1 are added to the xG ranking chart to provide context to what refers to a meaningfully positive or negative xG difference per match.
 
@@ -301,7 +300,7 @@ Despite the dashboard providing detailed insights into performance metrics durin
 
 Second, small sample sizes have an impact on the metrics. The maximum of matches a team could play was six, and this only if the team went through to the final. Majority of the teams only played three games (group stage), or potentially one or two extra games in the knockout stages. For example, England's xG figures are visibly inflated by their 6-1 win against Wales in the group stage, and vice versa Wales' average xG difference (-2.65) is disproportionately negative for the same reason. Averaging across six matches does produce useful comparisons, but should be interpreted with caution due to the sample size and games played for each team.
 
-Finally, the player-level analysis was limited to two players (Bonmatí and Hemp) due to them having the highest-volume of final-third actions for their respective teams. This was a deliberate choice, but it excludes contributions from other key players. For example, England's Goalkeeper Hannah Hampton was named player of the match in the final [@uefaHampton2025]. (UEFA, 2025b). This shows that she had an influential role in England's defence in the final and the penalty shootout, which helped them retain their European title.
+Finally, the player-level analysis was limited to two players (Bonmatí and Hemp) due to them having the highest-volume of final-third actions for their respective teams. This was a deliberate choice, but it excludes contributions from other key players. For example, England's Goalkeeper Hannah Hampton was named player of the match in the final [@uefaHampton2025]. This shows that she had an influential role in England's defence in the final and the penalty shootout, which helped them retain their European title.
 
 ## Future Outlook
 
@@ -343,7 +342,4 @@ Zotero (2026) *Zotero* (MacOS Version). Available at: <https://www.zotero.org/>
 
 {{< pagebreak >}}
 
-# Appendices {.unnumbered}
 
-## Appendix A: Dashboard Preview {.unnumbered}
-{{< pagebreak >}}
