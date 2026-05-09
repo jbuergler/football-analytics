@@ -43,8 +43,10 @@ saveRDS(events_filtered, "data/raw/events_filtered.rds")
 # unique(events_filtered$period) # yes, only periods 1-4
 
 # 4. CLEAN AND ENGINEER FEATURES ----
-# allclean() extrapolates coordinates and derived columns per the
-# StatsBomb Working with R guide (StatsBomb, 2022).
+# allclean() unpacks the nested location columns into usable x/y coordinates
+# and adds ElapsedTime — without this, location.x is still a list column
+# methods from StatsBomb Working with R guide (StatsBomb, 2022).
+# https://blogarchive.statsbomb.com/uploads/2022/08/Working-with-R.pdf
 # get.opposingteam() adds OpposingTeam — avoids manual joins downstream.
 # streamline all team names so it only shows the name of the country
 # Pitch third variables engineered from StatsBomb coordinate system (120 x 80)

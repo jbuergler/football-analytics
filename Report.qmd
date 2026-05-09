@@ -28,8 +28,6 @@ execute:
   
 bibliography: references.bib
 csl: harvard-cite-them-right.csl
-suppress-bibliography: true
-
 ---
 
 **Live dashboard:** <https://jbuergler.github.io/football-analytics/>
@@ -92,7 +90,7 @@ Several cleaning steps were applied to prepare the data for the analysis:
 
 As shown in @tbl-data-summary, the dataset covers all 31 matches of the UEFA Women's Euro 2025 tournament from the group stage through to the final. As coverage is subject to StatsBomb's data collection methodology, any recording errors cannot be ruled out.
 
-This project analysed on-ball actions only. Off-ball movements and physical metrics such as distance covered are not included. This means that some aspects of performance, especially defensive organisation away from the ball, were not covered in this analysis. StatsBomb's freeze frame data, which records the location of all players involved in the event, including goalkeeper and defender positions at the moment of each shot was not used in this analysis [@hudlStatsbomb2021]. However, it informed the pre-computed xG values available in the dataset, which makes them more contextually accurate. This directly represents a potential aspect, that future work could incorporate in the analysis. Across the full dataset, a total of 105,525 individual events were recorded.
+This project analysed on-ball actions only. Off-ball movements and physical metrics such as distance covered are not included. This means that some aspects of performance, especially defensive organisation away from the ball, were not covered in this analysis. StatsBomb's freeze frame data, which records the location of all players involved in the event, including goalkeeper and defender positions at the moment of each shot was not used in this analysis [@hudlStatsbomb2021]. However, it informed the pre-computed xG values available in the dataset, which makes them more contextually accurate. It should be noted that these xG values reflect StatsBomb's model assumptions and cannot be independently verified from the open dataset alone but remain a well-established and widely used metric in football analytics [@matchamnodate]. Across the full dataset, a total of 105,525 individual events were recorded.
 
 StatsBomb records concrete pressing events when a player applies pressure to an opponent in possession, instead of computing pressure through combining multiple defensive actions [@dorrington2025]. This is an advantage, as it allows pressing intensity to be evaluated directly from recorded events.
 
@@ -161,7 +159,7 @@ All pressing metrics were split by stage type (group stage vs knockout rounds) t
 
 The dashboard was built using R Shiny with the `bslib` package for the layout and theme [@sievert2023]. A consistent colour palette was applied for the entire dashboard based on the official hex colours of Spain in gold (`#F1BF00`) and England in red (`#CE1124`). All other teams were highlighted in grey to ensure England and Spain can be immediately identified across every chart.
 
-The dashboard was structured across a total of six tabs that guides the reader through the story of the tournament and ultimately answering the research question. First, Tournament Facts and Context was provided about the competition itself, as well as manager, formation, and high-performing player information for England and Spain. After that, the Tournament Overview provided context of the team's performance regarding their expected goals (scored and conceded). Moving on, the Journey Tab shows the development of the two finalists throughout the tournament across metrics like accumulated xG, match-by-match xG and pressing. Afterwards, the final was analysed in more detail across two tabs to analyse the shot and xG situation, as well as the Possession in separate windows. The final was split across two tabs deliberately, as otherwise the plots would be too visually cluttered and overwhelming. Finally, an analytical decision was made based on the analysed metrics to answer the research question. This ensures that the reader is guided from a broad to specific context. Each tab includes a navigation sidebar that can be collapsed if need be, to give some initial context of what each tab is trying to show. 
+The dashboard was structured across a total of six tabs that guides the reader through the story of the tournament and ultimately answering the research question. First, Tournament Facts and Context was provided about the competition itself, as well as manager, formation, and high-performing player information for England and Spain. After that, the Tournament Overview provided context of the team's performance regarding their expected goals (scored and conceded). Moving on, the Journey Tab shows the development of the two finalists throughout the tournament across metrics like accumulated xG, match-by-match xG and pressing. Afterwards, the final was analysed in more detail across two tabs to analyse the shot and xG situation, as well as the Possession in separate windows. The final was split across two tabs deliberately, as otherwise the plots would be too visually cluttered and overwhelming. Finally, an analytical decision was made based on the analysed metrics to answer the research question. This ensures that the reader is guided from a broad to specific context. Each tab includes a navigation sidebar that can be collapsed if need be, to give some initial context of what each tab is trying to show.
 
 The individual chart types were chosen based on the analytical question each visualisation attempted to address. A horizontal bar chart (Tab 1) ranks all 16 teams by xG dominance, making the ranking immediately readable. A scatter plot (Tab 1) compares total xG against goals scored, showing which teams over- or underperformed in terms of goals. Cumulative line charts show how the xG and momentum changes across the tournament, while step charts show the xG accumulated shot by shot in the final. Pitch-based plots like shot maps (scatter plot) and player passmaps (arrow maps) use spatial data to show where on the pitch certain actions happened. Reference lines at +1 and -1 are added to the xG ranking chart to provide context to what refers to a meaningfully positive or negative xG difference per match.
 
@@ -206,6 +204,24 @@ To compare England's and Spain's routes to the final and how they performed one 
 #| fig-height: 3
 
 readRDS("data/figures/fig_cumulative_xg.rds")
+```
+
+To further add to the cumulative xG overview, @fig-match-eng and @fig-match-esp show the match-by-match xG breakdown for England and Spain respectively. England's xG profile was heavily skewed by Matchday 3 due to their 6-1 win against Wales which produced 5.71xG, by far the highest single-match total in the tournament. Removing that outlier, England's attacking was more modest. On the contrary, Spain showed a more consistent pattern across all their six matches. They rarely generated less than 2 xG per game no matter who they played.
+
+```{r}
+#| label: fig-match-eng
+#| fig-cap: "Match-by-match xG for England across the tournament. Red bars show England xG, grey bars show opponent xG. England's group stage total is heavily influenced by the 6-1 win against Wales."
+#| fig-width: 6
+#| fig-height: 3
+readRDS("data/figures/fig_match_xg_bars_eng.rds")
+```
+
+```{r}
+#| label: fig-match-esp  
+#| fig-cap: "Match-by-match xG for Spain across the tournament. Yellow bars show Spain xG, grey bars show opponent xG. Spain maintained consistent attacking output throughout."
+#| fig-width: 6
+#| fig-height: 3
+readRDS("data/figures/fig_match_xg_bars_esp.rds")
 ```
 
 @fig-pressing shows the pressing intensity across high pressing and counter pressing. Evaluating both these metrics, Spain is ahead of England in the group stages and knockouts. They achieved their highest rates in the group stages with 76.6% (high-press rate) and 32.3% (counter-press rate). This reflects Spain's tactical approach of high-intensity, ball-oriented pressing. The data, however, shows that Spain in particular, reduced their pressing intensity in the knockouts, compared to the group stages. This is not surprising, considering the margins to win in the knockouts are usually higher, and a pressing done wrong could lead to a fatal counterattack. Surprisingly, England's counter pressing only marginally reduced in the later stages of the tournament (-2.50%). This shows that there was a smaller tactical change compared to Spain.
@@ -288,7 +304,7 @@ readRDS("data/cleaned/tbl_verdict_summary.rds") %>%
 
 ## Implication of Findings
 
-The data clearly shows that Spain were the stronger team across the UEFA Women's Euro 2025. The were performing better on all seven performance metrics analysed, generated more xG per match (2.65 vs 2.45), conceded considerably less (0.67 vs 1.25), on average across all stages of the competition pressed higher and more aggressively. Especially in the final the gap in chances created was significant. Spain created 2.14 xG from 23 shots, while England only attempted 8 shots (0.88 xG) and the last shot of the game coming in the 68th minute. Looking at these conventional metrics, Spain deserved to win.
+On every metric that mattered, Spain were the better team throughout the tournament. They generated more xG per match (2.65 vs 2.45), conceded less than half England's xG against (0.67 vs 1.25), and pressed higher at every stage of the tournament. The @tbl-verdict showing the seven-metrics side by side further highlights that. Moreover, in the final the gap in chances created was significant. Spain created 2.14 xG from 23 shots, while England only attempted 8 shots (0.88 xG) and the last shot of the game coming in the 68th minute. Looking at these conventional metrics, Spain deserved to win.
 
 However, England managed to get a draw after extra time and then beating Spain on penalties 3-1. This contradiction is what makes the result analytically interesting. In the final, England recorded 393 pressures, compared to Spain's 253. That suggests England took a tactically deliberate defensive approach, absorb Spain's attacking pressure, limiting their space and stay compact rather than dominating possession and going forward. Their pass distribution further confirms this approach, as it was mainly concentrated in the defensive and middle thirds. The result shows what is regularly observed in football, where match outcomes are heavily influenced by randomness and may not always reflect underlying team performance [@brechotFlepp2020].
 
@@ -296,7 +312,7 @@ This dashboard offers insights for a variety of football stakeholders. For an an
 
 ## Limitations
 
-Despite the dashboard providing detailed insights into performance metrics during the Women's Euros 2025, several limitations should be acknowledged within the scope of the work. First, this analysis only focused on on-ball event data. Any movements off the ball, such as defensive shape and physical metrics like distance covered or sprint intensity were not covered and therefore outside the scope of this analysis. Especially England's defensive organisation in the final cannot be fully quantified through the metrics used in this analysis.
+Three limitations are worth noting before drawing conclusions from this analysis. First, this analysis only focused on on-ball event data. Any movements off the ball, such as defensive shape and physical metrics like distance covered or sprint intensity were not covered and therefore outside the scope of this analysis. Especially England's defensive organisation in the final cannot be fully quantified through the metrics used in this analysis.
 
 Second, small sample sizes have an impact on the metrics. The maximum of matches a team could play was six, and this only if the team went through to the final. Majority of the teams only played three games (group stage), or potentially one or two extra games in the knockout stages. For example, England's xG figures are visibly inflated by their 6-1 win against Wales in the group stage, and vice versa Wales' average xG difference (-2.65) is disproportionately negative for the same reason. Averaging across six matches does produce useful comparisons, but should be interpreted with caution due to the sample size and games played for each team.
 
@@ -306,11 +322,13 @@ Finally, the player-level analysis was limited to two players (Bonmatí and Hemp
 
 There are several extensions to this analysis to further strengthen it. For example, the StatsBomb freeze frame data would help allowing to evaluate shot quality with more precision by accounting for goalkeeper positioning and defensive pressure at the moment of each attempt. Additionally, physical tracking data, if available, could be incorporated. This would strengthen the analysis to quantify for example, England's defensive shape rather than implying it. Another addition could be to extend the same analysis to other international tournaments, such as the 2022 Women's Euro or the 2023 World Cup. This could help in contextualise England's and Spain's 2025 performances against their own historical benchmarks. Finally, an analysis that includes the state of the match for each game, showing whether a team was winning, drawing, or losing could be helpful. It would allow to highlight deliberate tactical decisions in changes of play in attack and defence. This would be particularly interesting to interpret England's second-half and extra time pressing in the final to illustrate how they were able to keep the result at 1-1 without attempting to shoot themselves.
 
+Of these, incorporating freeze frame would be the simplest next step with the most direct impact on the research question. It is available through StatsBomb and would allow England's defensive positioning at the moment of each Spain shot to be quantified. This could potentially explain why Spain's 2.14 xG only resulted in one goal. Out of the other additions, a full tracking data would have the most comprehensive impact on improving the analysis, but would require access to the respective data, which may be more difficult to achieve.
+
 ## Conclusion
 
 Returning to the opening question of whether England deserved to win the Women's Euro 2025, the analysed data suggests they did not, at least not on the basis of performance. Spain were dominating throughout the tournament and in the final, and the analysed metrics support that conclusion in their favour. England were able to retain their title by having a high tactical discipline, clinical finishing under pressure as well as penalty shootout success. All that matters a lot in a knockout tournament, where the state of the game can shift from one moment to the other. However, not all of those factors can be fully capture by event data alone.
 
-However, the data does not discriminate England's achievement to win the title. Winning a major tournament depends on various elements and requires both performance and results. England sustained under pressure when it mattered the most. However, it does suggest that the scoreline, and the trophy only tell one part of the story. The dashboard was built to tell the other part.
+None of this diminishes what England achieved. Knockout football rewards resilience as much as dominance. England delivered on both counts when it mattered most by holding Spain scoreless for 96 out of 120 minutes and converting three of their penalties. The data explains the balance of play. It does not explain Chloe Kelly stepping up for England in the 120th minute to seal them their victory in the deciding penalty kick.
 
 {{< pagebreak >}}
 
@@ -341,5 +359,3 @@ Zotero (2026) *Zotero* (MacOS Version). Available at: <https://www.zotero.org/>
 -   Assisting in the organisation of references and citations
 
 {{< pagebreak >}}
-
-

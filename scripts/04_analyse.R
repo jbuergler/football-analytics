@@ -270,30 +270,6 @@ tbl_cumulative_xg <- tbl_match_xg %>%
     cumulative_xg, cumulative_goals
     )
 
-## tbl_team_journey ----
-# One row per team per stage type
-
-tbl_team_journey <- tbl_stage_breakdown %>%
-  group_by(team, stage_type) %>%
-  summarise(
-    matches = n(),
-    wins = sum(match_result == "win"),
-    draws = sum(match_result == "draw"),
-    losses = sum(match_result == "loss"),
-    dominant_wins = sum(won_dominant),
-    fortunate_wins = sum(won_fortunate),
-    matches_xg_pos = sum(xg_diff > 0),
-    avg_xg_diff = mean(xg_diff),
-    avg_xg = mean(xg_total),
-    avg_goals_minus_xg = mean(goals_minus_xg),
-    .groups = "drop"
-  ) %>%
-  select(
-    team, stage_type, matches, wins, draws, losses,
-    dominant_wins, fortunate_wins, matches_xg_pos,
-    avg_xg_diff, avg_xg, avg_goals_minus_xg
-  )
-
 ## Save Part 2 Tables ----
 saveRDS(tbl_stage_breakdown, "data/cleaned/tbl_stage_breakdown.rds")
 saveRDS(tbl_cumulative_xg, "data/cleaned/tbl_cumulative_xg.rds")
