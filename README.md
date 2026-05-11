@@ -21,7 +21,7 @@ StatsBomb open event data pulled from the `StatsBombR` package. Competition ID 5
 -   `scripts/` - data pipeline (00_setup.R through 05_visualise.R)
 -   `app/` - the Shiny app (app.R and all .rds data files)
 -   `docs/` - the Shinylive build served by GitHub Pages
--   `data/` - raw and cleaned data
+-   `data/` - raw and cleaned data and figures
 
 ## How to Reproduce
 
