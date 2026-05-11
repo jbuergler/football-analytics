@@ -208,7 +208,7 @@ To compare England's and Spain's routes to the final and how they performed one 
 readRDS("data/figures/fig_cumulative_xg.rds")
 ```
 
-@fig-match-eng and @fig-match-esp further confirm the cumulative xG trend. They show the xG breakdown for each of England's and Spain's games compared with their opponents. As already seen in @fig-cumulative-xg, England's xG was largely shaped by their massive win over Wales, where they achieved their highest single-match xG of the tournament (5.71). If that outlier was removed, England's attack looked a lot more modest. Spain, however, confirms the previous trend of having a more consistent xG pattern. They rarely generated less than 2 xG per game, no matter who they played.
+@fig-match-eng and @fig-match-esp further confirm the cumulative xG trend. They show the xG breakdown for each of England's and Spain's games compared with their opponents. As already seen in @fig-cumulative-xg, England's xG was largely shaped by their massive win over Wales, where they achieved their highest single-match xG of the tournament (5.71). If that outlier was removed, England's attack looked a lot more modest. Spain, however, confirm the previous trend of having a more consistent xG pattern. They rarely generated less than 2 xG per game, no matter who they played.
 
 ```{r}
 #| label: fig-match-eng
@@ -287,7 +287,7 @@ readRDS("data/figures/fig_player_passmap.rds")
 
 As shown in @tbl-verdict, Spain led England on all seven performance metrics across the tournament. Spain averaged more xG per match (2.65 vs 2.45) and conceded less as well (0.67 vs 1.25 xG per match). They also dominated in terms of pass completion (87.2% vs 79.4%). This number alone does not indicate better possession. But Spain showed their attacking threat through other metrics. Particularly, for the final third carries, Spain had a 6.6 percentage point lead compared to England. Consequently, by attacking more, this also led to fewer shots faced per match (8.7 vs 11.8).
 
-One finding that complicates this picture is England's pressing in the final. Spain had a much higher high-press rate across the tournament (67.8% vs 51.5%). But England applied 393 pressures to Spain's 253 in the final. This suggests that England's tactical approach in the final was more offensive than the xG gap would indicate. Their defensive resilience was a big part of that. But the data showed Spain was the better side in all seven of the tournament-wide metrics.
+One finding that complicates this picture is England's pressing in the final. Spain had a much higher high-press rate across the tournament (67.8% vs 51.5%). But England applied 393 pressures to Spain's 253 in the final. This suggests that England's tactical approach in the final was more offensive than the xG gap would indicate. Their defensive resilience was a big part of that. The data, however, showed Spain was the better side in all seven of the tournament-wide metrics.
 
 ```{r}
 #| label: tbl-verdict
@@ -310,7 +310,7 @@ On every metric that mattered, Spain was the better team throughout the tourname
 
 But England managed to draw after extra time and then beat Spain on penalties 3-1, which makes the result analytically interesting. In the final, England made 393 pressures, Spain 253. This indicates that England played a deliberately defensive game, absorbing Spain's attacking pressure, limiting their space and staying compact rather than controlling the ball and attacking. Their pass distribution further confirms this approach, as it was mainly concentrated in the defensive and middle thirds. The result shows what is regularly observed in football, where match outcomes are heavily influenced by randomness and may not always reflect underlying team performance [@brechotFlepp2020].
 
-The findings are relevant in different ways depending on the audience. For an analyst, the dashboard can be used as a framework to evaluate whether tournament results reflect underlying performance. A coach can use the pressing and ball progression data as a basis for the tactical analysis to prepare for upcoming games. As England and Spain are strong teams, they are likely to face each other again in high-stakes games. A coach could use the pressing and ball progression data to tactically prepare for a future match between the two sides. A journalist would likely be interested in the xG timeline of the final to create a storyline around the game. Spain dominated for 120 minutes while England endured their pressure. But, in the end, penalties decided a match that the statistics alone cannot explain.
+The findings are relevant in different ways depending on the audience. For an analyst, the dashboard can be used as a framework to evaluate whether tournament results reflect underlying performance. A coach can use the pressing and ball progression data to tactically prepare for a future match between the two sides. As England and Spain are strong teams, they are likely to face each other again in high-stakes games. A journalist would likely be interested in the xG timeline of the final to create a storyline around the game. Spain dominated for 120 minutes while England endured their pressure. But, in the end, penalties decided a match that the statistics alone cannot explain.
 
 ## Limitations
 
@@ -330,7 +330,7 @@ Of these, incorporating freeze frame would be the simplest next step with the mo
 
 Going back to the initial question of whether England deserved to win the Women's Euro 2025, based on performance, the data suggests otherwise. Spain was the stronger side throughout the tournament and in the final, and the metrics analysed in this project support that. England retained their title through tactical discipline, clinical finishing, and penalty shootout success. All that matters a lot in a knockout tournament, where the state of the game can shift from one moment to the other. However, not all of those factors can be fully captured by event data alone.
 
-None of this diminishes what England achieved. In knockout football, resilience counts as as much as control. England showed both when it mattered most. They conceded just once in 120 minutes and converted three of their penalties when it counted. The data helps to explain how the game played out. It does not explain Chloe Kelly stepping up for England in the 120th minute to convert the decisive penalty to secure their win.
+None of this diminishes what England achieved. In knockout football, resilience counts for as much as control. England showed both when it mattered most. They conceded just once in 120 minutes and converted three of their penalties when it counted. The data helps to explain how the game played out. It does not explain Chloe Kelly stepping up for England in the 120th minute to convert the decisive penalty to secure their win.
 
 {{< pagebreak >}}
 

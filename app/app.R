@@ -19,6 +19,7 @@ tbl_final_timeline <- readRDS("tbl_final_timeline.rds")
 tbl_final_player_actions <- readRDS("tbl_final_player_actions.rds")
 tbl_final_pass_thirds <- readRDS("tbl_final_pass_thirds.rds")
 tbl_verdict_summary <- readRDS("tbl_verdict_summary.rds")
+fig_xg_ranking_app <- readRDS("fig_xg_ranking_app.rds")
 # tbl_final_pressures not loaded — value (393 vs 253) hardcoded in value box
 # source: tbl_final_pressures.rds computed in 04_analyse.R
 # tbl_ball_progression used in 04_analyse.R to build tbl_verdict_summary
@@ -570,47 +571,7 @@ server <- function(input, output, session) {
   
   ## xG Dominance ----
   output$xg_ranking <- renderPlot({
-    tbl_team_xg_summary %>%
-      arrange(avg_xg_diff) %>%
-      mutate(
-        team_highlight = case_when(
-          team == "Spain"   ~ "Spain",
-          team == "England" ~ "England",
-          TRUE              ~ "Other"
-        ),
-        team = factor(team, levels = unique(team)),
-        label = if_else(
-          team %in% c("Spain", "England"),
-          sprintf("%+.2f", avg_xg_diff),
-          NA_character_
-        )
-      ) %>%
-      ggplot(aes(x = avg_xg_diff, y = team, fill = team_highlight)) +
-      geom_col(colour = NA) +
-      geom_vline(xintercept =  0, colour = "black", alpha = 0.5,
-                 linewidth = 0.4, linetype = "dashed") +
-      geom_vline(xintercept =  1, colour = "#4a7c3f", alpha = 0.7,
-                 linewidth = 0.8, linetype = "dotted") +
-      geom_vline(xintercept = -1, colour = "#CE1124", alpha = 0.7,
-                 linewidth = 0.8, linetype = "dotted") +
-      annotate("text", x =  1.05, y = 17, label = "+1", 
-               colour = "#2E7D32", size = 4, fontface = "bold", hjust = -0.2) +
-      annotate("text", x = -1.05, y = 17, label = "-1", 
-               colour = "#CE1124", size = 4, fontface = "bold", hjust =  1.2) +
-      geom_text(
-        aes(label = label,
-            hjust = if_else(avg_xg_diff >= 0, -0.2, 1.2)),
-        size = 4, fontface = "bold", na.rm = TRUE
-      ) +
-      scale_fill_manual(values = euro_colours) +
-      scale_x_continuous(expand = c(0.2, 0.25)) +
-      coord_cartesian(clip = "off") +
-      labs(x = "Avg xG difference per match", y = NULL) +
-      theme_euro() +
-      theme(
-        panel.grid.major.y = element_blank(),
-        legend.position    = "none"
-      )
+    readRDS("fig_xg_ranking_app.rds")
   }, bg = "white")
   
   # TAB 2 OUTPUTS ----

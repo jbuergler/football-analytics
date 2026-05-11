@@ -144,6 +144,52 @@ fig_xg_ranking <- tbl_team_xg_summary %>%
     legend.position = "none"
   )
 
+### fig_xg_ranking for app (no title as handled in dashboard) ----
+fig_xg_ranking_app <- tbl_team_xg_summary %>%
+  arrange(avg_xg_diff) %>%
+  mutate(
+    team_highlight = case_when(
+      team == "Spain"   ~ "Spain",
+      team == "England" ~ "England",
+      TRUE ~ "Other"
+    ),
+    team = factor(team, levels = unique(team)),
+    label = if_else(
+      team %in% c("Spain", "England"),
+      sprintf("%+.2f", avg_xg_diff),
+      NA_character_
+    )
+  ) %>%
+  ggplot(aes(x = avg_xg_diff, y = team, fill = team_highlight)) +
+  geom_col(colour = NA) +
+  geom_vline(xintercept =  0, colour = "black", alpha = 0.5,
+             linewidth = 0.4, linetype = "dashed") +
+  geom_vline(xintercept =  1, colour = "#2E7D32", alpha = 0.7,
+             linewidth = 0.8, linetype = "dotted") +
+  geom_vline(xintercept = -1, colour = "#CE1124", alpha = 0.7,
+             linewidth = 0.8, linetype = "dotted") +
+  annotate("text", x =  1, y = 0.4, label = "+1",
+           colour = "#2E7D32", size = 4, fontface = "bold", hjust = -0.2) +
+  annotate("text", x = -1, y = 0.4, label = "-1",
+           colour = "#CE1124", size = 4, fontface = "bold", hjust =  1.2) +
+  geom_text(
+    aes(label = label,
+        hjust = if_else(avg_xg_diff >= 0, -0.2, 1.2)),
+    size = 4, fontface = "bold", na.rm = TRUE
+  ) +
+  scale_fill_manual(values = euro_colours) +
+  scale_x_continuous(expand = c(0.2, 0.25)) +
+  coord_cartesian(clip = "off") +
+  labs(
+    x = "Avg xG Difference per Match", 
+    y = NULL
+  ) +
+  theme_euro() +
+  theme(
+    panel.grid.major.y = element_blank(),
+    legend.position = "none"
+  )
+
 # ---- TAB 2: THE JOURNEY ----
 
 ## fig_cumulative_xg ----
@@ -613,8 +659,9 @@ tbl_verdict_gt <- tbl_verdict_summary %>%
 # ---- SAVE FIGURES FOR REPORT ----
 dir.create("data/figures", recursive = TRUE, showWarnings = FALSE)
 
-saveRDS(fig_xg_ranking, "data/figures/fig_xg_ranking.rds")
 saveRDS(fig_xg_scatter, "data/figures/fig_xg_scatter.rds")
+saveRDS(fig_xg_ranking, "data/figures/fig_xg_ranking.rds")
+saveRDS(fig_xg_ranking, "data/figures/fig_xg_ranking_app.rds")
 saveRDS(fig_cumulative_xg, "data/figures/fig_cumulative_xg.rds")
 saveRDS(fig_match_xg_bars_eng, "data/figures/fig_match_xg_bars_eng.rds")
 saveRDS(fig_match_xg_bars_esp, "data/figures/fig_match_xg_bars_esp.rds")

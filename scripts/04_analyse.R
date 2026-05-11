@@ -466,6 +466,8 @@ saveRDS(tbl_final_pressures, "data/cleaned/tbl_final_pressures.rds")
 rds_files <- list.files("data/cleaned", pattern = "\\.rds$", full.names = TRUE)
 file.copy(rds_files, "app/", overwrite = TRUE)
 
+# add fig_xg_ranking as rds in app due to issues with shiny
+file.copy("data/figures/fig_xg_ranking_app.rds", "app/", overwrite = TRUE)
 
 # Confirm all files are in app/
 list.files("app", pattern = "\\.rds$")
