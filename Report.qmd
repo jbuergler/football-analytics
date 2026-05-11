@@ -20,6 +20,7 @@ format:
 knitr:
   opts_chunk:
     dev: svglite
+    fig.align: "center"
   
 execute:
   echo: false
@@ -29,7 +30,9 @@ execute:
 bibliography: references.bib
 csl: harvard-cite-them-right.csl
 ---
-
+```{=typst}
+#show raw: it => text(fill: rgb("#1F497D"), it)
+```
 **Live dashboard:** <https://jbuergler.github.io/football-analytics/>
 
 **Repository:** <https://github.com/jbuergler/football-analytics>
@@ -109,8 +112,8 @@ data_summary <- data.frame(
     "Matches",
     "Shots",
     "Granularity",
-    "Period 5 excluded",
-    "Own goals excluded"
+    "Period 5 excl.",
+    "Own goals excl."
   ),
   Detail = c(
     "StatsBomb open event data",
@@ -175,7 +178,7 @@ Apart from two exceptions, all plotly charts include hover tooltips providing ex
 
 ```{r}
 #| label: fig-xg-ranking
-#| fig-cap: "xG Dominance Tournament Ranking — all 16 teams ranked by average xG difference per match. Spain led the tournament (+1.98), ahead of England (+1.20)."
+#| fig-cap: "All 16 Teams ranked by average xG Difference per Match. Spain led the Tournament (+1.98), ahead of England (+1.20)."
 #| fig-width: 6
 #| fig-height: 3
 
@@ -186,7 +189,7 @@ In terms of average xG difference, @fig-xg-scatter illustrates how Spain outperf
 
 ```{r}
 #| label: fig-xg-scatter
-#| fig-cap: "Goals scored vs total xG for all 16 teams. Teams above the dashed line scored more than expected, and teams below the dashed line scored less than expected. Both England and Spain outperformed their xG, with Spain generating greater overall chance quality."
+#| fig-cap: "Goals scored vs total xG for all 16 Teams. Teams above the dashed line scored more than expected, and teams below the dashed line scored less than expected. Both England and Spain outperformed their xG, with Spain generating greater overall chance quality."
 #| fig-width: 6
 #| fig-height: 4
 
@@ -212,7 +215,7 @@ readRDS("data/figures/fig_cumulative_xg.rds")
 
 ```{r}
 #| label: fig-match-eng
-#| fig-cap: "Match-by-match xG for England across the tournament. Red bars show England xG, grey bars show opponent xG. England's group stage total is heavily influenced by the 6-1 win against Wales."
+#| fig-cap: "Match-by-match xG for England across the Tournament. Red bars show England xG, grey bars show opponent xG. England's group stage total is heavily influenced by the 6-1 win against Wales."
 #| fig-width: 6
 #| fig-height: 3
 readRDS("data/figures/fig_match_xg_bars_eng.rds")
@@ -220,7 +223,7 @@ readRDS("data/figures/fig_match_xg_bars_eng.rds")
 
 ```{r}
 #| label: fig-match-esp  
-#| fig-cap: "Match-by-match xG for Spain across the tournament. Yellow bars show Spain xG, grey bars show opponent xG. Spain maintained consistent attacking output throughout."
+#| fig-cap: "Match-by-match xG for Spain across the Tournament. Yellow bars show Spain xG, grey bars show opponent xG. Spain maintained consistent attacking output throughout."
 #| fig-width: 6
 #| fig-height: 3
 readRDS("data/figures/fig_match_xg_bars_esp.rds")
@@ -230,7 +233,7 @@ readRDS("data/figures/fig_match_xg_bars_esp.rds")
 
 ```{r}
 #| label: fig-pressing
-#| fig-cap: "Pressing intensity by stage. High press rate and counter-press rate for England and Spain across group stage and knockout rounds. Spain pressed higher at every stage."
+#| fig-cap: "Pressing Intensity by stage. High press rate and counter-press rate for England and Spain across group stage and knockout rounds. Spain pressed higher at every stage."
 #| fig-width: 6
 #| fig-height: 3
 

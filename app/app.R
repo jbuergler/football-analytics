@@ -339,7 +339,7 @@ ui <- page_navbar(
       ),
       card(
         full_screen = TRUE,
-        card_header("Pressing intensity - Group Stage vs Knockout"),
+        card_header("Pressing Intensity Group Stage vs Knockout"),
         p("Spain pressed consistently higher and counter-pressed more throughout the tournament.",
           style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
         plotlyOutput("press_shift", height = "320px")
@@ -379,7 +379,7 @@ ui <- page_navbar(
         col_widths = c(6, 6),
         card(
           full_screen = TRUE,
-          card_header("Shot Map - Final"),
+          card_header("Shot Map England vs Spain Final"),
           p("Circle size = xG value. England attack shown on the left 
           and Spain attack shown on the right.
           Spain registered 23 shots to England's 8, 
@@ -390,7 +390,7 @@ ui <- page_navbar(
         ),
         card(
           full_screen = TRUE,
-          card_header("Cumulative xG Timeline - Final"),
+          card_header("Cumulative xG Timeline England vs Spain Final"),
           p("Spain dominated xG from the beginning. England's last shot of the game was in the 68th minute.",
             style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
           plotlyOutput("xg_timeline", height = "400px")
@@ -430,7 +430,7 @@ ui <- page_navbar(
         col_widths = c(6, 6),
         card(
           full_screen = TRUE,
-          card_header("Pass Distribution by Pitch Third - Final"),
+          card_header("Final Pass Distribution by Pitch Third"),
           p("Spain played more passes into the final third, 
             showing attempts to create chances in the attacking end.
             England were more dominant in the defensive third, reflecting
@@ -439,7 +439,7 @@ ui <- page_navbar(
           plotlyOutput("pass_thirds", height = "380px")
         ),
         navset_card_tab(
-          title = "Top Player actions - Final Third",
+          title = "Top Player Final Third Actions",
           full_screen = TRUE,
           nav_panel(
             "Bonmatí (Spain)",
@@ -954,8 +954,8 @@ server <- function(input, output, session) {
       scale_colour_manual(
         values = c("Pass" = "#F1BF00", "Carry" = "grey69"),
         name   = NULL,
-        labels = c("Pass" = "Final-third pass",
-                   "Carry" = "Final-third carry")
+        labels = c("Pass" = "Final-third Pass",
+                   "Carry" = "Final-third Carry")
       ) +
       coord_cartesian(xlim = c(60, 121), ylim = c(0, 80)) +
       theme_pitch() +

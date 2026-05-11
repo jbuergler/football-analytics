@@ -1,7 +1,7 @@
 # ---- scripts/05_visualisation.R ----
 # Purpose: Build all static visualisation for the Women's Euro 2025 dashboard.
 # Builds the foundation for the interactive plots for the app later on (with plotly, shiny)
-# Static first - each chart confirmed here before going into Shiny
+# Static first-each chart confirmed here before going into Shiny
 # fig_ prefix for all saved plot objects
 
 # LOAD TABLES ----
@@ -32,7 +32,7 @@ euro_colours <- c(
 )
 
 # GGPLOT THEME ----
-# Applied to every chart - call theme_euro() instead of theme_minimal() directly
+# Applied to every chart-call theme_euro() instead of theme_minimal() directly
 theme_euro <- function() {
   theme_minimal(base_size = 12) +
     theme(
@@ -86,10 +86,10 @@ fig_xg_scatter <- tbl_team_xg_summary %>%
           # label = "below line = scored less than xG predicted",
            #size = 2.8, colour = "grey69", hjust = 0) +
   labs(
-    title = "Goals scored vs expected goals - Women's Euro 2025",
+    title = "Goals vs expected Goals",
     # subtitle = "Teams above the dashed line scored more than their chance quality predicted",
-    x = "Total expected goals (xG)",
-    y = "Total goals scored",
+    x = "Total expected Goals (xG)",
+    y = "Total Goals scored",
   ) +
   theme_euro()
 
@@ -298,7 +298,7 @@ fig_match_xg_bars_eng <- tbl_stage_breakdown %>%
   ) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
   labs(
-    title = "Match-by-match xG - England",
+    title = "Match-by-match xG England",
     #subtitle = "Red = England xG · Grey = Opponent xG · Red Background = Knockout Stage",
     x = NULL,
     y = "Expected Goals (xG)",
@@ -355,7 +355,7 @@ fig_match_xg_bars_esp <- tbl_stage_breakdown %>%
   ) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
   labs(
-    title = "Match-by-match xG - Spain",
+    title = "Match-by-match xG Spain",
     #subtitle = "Yellow = Spain xG · Grey = Opponent xG · Yellow background = Knockout Stage",
     x = NULL,
     y = "Expected Goals (xG)",
@@ -404,7 +404,7 @@ fig_press_shift <- tbl_press_summary %>%
     expand = expansion(mult = c(0, 0.05))
   ) +
   labs(
-    title = "Pressing Intensity - Group Stage vs Knockout",
+    title = "Pressing Intensity Group Stage vs Knockout",
    # subtitle = "Spain pressed higher and counter-pressed more aggressively than England at every stage",
     x = NULL,
     y = "Rate (%)"
@@ -425,8 +425,8 @@ fig_press_shift <- tbl_press_summary %>%
 fig_shot_map <- tbl_final_shots %>%
   mutate(
     # Flip England so they attack left, Spain stays attacking right
-    plot_x = if_else(team == "England", 120 - location_x, location_x),
-    plot_y = if_else(team == "England", 80  - location_y, location_y),
+    plot_x = if_else(team == "England", 120-location_x, location_x),
+    plot_y = if_else(team == "England", 80 -location_y, location_y),
   ) %>%
   ggplot(aes(x = plot_x, y = plot_y)) +
   annotate_pitch(dimensions = pitch_statsbomb,
@@ -456,7 +456,7 @@ fig_shot_map <- tbl_final_shots %>%
   ) +
   coord_cartesian(xlim = c(0, 120), ylim = c(0, 80)) +
   labs(
-    title = "Shot map - Women's Euro 2025 Final",
+    title = "Shot Map England vs Spain Final",
    # subtitle = "England attack left · Spain attack right · circle size = xG · white ring = goal"
   ) +
   theme_pitch() +
@@ -477,7 +477,7 @@ fig_shot_map <- tbl_final_shots %>%
 # One takeaway: Spain's xG accumulated steadily throughout
 # England's line barely moved after the first half.
 
-# create end-point labels (last row per team) - added for the report
+# create end-point labels (last row per team)-added for the report
 tbl_timeline_labels <- tbl_final_timeline %>%
   group_by(team) %>%
   slice_max(minute, n = 1) %>%
@@ -520,7 +520,7 @@ fig_xg_timeline <- tbl_final_timeline %>%
     expand = expansion(mult = c(0.02, 0.08))
   ) +
   labs(
-    title = "Cumulative xG Timeline - Women's Euro 2025 Final",
+    title = "Cumulative xG Timeline England vs Spain Final",
     x = "Minute",
     y = "Cumulative xG"
   ) +
@@ -547,7 +547,7 @@ fig_final_pass_thirds <- tbl_final_pass_thirds %>%
     labels = function(x) paste0(x, "%")
   ) +
   labs(
-    title = "Pass Distribution by Pitch Third",
+    title = "Final Pass Distribution by Pitch Third",
     x = NULL,
     y = "Share of completed Passes (%)"
   ) +
@@ -555,7 +555,7 @@ fig_final_pass_thirds <- tbl_final_pass_thirds %>%
   theme(legend.position = "top")
 
 ## fig_player_passmap ----
-# Method: StatsBomb Working with R (StatsBomb, 2022), Use Case 4 - plotting passes
+# Method: StatsBomb Working with R (StatsBomb, 2022), Use Case 4-plotting passes
 # takeaway: Bonmatí drove forward across the full width of the pitch 
 # Hemp mainly came through the left hand side
 # Note: 
@@ -579,11 +579,11 @@ fig_player_passmap <- tbl_final_player_actions %>%
   scale_colour_manual(
     values = c("Pass" = "#1F2937", "Carry" = "grey69"),
     name   = NULL,
-    labels = c("Pass" = "Final-third pass", "Carry" = "Final-third carry")
+    labels = c("Pass" = "Final-third Pass", "Carry" = "Final-third Carry")
   ) +
   coord_cartesian(xlim = c(60, 121), ylim = c(0, 80)) +
   labs(
-    title = "Final-third actions - Women's Euro 2025 Final",
+    title = "Top Player Final Third Actions England vs Spain Final",
   ) +
   theme_pitch() +
   theme(
@@ -600,13 +600,13 @@ fig_player_passmap <- tbl_final_player_actions %>%
 
 # ---- TAB 4: WAS IT DESERVED? ----
 ## tbl_verdict_gt ----
-# gt summary table for Tab 4 - rendered via gt_output() in the Shiny app.
+# gt summary table for Tab 4-rendered via gt_output() in the Shiny app.
 # Colour bands highlight which team led each metric
-# Spain leads in all 7 metrics - the table closes the analytical verdict
+# Spain leads in all 7 metrics-the table closes the analytical verdict
 tbl_verdict_gt <- tbl_verdict_summary %>%
   gt(groupname_col = "Dimension") %>%
   tab_header(
-    title = md("**England vs Spain - Key Metrics**"),
+    title = md("**England vs Spain-Key Metrics**"),
     subtitle = "Tournament Averages · Women's Euro 2025"
   ) %>%
   tab_spanner(
@@ -661,7 +661,7 @@ dir.create("data/figures", recursive = TRUE, showWarnings = FALSE)
 
 saveRDS(fig_xg_scatter, "data/figures/fig_xg_scatter.rds")
 saveRDS(fig_xg_ranking, "data/figures/fig_xg_ranking.rds")
-saveRDS(fig_xg_ranking_app, "data/figures/fig_xg_ranking_app.rds")
+saveRDS(fig_xg_ranking_app, "data/figures/fig_xg_ranking_app.rds") # not used in report but saved for app
 saveRDS(fig_cumulative_xg, "data/figures/fig_cumulative_xg.rds")
 saveRDS(fig_match_xg_bars_eng, "data/figures/fig_match_xg_bars_eng.rds")
 saveRDS(fig_match_xg_bars_esp, "data/figures/fig_match_xg_bars_esp.rds")
