@@ -1,7 +1,7 @@
 # ---- scripts/04_analyse.R ----
 
 # Purpose: Build all summary tables for the Women's Euro 2025 dashboard.
-# Sections map directly to dashboard tabs — build one section at a time
+# Sections map directly to dashboard tabs - build one section at a time
 
 # Inputs:  
 # data/cleaned/weuro2025_shots_clean.rds
@@ -76,7 +76,7 @@ tbl_match_xg <- shots_clean %>%
     goals_vs_xg, goals_minus_xg, shots, opp_shots,
   )
 
-# Integrity check — must return zero rows before proceeding
+# Integrity check - must return zero rows before proceeding
 tbl_match_xg %>%
   count(match_id) %>%
   filter(n != 2) # zero rows confirmed
@@ -152,7 +152,7 @@ tbl_press_summary <- events_clean %>%
 
 # Key findings:
 # Spain led on high press rate at every stage (76.6 group, 61.8 knockout vs 56.3 and 48.5 for England)
-# Counter-press gap is smaller but consistent — Spain 32.3 group, England 20.
+# Counter-press gap is smaller but consistent - Spain 32.3 group, England 20.
 
 ## tbl_ball_progression ----
 # Pass and carry metrics showing how each team moved the ball forward
@@ -278,13 +278,13 @@ saveRDS(tbl_cumulative_xg, "data/cleaned/tbl_cumulative_xg.rds")
 # Tab 3A: what happened in the England vs Spain final (shots)?
 
 ## tbl_final_shots ----
-# Shot-level detail for the final match only — used for the shot map
+# Shot-level detail for the final match only - used for the shot map
 final_match_id <- tbl_match_xg %>%
   filter(stage == "Final") %>%
   pull(match_id) %>%
   unique()
 
-# Shot-level table for the final — one row per shot attempt
+# Shot-level table for the final - one row per shot attempt
 tbl_final_shots <- shots_clean %>%
   filter(match_id == final_match_id) %>%
   select(
@@ -300,7 +300,7 @@ tbl_final_shots <- shots_clean %>%
 # England: Russo, min 56, 0.213 xG. Spain: Caldentey, min 24, 0.396 xG
 
 ## tbl_final_timeline ----
-# Cumulative xG by shot, in chronological order — used for the xG timeline chart
+# Cumulative xG by shot, in chronological order - used for the xG timeline chart
 tbl_final_timeline <- tbl_final_shots %>%
   arrange(period, minute) %>%
   group_by(team) %>%
@@ -444,8 +444,8 @@ tbl_verdict_summary <- tibble(
 
 ## tbl_final_pressures ----
 # Pressure counts by team in the final
-# England out-pressed Spain (393 vs 253) — used for Tab 4 value box
-# Surprising given Spain's xG dominance — suggests England's tactical
+# England out-pressed Spain (393 vs 253) - used for Tab 4 value box
+# Surprising given Spain's xG dominance - suggests England's tactical
 # approach was more aggressive than the scoreline implies
 tbl_final_pressures <- events_clean %>%
   filter(

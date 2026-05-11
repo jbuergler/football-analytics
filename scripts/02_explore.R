@@ -12,7 +12,7 @@
 # All column names (143 columns total)
 names(events_raw)
 
-# Missing data summary — most NAs are expected because columns
+# Missing data summary - most NAs are expected because columns
 # only apply to specific event types (e.g. shot columns are NA
 # for pass events and vice versa)
 miss_var_summary(events_raw) %>% print(n=150)
@@ -39,7 +39,7 @@ events_raw %>%
     block = sum(type.name == "Block", na.rm = TRUE), # 1,494
     goalkeeper = sum(type.name == "Goal Keeper", na.rm = TRUE), # 1,184
     shot = sum(type.name == "Shot", na.rm = TRUE), # 912 (includes penalty shootout shots in period 5)
-    # After filtering period <= 4, shots = 875 — used in dashboard
+    # After filtering period <= 4, shots = 875 - used in dashboard
     interception = sum(type.name == "Interception", na.rm = TRUE), # 516
     dispossessed = sum(type.name == "Dispossessed", na.rm = TRUE), # 812
     dribble = sum(type.name == "Dribble", na.rm = TRUE), # 942
@@ -66,13 +66,13 @@ events_raw %>%
 # The amount of carries (22,960) is almost as high as passes (29,108) 
 # carries are far more common than I expected and worth looking at 
 # for the ball progression analysis
-# Complete and incomplete dribbles are almost exactly split (455 vs 487) —
+# Complete and incomplete dribbles are almost exactly split (455 vs 487) -
 # slight edge to defenders across the tournament
 # Total goals including own goals = 106
-# Own goals excluded from shot/xG analysis — 103 used in analytical tables
+# Own goals excluded from shot/xG analysis - 103 used in analytical tables
 # Dashboard value box shows 106 (total goals scored in tournament)
 
-# 11,784 pressure events across 31 matches — roughly 380 per match,
+# 11,784 pressure events across 31 matches - roughly 380 per match,
 # enough for a meaningful pressing analysis per team
 
 # 3. PLAY PATTERN COUNTS ----
@@ -133,7 +133,7 @@ events_raw %>%
   )
 
 # Additional shot flags (all TRUE/NA columns)
-# These are binary flags — either TRUE or NA, no FALSE values
+# These are binary flags - either TRUE or NA, no FALSE values
 # more shot event summary
 events_raw %>%
   summarise(
@@ -191,7 +191,7 @@ events_raw %>%
     bodypart_notouch = sum(pass.body_part.name == "No Touch", na.rm = TRUE) # 15
     )
 
-# 99,037 passes have NA outcome — StatsBomb's convention is that 
+# 99,037 passes have NA outcome - StatsBomb's convention is that 
 # NA = completed, only failed passes get an outcome name recorded.
 # That's important for pass completion calculations later.
 
@@ -227,7 +227,7 @@ events_raw %>%
     incomplete.dribble = sum(dribble.outcome.name == "Incomplete", na.rm = TRUE) # 487
   )
 
-# Complete and incomplete dribbles are almost exactly split (455 vs 487) —
+# Complete and incomplete dribbles are almost exactly split (455 vs 487) -
 # slight edge to defenders across the tournament
 
 # 7. DEFENSIVE EVENTS ----
@@ -283,7 +283,7 @@ events_raw %>%
     foul.won = sum(type.name == "Foul Won", na.rm = TRUE)  # 681
   )
 
-# Roughly balanced — neither team had a notable foul count advantage overall
+# Roughly balanced - neither team had a notable foul count advantage overall
 
 # 8. PENALTY SHOOTOUT CHECK ----
 # StatsBomb records penalty shootouts as period = 5
@@ -303,12 +303,12 @@ events_raw %>%
 # Confirmed: period 5 = shootout. All cleaned tables will use:
 # filter(as.integer(period) <= 4)
 
-# Three matches went to shootouts — one of them is the final
+# Three matches went to shootouts - one of them is the final
 # This means England's penalty win is literally in the data (period 5) and 
 # needs to be stripped out before any xG comparison
 
 # Key decisions for 03_clean.R:
-# - Filter period 5 (penalty shootouts) — affects 3 matches
+# - Filter period 5 (penalty shootouts) - affects 3 matches
 # - NA in pass.outcome.name = completed pass (not missing data)
-# - counterpress column is TRUE or NA, never FALSE — recode before analysis
+# - counterpress column is TRUE or NA, never FALSE - recode before analysis
 # - allclean() needed to extract x/y coordinates and ElapsedTime from nested columns

@@ -35,19 +35,19 @@ weuro_matches <- readRDS("data/raw/weuro2025_matches.rds")
 events_filtered <- events_raw %>%
   filter(as.integer(period) <= 4)
 
-# saved to raw/ rather than cleaned/ — this is a filtered but not yet
+# saved to raw/ rather than cleaned/ - this is a filtered but not yet
 # fully cleaned version, used as an intermediate step only
 saveRDS(events_filtered, "data/raw/events_filtered.rds")
 
-# Quick check — period 5 should now be gone
+# Quick check - period 5 should now be gone
 # unique(events_filtered$period) # yes, only periods 1-4
 
 # 4. CLEAN AND ENGINEER FEATURES ----
 # allclean() unpacks the nested location columns into usable x/y coordinates
-# and adds ElapsedTime — without this, location.x is still a list column
+# and adds ElapsedTime - without this, location.x is still a list column
 # methods from StatsBomb Working with R guide (StatsBomb, 2022).
 # https://blogarchive.statsbomb.com/uploads/2022/08/Working-with-R.pdf
-# get.opposingteam() adds OpposingTeam — avoids manual joins downstream.
+# get.opposingteam() adds OpposingTeam - avoids manual joins downstream.
 # streamline all team names so it only shows the name of the country
 # Pitch third variables engineered from StatsBomb coordinate system (120 x 80)
 events_clean <- allclean(events_filtered) %>%
@@ -96,7 +96,7 @@ events_clean <- allclean(events_filtered) %>%
   )
 
 # 5. BUILD A SHOTS TABLE ----
-# Shot events only — columns needed for xG analysis, shot maps, etc.
+# Shot events only - columns needed for xG analysis, shot maps, etc.
 # Penalty shootout shots already excluded by period filter
 # stage_type values: "Group Stage", "Quarter-finals", "Semi-finals", "Final"
 # The four competition stages are collapsed into a binary group/knockout split
@@ -118,7 +118,7 @@ shots_clean <- events_clean %>%
     follows_dribble = shot.follows_dribble
   ) %>%
   mutate(
-    # NA means flag was not set — replace with FALSE
+    # NA means flag was not set - replace with FALSE
     first_time = replace_na(first_time, FALSE),
     one_on_one = replace_na(one_on_one, FALSE),
     follows_dribble = replace_na(follows_dribble, FALSE),

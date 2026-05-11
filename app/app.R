@@ -1,5 +1,5 @@
 # ---- app/app.R ----
-# Women's Euro 2025 — Did England deserve to win?
+# Women's Euro 2025 - Did England deserve to win?
 
 library(shiny)
 library(bslib)
@@ -20,10 +20,10 @@ tbl_final_player_actions <- readRDS("tbl_final_player_actions.rds")
 tbl_final_pass_thirds <- readRDS("tbl_final_pass_thirds.rds")
 tbl_verdict_summary <- readRDS("tbl_verdict_summary.rds")
 fig_xg_ranking_app <- readRDS("fig_xg_ranking_app.rds")
-# tbl_final_pressures not loaded — value (393 vs 253) hardcoded in value box
+# tbl_final_pressures not loaded - value (393 vs 253) hardcoded in value box
 # source: tbl_final_pressures.rds computed in 04_analyse.R
 # tbl_ball_progression used in 04_analyse.R to build tbl_verdict_summary
-# not loaded directly in app — values are already baked into tbl_verdict_summary
+# not loaded directly in app - values are already baked into tbl_verdict_summary
 
 # COLOURS ----
 euro_colours <- c(
@@ -122,7 +122,7 @@ ui <- page_navbar(
               height = "30px", width = "45px",
               style = "margin-top:2px;"
             ),
-            tags$span("England — The Lionesses",
+            tags$span("England - The Lionesses",
                       style = "font-weight:bold; font-size:1rem;")
           )
         ),
@@ -156,7 +156,7 @@ ui <- page_navbar(
               height = "30px", width = "45px",
               style = "margin-top:2px;"
             ),
-            tags$span("Spain — La Roja",
+            tags$span("Spain - La Roja",
                       style = "font-weight:bold; font-size:1rem;")
           )
         ),
@@ -201,10 +201,10 @@ ui <- page_navbar(
         ),
         tags$hr(),
         tags$p(
-          "This Dashboard compares England's Journey to and at the Final against Spain.
-          It analyses their Journey from four analytical angles:
+          "This Dashboard compares England's journey to and at the Final against Spain.
+          It analyses their journey from four analytical angles:
           Tournament Overview ➜ 
-          England and Spain's Journeys to the Final ➜
+          England and Spain's journeys to the Final ➜
           The Final itself ➜ 
           Analytical Decision: Did England deserve to win?",
           style = "font-size: 0.78rem; color: #6B7280;"
@@ -217,7 +217,7 @@ ui <- page_navbar(
         tags$hr(),
         tags$p(
           "Based on StatsBomb open event data of
-          31 matches · excluding Penalty Shootouts",
+          31 matches · excluding Penalty Shootouts and Own Goals",
           style = "font-size: 0.78rem; color: #6B7280;"
         )
       ),
@@ -297,7 +297,7 @@ ui <- page_navbar(
         tags$hr(),
         tags$p(
           "Based on StatsBomb open event data of
-        31 matches · excluding Penalty Shootouts",
+        31 matches · excluding Penalty Shootouts and Own Goals",
           style = "font-size: 0.78rem; color: #6B7280;"
         )
       ),
@@ -339,7 +339,7 @@ ui <- page_navbar(
       ),
       card(
         full_screen = TRUE,
-        card_header("Pressing intensity — Group Stage vs Knockout"),
+        card_header("Pressing intensity - Group Stage vs Knockout"),
         p("Spain pressed consistently higher and counter-pressed more throughout the tournament.",
           style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
         plotlyOutput("press_shift", height = "320px")
@@ -350,7 +350,7 @@ ui <- page_navbar(
   
   # TAB 3A: The Final - Shots ----
   nav_panel(
-    "The Final — Shots",
+    "The Final - Shots",
     layout_sidebar(
       sidebar = sidebar(
         width = 210,
@@ -361,7 +361,7 @@ ui <- page_navbar(
           style = "margin-bottom: 0.4rem;"
         ),
         tags$p(
-          "The final at St. Jakob-Park ended 1–1 after extra time, with England 
+          "The Final at St. Jakob-Park ended 1–1 after extra time, with England 
           winning 3–1 on penalties. This tab shows where shots were taken and 
           their respective xG values, and how expected goals accumulated across 
           the 120 minutes. 
@@ -371,7 +371,7 @@ ui <- page_navbar(
         ),
         tags$hr(),
         tags$p(
-          "Based on StatsBomb open event data · excluding Penalty Shootouts",
+          "Based on StatsBomb open event data of 31 matches · excluding Penalty Shootouts and Own Goals",
           style = "font-size: 0.78rem; color: #6B7280;"
         )
       ),
@@ -401,7 +401,7 @@ ui <- page_navbar(
   
   # TAB 3B: The Final - Possession ----
   nav_panel(
-    "The Final — Possession",
+    "The Final - Possession",
     layout_sidebar(
       sidebar = sidebar(
         width = 210,
@@ -422,7 +422,7 @@ ui <- page_navbar(
         ),
         tags$hr(),
         tags$p(
-          "Based on StatsBomb open event data · excluding Penalty Shootouts",
+          "Based on StatsBomb open event data of 31 matches · excluding Penalty Shootouts",
           style = "font-size: 0.78rem; color: #6B7280;"
         )
       ),
@@ -439,7 +439,7 @@ ui <- page_navbar(
           plotlyOutput("pass_thirds", height = "380px")
         ),
         navset_card_tab(
-          title = "Top Player actions — Final Third",
+          title = "Top Player actions - Final Third",
           full_screen = TRUE,
           nav_panel(
             "Bonmatí (Spain)",
@@ -466,7 +466,7 @@ ui <- page_navbar(
   nav_panel(
     "Was It Deserved?",
     
-    # Row 1 — headline value boxes
+    # Row 1 - headline value boxes
     layout_columns(
       col_widths = c(4, 4, 4),
       value_box(
@@ -489,7 +489,7 @@ ui <- page_navbar(
       )
     ),
     
-    # Row 2 — verdict text left, metric table right
+    # Row 2 - verdict text left, metric table right
     layout_columns(
       col_widths = c(4, 8),
       
@@ -632,7 +632,7 @@ server <- function(input, output, session) {
       layout(showlegend = FALSE)
   })
   
-  ## Match bars — England ----
+  ## Match bars - England ----
   output$match_bars_eng <- renderPlotly({
     eng_data <- tbl_stage_breakdown %>%
       filter(team == "England") %>%
@@ -684,7 +684,7 @@ server <- function(input, output, session) {
     )
   })
   
-  ## Match bars — Spain ----
+  ## Match bars - Spain ----
   output$match_bars_esp <- renderPlotly({
     esp_data <- tbl_stage_breakdown %>%
       filter(team == "Spain") %>%
@@ -937,7 +937,7 @@ server <- function(input, output, session) {
       )
   })
  
-  ## Player passmap — Bonmatí ----
+  ## Player passmap - Bonmatí ----
   output$passmap_bonmati <- renderPlot({
     tbl_final_player_actions %>%
       filter(player_label == "Bonmatí (Spain)") %>%
@@ -967,7 +967,7 @@ server <- function(input, output, session) {
       )
   }, bg = "white")
   
-  ## Player passmap — Hemp ----
+  ## Player passmap - Hemp ----
   output$passmap_hemp <- renderPlot({
     tbl_final_player_actions %>%
       filter(player_label == "Hemp (England)") %>%
@@ -998,12 +998,12 @@ server <- function(input, output, session) {
   }, bg = "white")
 
   # TAB 4 OUTPUTS ----
-  ## Verdict table — static ----
+  ## Verdict table - static ----
   output$verdict_table <- render_gt({
     tbl_verdict_summary %>%
       gt(groupname_col = "Dimension") %>%
       tab_header(
-        title = md("**England vs Spain — Key Metrics**"),
+        title = md("**England vs Spain - Key Metrics**"),
         subtitle = "Tournament averages · Women's Euro 2025"
       ) %>%
       tab_spanner(
