@@ -123,7 +123,7 @@ data_summary <- data.frame(
     "875",
     "Event level (one row per action), a total of 105,525 events",
     "Yes (penalty shootouts)",
-    "Yes (from xG analysis)"
+    "Yes (from xG and shot analysis)"
   )
 )
 

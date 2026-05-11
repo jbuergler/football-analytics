@@ -405,8 +405,8 @@ saveRDS(tbl_final_pass_thirds, "data/cleaned/tbl_final_pass_thirds.rds")
 # used for tbl_verdict_gt in 05_visualise.R and static table in App Tab 4
 tbl_verdict_summary <- tibble(
   Dimension = c(
-    "Chance quality", "Defensive Solidity",
-    "Game control", "Game control",
+    "Chance Quality", "Defensive Solidity",
+    "Game Control", "Game Control",
     "Attacking Threat", "Attacking Threat",
     "Defensive Solidity"
   ),
@@ -463,12 +463,22 @@ saveRDS(tbl_verdict_summary, "data/cleaned/tbl_verdict_summary.rds")
 saveRDS(tbl_final_pressures, "data/cleaned/tbl_final_pressures.rds")
 
 # Copy all app data files to app/ folder
-rds_files <- list.files("data/cleaned", pattern = "\\.rds$", full.names = TRUE)
-file.copy(rds_files, "app/", overwrite = TRUE)
+app_files <- c(
+  "data/cleaned/tbl_team_xg_summary.rds",
+  "data/cleaned/tbl_press_summary.rds",
+  "data/cleaned/tbl_cumulative_xg.rds",
+  "data/cleaned/tbl_stage_breakdown.rds",
+  "data/cleaned/tbl_final_shots.rds",
+  "data/cleaned/tbl_final_timeline.rds",
+  "data/cleaned/tbl_final_player_actions.rds",
+  "data/cleaned/tbl_final_pass_thirds.rds",
+  "data/cleaned/tbl_verdict_summary.rds"
+)
+
+file.copy(app_files, "app/", overwrite = TRUE)
 
 # add fig_xg_ranking as rds in app due to issues with shiny
 file.copy("data/figures/fig_xg_ranking_app.rds", "app/", overwrite = TRUE)
 
 # Confirm all files are in app/
 list.files("app", pattern = "\\.rds$")
-

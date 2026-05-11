@@ -134,7 +134,7 @@ ui <- page_navbar(
                style = "margin-bottom:4px;"),
         tags$ul(
           tags$li(tags$strong("Hannah Hampton (GK):"),
-                  " Named tournament best goalkeeper after stepping up following Mary Earps' retirement."),
+                  " Named best goalkeeper of the tournament after stepping up following Mary Earps' retirement."),
           tags$li(tags$strong("Lucy Bronze (DF):"),
                   " Named in the UEFA Team of the Tournament, a key presence in England's backline."),
           tags$li(tags$strong("Leah Williamson (DF):"),
@@ -391,7 +391,7 @@ ui <- page_navbar(
         card(
           full_screen = TRUE,
           card_header("Cumulative xG Timeline England vs Spain Final"),
-          p("Spain dominated xG from the beginning. England's last shot of the game was in the 68th minute.",
+          p("Green circle = Goal. Spain dominated xG from the beginning. England's last shot of the game was in the 68th minute.",
             style = "font-size:0.85rem; color:#555; padding: 4px 12px 0 12px;"),
           plotlyOutput("xg_timeline", height = "400px")
         )
@@ -984,8 +984,8 @@ server <- function(input, output, session) {
       scale_colour_manual(
         values = c("Pass" = "#CE1124", "Carry" = "grey69"),
         name   = NULL,
-        labels = c("Pass" = "Final-third pass",
-                   "Carry" = "Final-third carry")
+        labels = c("Pass" = "Final-third Pass",
+                   "Carry" = "Final-third Carry")
       ) +
       coord_cartesian(xlim = c(60, 121), ylim = c(0, 80)) +
       theme_pitch() +
@@ -1003,7 +1003,7 @@ server <- function(input, output, session) {
     tbl_verdict_summary %>%
       gt(groupname_col = "Dimension") %>%
       tab_header(
-        title = md("**England vs Spain - Key Metrics**"),
+        title = md("**England vs Spain-Key Metrics**"),
         subtitle = "Tournament averages · Women's Euro 2025"
       ) %>%
       tab_spanner(
