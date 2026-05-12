@@ -194,7 +194,7 @@ In terms of average xG difference, @fig-xg-scatter illustrates how Spain outperf
 
 ```{r}
 #| label: fig-xg-scatter
-#| fig-cap: "Goals scored vs total xG for all 16 Teams. Teams above the dashed line scored more than expected, and teams below the dashed line scored less than expected. Both England and Spain outperformed their xG, with Spain generating greater overall chance quality."
+#| fig-cap: "Goals scored vs total xG for all 16 Teams. Teams above the dashed line scored more than expected, and teams below the dashed line scored less than expected. Both England and Spain outperformed their xG, with Spain generating greater overall chance quality. Exact values per team are available via the interactive tooltips in the dashboard"
 #| fig-width: 6
 #| fig-height: 3.5
 
@@ -209,7 +209,7 @@ To compare England's and Spain's routes to the final and how they performed one 
 
 ```{r}
 #| label: fig-cumulative-xg
-#| fig-cap: "Cumulative xG across the tournament for England and Spain. Spain built xG at a consistently higher rate, pulling clear from Match 4 onwards. Grey lines show all other teams."
+#| fig-cap: "Cumulative xG across the tournament for England and Spain. Spain built xG at a consistently higher rate, pulling clear from Match 4 onwards. Grey lines show all other teams. Exact xG values per match point are available via the interactive tooltips in the dashboard"
 #| fig-width: 6
 #| fig-height: 3
 
@@ -234,7 +234,7 @@ readRDS("data/figures/fig_match_xg_bars_eng.rds")
 readRDS("data/figures/fig_match_xg_bars_esp.rds")
 ```
 
-@fig-pressing shows the pressing intensity across high pressing and counter pressing. Evaluating both these metrics, Spain was ahead of England in the group stages and knockouts. They achieved their highest rates in the group stages with 77% (high-press rate) and 32% (counter-press rate). Spain's numbers suggest a team that set up to win back the ball high up the pitch and keep opponents in their own half. This style fits with their xG advantage across the tournament. The data, however, shows that Spain, in particular, reduced their pressing intensity in the knockouts, compared to the group stages. This is not surprising, considering the margins to win in the knockouts are usually higher, and a pressing done wrong could lead to a fatal counterattack. Surprisingly, England's counterpressing only marginally reduced in the later stages of the tournament (-2.50%). This shows that there was a smaller tactical change compared to Spain.
+@fig-pressing shows the pressing intensity across high pressing and counter pressing. Evaluating both these metrics, Spain was ahead of England in the group stages and knockouts. They achieved their highest rates in the group stages with 77% (high-press rate) and 32% (counter-press rate). Spain's numbers suggest a team that set up to win back the ball high up the pitch and keep opponents in their own half. This style fits with their xG advantage across the tournament. The data, however, shows that Spain, in particular, reduced their pressing intensity in the knockouts, compared to the group stages. This is not surprising, considering the margins to win in the knockouts are usually higher, and a pressing done wrong could lead to a fatal counterattack. Surprisingly, England's counterpressing only marginally reduced in the later stages of the tournament (- 3 percentage points). This shows that there was a smaller tactical change compared to Spain.
 
 ```{r}
 #| label: fig-pressing
@@ -247,11 +247,11 @@ readRDS("data/figures/fig_press_shift.rds")
 
 ## The Final
 
-Looking at the attacking output in the final, Spain clearly dominated England on both analysed metrics. @fig-shot-map shows Spain had 23 shots compared to England's 8, a volume that shows their attacking dominance. The location of Spain's attempts was also more centrally located around the penalty area, compared to England's more dispersed shot ranges. Both goals in the match were headers. Spain's Caldentey headed in from close range in the 24th minute (0.396 xG), while England's Russo equalised with a header in the 56th minute (0.213 xG).
+Looking at the attacking output in the final, Spain clearly dominated England on both analysed metrics. @fig-shot-map shows where both team's shot were located at. Spain had a total of 23 shots compared to England's 8, a volume that shows their attacking dominance. The location of Spain's attempts was also more centrally located around the penalty area, compared to England's more dispersed shot ranges. Both goals in the match were headers. Spain's Caldentey headed in from close range in the 24th minute (0.396 xG), while England's Russo equalised with a header in the 56th minute (0.213 xG).
 
 ```{r}
 #| label: fig-shot-map
-#| fig-cap: "Shot map for the Women's Euro 2025 Final. England attack from the left, Spain attack from the right. Circle size represents xG value. The white ring indicates a goal. Spain registered 23 shots to England's 8."
+#| fig-cap: "Shot map for the Women's Euro 2025 Final. England attack from the left, Spain attack from the right. Circle size represents xG value. The white ring indicates a goal. Spain registered 23 shots to England's 8. Exact xG values and shot outcomes for each attempt are available via the interactive tooltips in the dashboard"
 #| fig-width: 6
 #| fig-height: 3
 
@@ -332,7 +332,7 @@ Third, the player-level analysis only focused on Bonmatí and Hemp, who were the
 
 ## Future Outlook
 
-There are several extensions to this analysis to further strengthen it. For example, the StatsBomb freeze frame data could be included. This could help evaluate shot quality in a more accurate way by including goalkeeper positioning and defensive pressure at the moment of each attempt. Second, if available, physical tracking data should be incorporated. The analysis could be improved by, for example, quantifying England's defensive shape instead of implying it. The same analysis could also be extended to other international tournaments, like the 2022 Women's Euro or the 2023 World Cup. This could help to put England's and Spain's 2025 performances into context by comparing them to their own past results. Another way could be to look at the match situation in each game, which shows whether a team was winning, drawing, or losing. This could add useful context and help in highlighting intentional tactical changes in attack and defence. This would be particularly interesting to interpret England's second-half and extra-time pressing in the final to illustrate how they were able to keep the result at 1-1 without attempting to shoot themselves.
+There are several extensions to further strengthen this analysis. For example, the StatsBomb freeze frame data could be included. This could help evaluate shot quality in a more accurate way by including goalkeeper positioning and defensive pressure at the moment of each attempt. Second, if available, physical tracking data should be incorporated. The analysis could be improved by, for example, quantifying England's defensive shape instead of implying it. The same analysis could also be extended to other international tournaments, like the 2022 Women's Euro or the 2023 World Cup. This could help to put England's and Spain's 2025 performances into context by comparing them to their own past results. Another way could be to look at the match situation in each game, which shows whether a team was winning, drawing, or losing. This could add useful context and help in highlighting intentional tactical changes in attack and defence. This would be particularly interesting to interpret England's second-half and extra-time pressing in the final to illustrate how they were able to keep the result at 1-1 without attempting to shoot themselves.
 
 Of these, incorporating freeze frame would be the simplest next step with the most direct impact on the research question. It is available through StatsBomb and would allow England's defensive positioning at the moment of each Spain shot to be quantified. This could potentially explain the gap between Spain's xG and the only one goal they scored. Out of the other additions, full tracking data would have the most comprehensive impact on improving the analysis, but would require access to the respective data, which may be more difficult to achieve.
 
