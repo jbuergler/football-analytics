@@ -2,18 +2,18 @@
 # Women's Euro 2025 - Did England deserve to win?
 
 library(shiny)
-library(bslib)
 library(tidyverse)
-library(plotly)
 library(ggrepel)
 library(ggsoccer)
 library(gt)
+library(plotly)
+library(bslib)
 
 # LOAD DATA ----
+tbl_match_xg <- readRDS("tbl_match_xg.rds")
 tbl_team_xg_summary <- readRDS("tbl_team_xg_summary.rds")
 tbl_press_summary <- readRDS("tbl_press_summary.rds")
 tbl_cumulative_xg <- readRDS("tbl_cumulative_xg.rds")
-tbl_stage_breakdown <- readRDS("tbl_stage_breakdown.rds")
 tbl_final_shots <- readRDS("tbl_final_shots.rds")
 tbl_final_timeline <- readRDS("tbl_final_timeline.rds")
 tbl_final_player_actions <- readRDS("tbl_final_player_actions.rds")
@@ -23,7 +23,7 @@ fig_xg_ranking_app <- readRDS("fig_xg_ranking_app.rds")
 # tbl_final_pressures not loaded - value (393 vs 253) hardcoded in value box
 # source: tbl_final_pressures.rds computed in 04_analyse.R
 # tbl_ball_progression used in 04_analyse.R to build tbl_verdict_summary
-# not loaded directly in app - values are already baked into tbl_verdict_summary
+# not loaded directly in app - values are already put into tbl_verdict_summary
 
 # COLOURS ----
 euro_colours <- c(
@@ -32,7 +32,8 @@ euro_colours <- c(
   "Other"   = "grey69"
 )
 
-# only have
+# only have defined colors for England and Spain, all other teams in grey
+# used for xg ranking, cumulative xg across tournament, and match by match xG for England and Spain
 team_colours <- c(
   "England" = "#CE1124",
   "Spain" = "#F1BF00",
@@ -380,7 +381,7 @@ ui <- page_navbar(
         card(
           full_screen = TRUE,
           card_header("Shot Map England vs Spain Final"),
-          p("Circle size = xG value. England attack shown on the left 
+          p("Circle size = xG value. White circle = Goal. England attack shown on the left 
           and Spain attack shown on the right.
           Spain registered 23 shots to England's 8, 
           with higher-quality chances concentrated centrally. 
@@ -634,7 +635,7 @@ server <- function(input, output, session) {
   
   ## Match bars - England ----
   output$match_bars_eng <- renderPlotly({
-    eng_data <- tbl_stage_breakdown %>%
+    eng_data <- tbl_match_xg %>%
       filter(team == "England") %>%
       arrange(match_date) %>%
       mutate(
@@ -686,7 +687,7 @@ server <- function(input, output, session) {
   
   ## Match bars - Spain ----
   output$match_bars_esp <- renderPlotly({
-    esp_data <- tbl_stage_breakdown %>%
+    esp_data <- tbl_match_xg %>%
       filter(team == "Spain") %>%
       arrange(match_date) %>%
       mutate(
@@ -961,8 +962,8 @@ server <- function(input, output, session) {
       theme_pitch() +
       theme(
         legend.position = "bottom",
-        legend.key.size = unit(1.2, "cm"), 
-        legend.text  = element_text(size = 10, colour = "#1F2937"),
+        legend.key.size = unit(1.8, "cm"), 
+        legend.text = element_text(size = 13, colour = "#1F2937"),
         plot.background = element_rect(fill = "white", colour = NA)
       )
   }, bg = "white")
@@ -991,8 +992,8 @@ server <- function(input, output, session) {
       theme_pitch() +
       theme(
         legend.position = "bottom",
-        legend.key.size = unit(1.2, "cm"), 
-        legend.text = element_text(size = 10, colour = "#1F2937"),
+        legend.key.size = unit(1.8, "cm"), 
+        legend.text = element_text(size = 13, colour = "#1F2937"),
         plot.background = element_rect(fill = "white", colour = NA)
       )
   }, bg = "white")

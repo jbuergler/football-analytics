@@ -182,6 +182,8 @@ fig_xg_ranking_app <- tbl_team_xg_summary %>%
   ) +
   theme_euro() +
   theme(
+    axis.text.y = element_text(size = 11),
+    axis.title.x = element_text(size = 11),
     panel.grid.major.y = element_blank(),
     legend.position = "none"
   )
