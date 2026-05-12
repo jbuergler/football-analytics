@@ -38,7 +38,7 @@ weuro_matches %>%
 
 
 # --- 4. Pull events for each match and combine into one dataframe ----
-# according to StatsBomb Working with R guide (StatsBomb, 2022).
+# according to StatsBomb Working with R guide (StatsBomb, 2022, p.11).
 # https://blogarchive.statsbomb.com/uploads/2022/08/Working-with-R.pdf
 events_raw <- free_allevents(MatchesDF = weuro_matches, Parallel = TRUE)
 
