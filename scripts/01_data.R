@@ -43,7 +43,8 @@ weuro_matches %>%
 events_raw <- free_allevents(MatchesDF = weuro_matches, Parallel = TRUE)
 
 # --- 5. Save raw data to data/raw/ ----
-saveRDS(events_raw,    "data/raw/weuro2025_events.rds")
+dir.create("data/raw", recursive = TRUE) # create raw data folder
+saveRDS(events_raw, "data/raw/weuro2025_events.rds")
 saveRDS(weuro_matches, "data/raw/weuro2025_matches.rds")
 
 
