@@ -8,29 +8,41 @@
 # data/cleaned/weuro2025_events_clean.rds
 
 # Outputs: 
-# data/cleaned/tbl_team_xg_summary.rds           - Part 1: tournament overview
-# data/cleaned/tbl_press_summary.rds             - Part 1
-# data/cleaned/tbl_ball_progression.rds          - Part 1
-# data/cleaned/tbl_stage_breakdown.rds           - Part 2: the journey
-# data/cleaned/tbl_cumulative_xg.rds             - Part 2
-# data/cleaned/tbl_final_shots.rds               - Part 3A: the final in detail: shots
-# data/cleaned/tbl_final_timeline.rds            - Part 3A
-# data/cleaned/tbl_final_player_actions.rds      - Part 3B: the final in detail: possession
-# data/cleaned/tbl_final_pass_thirds.rds         - Part 3B
-# data/cleaned/tbl_verdict_summary.rds           - Part 4: was it deserved?
-# data/cleaned/tbl_final_pressures.rds           - Part 4
+# Part 1: Tournament Overview:
+# data/cleaned/tbl_match_xg.rds (app + intermediate - also used to build tbl_team_xg_summary and tbl_cumulative_xg)
+# data/cleaned/tbl_team_xg_summary.rds (app)
+# data/cleaned/tbl_press_summary.rds (app)      
+# data/cleaned/tbl_ball_progression.rds (report only and to build tbl_verdict_summary) 
+
+# Part 2: The Journey
+# data/cleaned/tbl_cumulative_xg.rds (app)            
+
+# Part 3A: The final in detail: shots
+# data/cleaned/tbl_final_shots.rds (app)            
+# data/cleaned/tbl_final_timeline.rds (app)            
+
+# Part 3B: The final in detail: possession
+# data/cleaned/tbl_final_player_actions.rds (app)     
+# data/cleaned/tbl_final_pass_thirds.rds (app)         
+
+# Part 4: was it deserved?
+# data/cleaned/tbl_verdict_summary.rds (app)         
+# data/cleaned/tbl_final_pressures.rds (not loaded in app, used in report and numbers for value boxes)          
 
 # Note: every saved .rds contains only the columns the dashboard needs
-# The app never loads the full event log (Shinylive file-size constraint).
+# The app never loads the full event log (due to Shinylive file-size constraint)
 
 # Naming:
 # tbl_ prefix for all saved data tables
 # fig_ prefix for all plot objects (used in 05_visualise.R)
 
 # LOAD LIBRARIES AND DATA ----
+# Note: these are already loaded if 00_setup.R has been run
 library(tidyverse)
 library(StatsBombR)
 
+# NOTE: cleaned is already loaded in environment from 03_clean.R
+# If starting fresh, run these lines:
 shots_clean <- readRDS("data/cleaned/weuro2025_shots_clean.rds")
 events_clean <- readRDS("data/cleaned/weuro2025_events_clean.rds")
 
@@ -44,6 +56,8 @@ events_clean <- readRDS("data/cleaned/weuro2025_events_clean.rds")
 # Opponent goals/ xG/ shots = match total minus team's value
 # only valid if exactly 2 teams per match
 # The check below confirms this holds across all 31 games
+# tbl_match_xg saved as an intermediate table only
+# used to build tbl_team_xg_summary and tbl_cumulative_xg
 tbl_match_xg <- shots_clean %>%
   group_by(match_id, team) %>%
   summarise(
@@ -59,7 +73,7 @@ tbl_match_xg <- shots_clean %>%
   # opponent-relative metrics within each match
   group_by(match_id) %>%
   mutate(
-    opp_xg  = sum(xg_total) - xg_total,
+    opp_xg = sum(xg_total) - xg_total,
     xg_diff = xg_total - opp_xg,
     opp_goals = sum(goals) - goals,
     opp_shots = sum(shots) - shots
@@ -67,7 +81,7 @@ tbl_match_xg <- shots_clean %>%
   ungroup() %>%
   # finishing metrics per row
   mutate(
-    goals_vs_xg = ifelse(xg_total > 0, goals / xg_total,  NA_real_),
+    goals_vs_xg = ifelse(xg_total > 0, goals / xg_total, NA_real_),
     goals_minus_xg = goals - xg_total
   ) %>%
   select(
@@ -123,7 +137,6 @@ tbl_team_xg_summary <- tbl_match_xg %>%
 # NA in counterpress recoded to FALSE so the full row count is the denominator
 # Split by stage_type to capture any tactical shift from group to knockouts
 # press summary uses events_clean directly so stage_type needs to be computed here separately
-
 tbl_press_summary <- events_clean %>%
   filter(type.name == "Pressure") %>%
   mutate(
@@ -223,34 +236,13 @@ tbl_ball_progression <- carry_stats %>%
 # England were 5th for final third carries (29.1%)
 
 ## Save part 1 tables ----
-dir.create("data/cleaned", recursive = TRUE, showWarnings = FALSE)
-
-saveRDS(tbl_team_xg_summary,        "data/cleaned/tbl_team_xg_summary.rds")
+saveRDS(tbl_match_xg, "data/cleaned/tbl_match_xg.rds") # used in app and as intermediate for other tables
+saveRDS(tbl_team_xg_summary, "data/cleaned/tbl_team_xg_summary.rds")
 saveRDS(tbl_press_summary, "data/cleaned/tbl_press_summary.rds")
-saveRDS(tbl_ball_progression, "data/cleaned/tbl_ball_progression.rds")
+saveRDS(tbl_ball_progression, "data/cleaned/tbl_ball_progression.rds") # used for tbl_verdict_summary
 
 # ---- THE JOURNEY ----
 # Tab 2: how did teams get to the final, match by match?
-
-## tbl_stage_breakdown ----
-# Adds result flags to tbl_match_xg
-# won_dominant: won AND created more xG than the opponent (deserved win)
-# won_fortunate: won BUT opponent created more xG (fortunate win)
-tbl_stage_breakdown <- tbl_match_xg %>%
-  mutate(
-    match_result = case_when(
-      goals > opp_goals ~ "win",
-      goals < opp_goals ~ "loss",
-      TRUE ~ "draw"
-    ),
-    won_dominant = match_result == "win" & xg_diff >  0,
-    won_fortunate = match_result == "win" & xg_diff <  0
-  ) %>%
-  select(
-    match_id, match_date, team, opponent, stage, stage_type,
-    goals, opp_goals, xg_total, opp_xg, xg_diff,
-    goals_minus_xg, match_result, won_dominant, won_fortunate
-  ) 
 
 ## tbl_cumulative_xg ----
 # Running xG and goal totals per team, in match order
@@ -270,15 +262,14 @@ tbl_cumulative_xg <- tbl_match_xg %>%
     cumulative_xg, cumulative_goals
     )
 
-## Save Part 2 Tables ----
-saveRDS(tbl_stage_breakdown, "data/cleaned/tbl_stage_breakdown.rds")
+## Save Part 2 Table ----
 saveRDS(tbl_cumulative_xg, "data/cleaned/tbl_cumulative_xg.rds")
 
 # ---- THE FINAL PART A (SHOTS) ----
 # Tab 3A: what happened in the England vs Spain final (shots)?
 
 ## tbl_final_shots ----
-# Shot-level detail for the final match only - used for the shot map
+# Shot-level detail for the final match only used for the shot map
 final_match_id <- tbl_match_xg %>%
   filter(stage == "Final") %>%
   pull(match_id) %>%
@@ -300,7 +291,7 @@ tbl_final_shots <- shots_clean %>%
 # England: Russo, min 56, 0.213 xG. Spain: Caldentey, min 24, 0.396 xG
 
 ## tbl_final_timeline ----
-# Cumulative xG by shot, in chronological order - used for the xG timeline chart
+# Cumulative xG by shot, in chronological order: used for the xG timeline chart
 tbl_final_timeline <- tbl_final_shots %>%
   arrange(period, minute) %>%
   group_by(team) %>%
@@ -314,16 +305,20 @@ tbl_final_timeline <- tbl_final_shots %>%
     player, xg, cumulative_xg, shot_outcome
   )
 
+## Save Part 3A Tables (Shots) ----
+saveRDS(tbl_final_shots, "data/cleaned/tbl_final_shots.rds")
+saveRDS(tbl_final_timeline, "data/cleaned/tbl_final_timeline.rds")
+
 # ---- THE FINAL PART B (POSSESSION) ----
 # Tab 3B: what happened in the England vs Spain final (possession)?
 
 ## tbl_final_player_actions ----
 # Completed passes and progressive carries for Bonmatí and Hemp in the final.
-# Used for the player pass map in Tab 3.
-# Filtered to final-third actions only to keep the map readable.
+# Used for the player pass map in Tab 3B.
+# Filtered to final-third actions only to keep the map readable
 tbl_final_player_actions <- events_clean %>%
   filter(
-    match_id  == final_match_id,
+    match_id == final_match_id,
     player %in% c("Aitana Bonmati Conca", "Lauren Hemp")
   ) %>%
   filter(
@@ -346,16 +341,17 @@ tbl_final_player_actions <- events_clean %>%
       player_label, " · ", action_type, "\n",
       "From: (", round(location_x,1), ", ", round(location_y,1), ")\n",
       "To: (", round(end_x,1), ", ", round(end_y,1), ")\n",
-      "Minute: ", minute, "'"
-    )
+      "Minute: ", minute, "'") # tooltip built here to make it easier for app later on
   ) %>%
   select(player_label, action_type, minute,
-         location_x, location_y, end_x, end_y, tooltip)
+         location_x, location_y, end_x, end_y, tooltip) 
 
 # Player selection rationale:
 # Bonmatí: most active attacking player in the final by carries and passes into the final third
 # Hemp: England's equivalent: highest volume of forward ball-carrying for her side
-# Comparing them spatially follows StatsBomb Use Case 4 (pass plotting).
+# Comparing them spatially follows StatsBomb Use Case 4: Plotting Passes
+# StatsBomb Working with R guide (StatsBomb, 2022, pp. 22-24)
+# https://blogarchive.statsbomb.com/uploads/2022/08/Working-with-R.pdf
 
 ## tbl_final_pass_thirds ----
 # Completed pass distribution by pitch third for the final
@@ -365,9 +361,9 @@ tbl_final_pass_thirds <- events_clean %>%
          is.na(pass.outcome.name)) %>%
   mutate(
     pitch_third = case_when(
-      pitch_third == "defensive_third"  ~ "Defensive third",
-      pitch_third == "middle_third"     ~ "Middle third",
-      pitch_third == "attacking_third"  ~ "Attacking third"
+      pitch_third == "defensive_third" ~ "Defensive third",
+      pitch_third == "middle_third" ~ "Middle third",
+      pitch_third == "attacking_third" ~ "Attacking third"
     )
   ) %>%
   group_by(team, pitch_third) %>%
@@ -391,18 +387,16 @@ tbl_final_pass_thirds <- events_clean %>%
 # Key Findings
 # Spain dominated passes in the attacking third and less in the defensive third
 
-## Save Part 3 Tables ----
-saveRDS(tbl_final_shots, "data/cleaned/tbl_final_shots.rds")
-saveRDS(tbl_final_timeline, "data/cleaned/tbl_final_timeline.rds")
+## Save Part 3B Tables (Possession) ----
 saveRDS(tbl_final_player_actions,"data/cleaned/tbl_final_player_actions.rds")
 saveRDS(tbl_final_pass_thirds, "data/cleaned/tbl_final_pass_thirds.rds")
 
-# ---- EVIDENCE FOR THE VERDICT ----
+# ---- WAS IT DESERVED? ----
 # Tab 4: did England deserve to win?
 
 ## tbl_verdict_summary ----
 # Static England vs Spain comparison
-# used for tbl_verdict_gt in 05_visualise.R and static table in App Tab 4
+# used for tbl_verdict_gt in 05_visualise.R and static table in Dashboard Tab "Was it deserved?"
 tbl_verdict_summary <- tibble(
   Dimension = c(
     "Chance Quality", "Defensive Solidity",
@@ -447,6 +441,7 @@ tbl_verdict_summary <- tibble(
 # England out-pressed Spain (393 vs 253) - used for Tab 4 value box
 # Surprising given Spain's xG dominance - suggests England's tactical
 # approach was more aggressive than the scoreline implies
+# note: not copied to app, value box values pulled directly from this count
 tbl_final_pressures <- events_clean %>%
   filter(
     match_id == final_match_id,
@@ -463,22 +458,28 @@ saveRDS(tbl_verdict_summary, "data/cleaned/tbl_verdict_summary.rds")
 saveRDS(tbl_final_pressures, "data/cleaned/tbl_final_pressures.rds")
 
 # Copy all app data files to app/ folder
+# create app folder
+dir.create("app", recursive = TRUE, showWarnings = FALSE)
+
+# vector for all files that need to go in app from this script
 app_files <- c(
-  "data/cleaned/tbl_team_xg_summary.rds",
+  "data/cleaned/tbl_match_xg.rds",
+  "data/cleaned/tbl_team_xg_summary.rds", 
   "data/cleaned/tbl_press_summary.rds",
+  
   "data/cleaned/tbl_cumulative_xg.rds",
-  "data/cleaned/tbl_stage_breakdown.rds",
+  
   "data/cleaned/tbl_final_shots.rds",
   "data/cleaned/tbl_final_timeline.rds",
+  
   "data/cleaned/tbl_final_player_actions.rds",
   "data/cleaned/tbl_final_pass_thirds.rds",
+  
   "data/cleaned/tbl_verdict_summary.rds"
 )
 
+# add the files in
 file.copy(app_files, "app/", overwrite = TRUE)
 
-# add fig_xg_ranking as rds in app due to issues with shiny
-file.copy("data/figures/fig_xg_ranking_app.rds", "app/", overwrite = TRUE)
-
-# Confirm all files are in app/
+# Confirm that all files from 04 analyse are in app/
 list.files("app", pattern = "\\.rds$")

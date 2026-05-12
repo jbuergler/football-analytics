@@ -24,7 +24,7 @@ library(StatsBombR)
 # 2. LOAD RAW DATA ----
 # NOTE: Raw data is already loaded in environment from 01_data.R
 # If starting fresh, run these lines:
-events_raw    <- readRDS("data/raw/weuro2025_events.rds")
+events_raw <- readRDS("data/raw/weuro2025_events.rds")
 weuro_matches <- readRDS("data/raw/weuro2025_matches.rds")
 
 # 3. REMOVE PENALTY SHOOTOUTS ----

@@ -2,7 +2,7 @@
 # Purpose: Pull Women's Euro 2025 data from StatsBomb and save raw files
 
 # StatsBomb open data accessed via StatsBombR package
-# Methodology reference: StatsBomb (2023) Working with R
+# Methodology reference: StatsBomb (2022) Working with R
 # https://blogarchive.statsbomb.com/uploads/2022/08/Working-with-R.pdf
 
 # Outputs: 
