@@ -5,30 +5,30 @@
 # fig_ prefix for all saved plot objects
 
 # LOAD TABLES ----
-tbl_team_xg_summary <- readRDS("data/cleaned/tbl_team_xg_summary.rds") # Fig lollipop, scatter, tbl verdict
-tbl_press_summary   <- readRDS("data/cleaned/tbl_press_summary.rds") # fig press shift, tbl verdict
-tbl_ball_progression <- readRDS("data/cleaned/tbl_ball_progression.rds") # tbl verdict
+tbl_team_xg_summary <- readRDS("data/cleaned/tbl_team_xg_summary.rds") # Fig xg scatter, fig xg ranking, tbl verdict
 tbl_cumulative_xg <- readRDS("data/cleaned/tbl_cumulative_xg.rds") # fig cum xg
-tbl_stage_breakdown <- readRDS("data/cleaned/tbl_stage_breakdown.rds") # fig match xg eng and esp
+tbl_match_xg <- readRDS("data/cleaned/tbl_match_xg.rds") # fig match xg bars eng and esp
+tbl_press_summary <- readRDS("data/cleaned/tbl_press_summary.rds") # fig press shift, tbl verdict
+tbl_ball_progression <- readRDS("data/cleaned/tbl_ball_progression.rds") # tbl verdict
 tbl_final_shots <- readRDS("data/cleaned/tbl_final_shots.rds") # fig shot map
 tbl_final_timeline <- readRDS("data/cleaned/tbl_final_timeline.rds") # fig xg timeline
 tbl_final_pass_thirds <- readRDS("data/cleaned/tbl_final_pass_thirds.rds") # fig final pass thirds
-tbl_final_player_actions <- readRDS("data/cleaned/tbl_final_player_actions.rds") # fig passmap
+tbl_final_player_actions <- readRDS("data/cleaned/tbl_final_player_actions.rds") # fig player passmap
 tbl_verdict_summary <- readRDS("data/cleaned/tbl_verdict_summary.rds") # verdict gt table
 
 # LIBRARIES ----
+# Note: these are already loaded if 00_setup.R has been run
 library(tidyverse)
 library(ggrepel)
 library(ggsoccer)
 library(gt)
-library(webshot2)
 
 ## COLOURS ----- 
-# defined once, used in both ggplot charts and bslib theme
+# defined once, used in both ggplot charts and bslib theme later in app
 euro_colours <- c(
-  "Spain"   = "#F1BF00",
-  "England" = "#CE1124",
-  "Other"   = "grey69"
+  "Spain" = "#F1BF00", # hex colour for Spain
+  "England" = "#CE1124", # hex colour for England
+  "Other" = "grey69"
 )
 
 # GGPLOT THEME ----
@@ -41,10 +41,10 @@ theme_euro <- function() {
       plot.subtitle = element_text(size = 10, colour = "#6B7280",
                                       margin = margin(b = 10)),
       axis.title = element_text(size = 10, colour = "#1F2937"),
-      axis.text = element_text(size = 9,  colour = "#6B7280"),
+      axis.text = element_text(size = 9, colour = "#6B7280"),
       panel.grid.major = element_line(colour = "#E5E7EB", linewidth = 0.3),
       panel.grid.minor = element_blank(),
-      plot.background  = element_rect(fill = "white", colour = NA),
+      plot.background = element_rect(fill = "white", colour = NA),
       panel.background = element_rect(fill = "white", colour = NA),
       legend.position = "none",
       plot.caption = element_text(size = 8, colour = "#9CA3AF", hjust = 0)
@@ -54,12 +54,12 @@ theme_euro <- function() {
 # ---- TAB 1: TOURNAMENT OVERVIEW ----
 
 ## fig_xg_scatter ----
-# One takeaway: both finalists' goals broadly matched their xG -
-# the xG differential reflects genuine quality, not finishing luck.
+# One takeaway: both finalists' goals broadly matched their xG
+# the xG difference shows finishing quality and not luck
 fig_xg_scatter <- tbl_team_xg_summary %>%
   mutate(
     team_highlight = case_when(
-      team == "Spain"   ~ "Spain",
+      team == "Spain" ~ "Spain",
       team == "England" ~ "England",
       TRUE ~ "Other"
     )
@@ -79,15 +79,8 @@ fig_xg_scatter <- tbl_team_xg_summary %>%
                      expand = expansion(mult = c(0, 0.1))) +
   scale_y_continuous(limits = c(0, NA),
                      expand = expansion(mult = c(0, 0.1))) +
-  #annotate("text", x = 1, y = 19,
-          # label = "above line = scored more than xG predicted",
-           #size = 2.8, colour = "grey69", hjust = 0) +
-  #annotate("text", x = 8, y = 1,
-          # label = "below line = scored less than xG predicted",
-           #size = 2.8, colour = "grey69", hjust = 0) +
   labs(
     title = "Goals vs expected Goals",
-    # subtitle = "Teams above the dashed line scored more than their chance quality predicted",
     x = "Total expected Goals (xG)",
     y = "Total Goals scored",
   ) +
@@ -97,12 +90,12 @@ fig_xg_scatter <- tbl_team_xg_summary %>%
 # Horizontal bar chart ranking all 16 teams by avg xG difference per match
 # Spain and England highlighted in team colours, others in grey
 # Reference lines at +1 and -1 to contextualise the rankings
-# One takeaway: Spain dominated on chance quality; England ranked 3rd
+# One takeaway: Spain dominated on chance quality, England ranked 3rd
 fig_xg_ranking <- tbl_team_xg_summary %>%
   arrange(avg_xg_diff) %>%
   mutate(
     team_highlight = case_when(
-      team == "Spain"   ~ "Spain",
+      team == "Spain" ~ "Spain",
       team == "England" ~ "England",
       TRUE ~ "Other"
     ),
@@ -144,12 +137,15 @@ fig_xg_ranking <- tbl_team_xg_summary %>%
     legend.position = "none"
   )
 
-### fig_xg_ranking for app (no title as handled in dashboard) ----
+### fig_xg_ranking for app (no title as handled in dashboard itself) ----
+# saved separately for the app only because it is loaded as this RDS in the output
+# some issues with showing this figure in shinylive, therefore went for this approach
+# all the other figures don't need a separate figure as handled correctly in the app
 fig_xg_ranking_app <- tbl_team_xg_summary %>%
   arrange(avg_xg_diff) %>%
   mutate(
     team_highlight = case_when(
-      team == "Spain"   ~ "Spain",
+      team == "Spain" ~ "Spain",
       team == "England" ~ "England",
       TRUE ~ "Other"
     ),
@@ -240,10 +236,8 @@ fig_cumulative_xg <- tbl_cumulative_xg %>%
   scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
   labs(
     title = "Cumulative xG across the Tournament",
-    # subtitle = "Spain builds up consistently · England's line is inflated by a 5.71 xG group stage match against Wales.",
     x = NULL,
     y = "Cumulative expected goals (xG)",
-    # caption = "grey lines = other teams"
   ) +
   theme_euro() +
   theme(legend.position = "none")
@@ -253,7 +247,7 @@ fig_cumulative_xg <- tbl_cumulative_xg %>%
 # the knockouts were tight, and the final shows Spain with more xG
 
 ### England ----
-fig_match_xg_bars_eng <- tbl_stage_breakdown %>%
+fig_match_xg_bars_eng <- tbl_match_xg %>%
   filter(team == "England") %>%
   arrange(match_date) %>%
   mutate(
@@ -299,7 +293,6 @@ fig_match_xg_bars_eng <- tbl_stage_breakdown %>%
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
   labs(
     title = "Match-by-match xG England",
-    #subtitle = "Red = England xG · Grey = Opponent xG · Red Background = Knockout Stage",
     x = NULL,
     y = "Expected Goals (xG)",
     fill = NULL,
@@ -312,7 +305,7 @@ fig_match_xg_bars_eng <- tbl_stage_breakdown %>%
   )
 
 ### Spain ----
-fig_match_xg_bars_esp <- tbl_stage_breakdown %>%
+fig_match_xg_bars_esp <- tbl_match_xg %>%
   filter(team == "Spain") %>%
   arrange(match_date) %>%
   mutate(
@@ -322,7 +315,7 @@ fig_match_xg_bars_esp <- tbl_stage_breakdown %>%
   select(match_label, stage_type, xg_total, opp_xg) %>%
   pivot_longer(
     cols = c(xg_total, opp_xg),
-    names_to  = "metric",
+    names_to = "metric",
     values_to = "xg"
   ) %>%
   mutate(
@@ -356,7 +349,6 @@ fig_match_xg_bars_esp <- tbl_stage_breakdown %>%
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
   labs(
     title = "Match-by-match xG Spain",
-    #subtitle = "Yellow = Spain xG · Grey = Opponent xG · Yellow background = Knockout Stage",
     x = NULL,
     y = "Expected Goals (xG)",
     fill = NULL
@@ -405,7 +397,6 @@ fig_press_shift <- tbl_press_summary %>%
   ) +
   labs(
     title = "Pressing Intensity Group Stage vs Knockout",
-   # subtitle = "Spain pressed higher and counter-pressed more aggressively than England at every stage",
     x = NULL,
     y = "Rate (%)"
   ) +
@@ -422,7 +413,7 @@ fig_press_shift <- tbl_press_summary %>%
 ## fig_shot_map ----
 # One takeaway: Spain generated far more shots and from better positions -
 # 23 shots and 2.14 xG vs England's 8 shots and 0.88 xG
-fig_shot_map <- tbl_final_shots %>%
+fig_shot_map <- tbl_final_shots %>% 
   mutate(
     # Flip England so they attack left, Spain stays attacking right
     plot_x = if_else(team == "England", 120-location_x, location_x),
@@ -457,15 +448,12 @@ fig_shot_map <- tbl_final_shots %>%
   coord_cartesian(xlim = c(0, 120), ylim = c(0, 80)) +
   labs(
     title = "Shot Map England vs Spain Final",
-   # subtitle = "England attack left · Spain attack right · circle size = xG · white ring = goal"
   ) +
   theme_pitch() +
   theme(
     plot.title = element_text(face = "bold", size = 13,
                                    colour = "#1F2937",
                                    margin = margin(b = 4)),
-    #plot.subtitle = element_text(size = 10, colour = "#6B7280",
-                                  # margin = margin(b = 8)),
     legend.position = "bottom",
     legend.box = "horizontal",
     legend.spacing.x = unit(1, "cm"),
@@ -475,9 +463,9 @@ fig_shot_map <- tbl_final_shots %>%
 
 ## fig_xg_timeline ----
 # One takeaway: Spain's xG accumulated steadily throughout
-# England's line barely moved after the first half.
+# England's line barely moved after the first half
 
-# create end-point labels (last row per team)-added for the report
+# create end-point labels (last row per team)- added for the report
 tbl_timeline_labels <- tbl_final_timeline %>%
   group_by(team) %>%
   slice_max(minute, n = 1) %>%
@@ -514,7 +502,7 @@ fig_xg_timeline <- tbl_final_timeline %>%
   scale_x_continuous(
     breaks = c(0, 45, 90, 105, 120),
     labels = c("0'", "45'", "90'", "105'", "120'"),
-    expand = expansion(mult = c(0.02, 0.18))  # increase from 0.12 to 0.18
+    expand = expansion(mult = c(0.02, 0.18)) 
   ) +
   scale_y_continuous(
     expand = expansion(mult = c(0.02, 0.08))
@@ -529,7 +517,7 @@ fig_xg_timeline <- tbl_final_timeline %>%
 
 # ---- TAB 3B: THE FINAL (POSSESSION) ----
 ## fig_final_pass_thirds ----
-# how the passes were distributed by pitch third (def, mid, att)
+# how the passes were distributed by pitch third (defence, middle, attack)
 # takeaway: Spain in attacking third (29.2%) vs England's 15.2%
 fig_final_pass_thirds <- tbl_final_pass_thirds %>%
   ggplot(aes(x = pitch_third, y = pct,
@@ -555,11 +543,14 @@ fig_final_pass_thirds <- tbl_final_pass_thirds %>%
   theme(legend.position = "top")
 
 ## fig_player_passmap ----
-# Method: StatsBomb Working with R (StatsBomb, 2022), Use Case 4-plotting passes
+# Method: StatsBomb Working with R (StatsBomb, 2022), Use Case 4: Plotting Passes
+# StatsBomb Working with R guide (StatsBomb, 2022, pp. 22-24)
+# https://blogarchive.statsbomb.com/uploads/2022/08/Working-with-R.pdf
+
 # takeaway: Bonmatí drove forward across the full width of the pitch 
 # Hemp mainly came through the left hand side
 # Note: 
-# as a facet wrap for a static visual, but will be 2 individual ones in the app
+# as a facet wrap for a static visual, but will be two individual ones in the app
 # colours here are generic. In the app each player gets their team colour (Spain yellow for Bonmatí, England red for Hemp)
 fig_player_passmap <- tbl_final_player_actions %>%
   mutate(
@@ -578,7 +569,7 @@ fig_player_passmap <- tbl_final_player_actions %>%
   facet_wrap(~ player_label) +
   scale_colour_manual(
     values = c("Pass" = "#1F2937", "Carry" = "grey69"),
-    name   = NULL,
+    name = NULL,
     labels = c("Pass" = "Final-third Pass", "Carry" = "Final-third Carry")
   ) +
   coord_cartesian(xlim = c(60, 121), ylim = c(0, 80)) +
@@ -659,16 +650,22 @@ tbl_verdict_gt <- tbl_verdict_summary %>%
 # ---- SAVE FIGURES FOR REPORT ----
 dir.create("data/figures", recursive = TRUE, showWarnings = FALSE)
 
+# Section 4.1 Tournament Overview
 saveRDS(fig_xg_scatter, "data/figures/fig_xg_scatter.rds")
 saveRDS(fig_xg_ranking, "data/figures/fig_xg_ranking.rds")
 saveRDS(fig_xg_ranking_app, "data/figures/fig_xg_ranking_app.rds") # not used in report but saved for app
+
+# Section 4.1 The Journey to the Final
 saveRDS(fig_cumulative_xg, "data/figures/fig_cumulative_xg.rds")
 saveRDS(fig_match_xg_bars_eng, "data/figures/fig_match_xg_bars_eng.rds")
 saveRDS(fig_match_xg_bars_esp, "data/figures/fig_match_xg_bars_esp.rds")
 saveRDS(fig_press_shift, "data/figures/fig_press_shift.rds")
+
+# Section 4.3 The Final
 saveRDS(fig_shot_map, "data/figures/fig_shot_map.rds")
 saveRDS(fig_xg_timeline, "data/figures/fig_xg_timeline.rds")
 saveRDS(fig_final_pass_thirds, "data/figures/fig_final_pass_thirds.rds")
 saveRDS(fig_player_passmap, "data/figures/fig_player_passmap.rds")
-gtsave(tbl_verdict_gt, "data/figures/fig_verdict_table.png", 
-       vwidth = 900, vheight = 400, zoom = 2)
+
+# add fig_xg_ranking to the app folder as an rds due to issues with shinylive
+file.copy("data/figures/fig_xg_ranking_app.rds", "app/", overwrite = TRUE)
