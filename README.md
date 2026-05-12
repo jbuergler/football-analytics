@@ -6,7 +6,7 @@ An interactive dashboard analysing England's victory at UEFA Women's Euro 2025 u
 
 **Live dashboard:** <https://jbuergler.github.io/football-analytics/>
 
-Built with R R 4.5.1, Shiny, and `bslib`, published to GitHub Pages via [Shinylive](https://shinylive.io/r/). The app runs entirely in the visitor's browser, with no server required. Data was pulled from the StatsBomb API in May 2026.
+Built with R R 4.5.1, Shiny, and `bslib`, published to GitHub Pages via [Shinylive](https://shinylive.io/r/). The app runs entirely in the visitor's browser, with no server required. Data was pulled from the StatsBomb API in April 2026.
 
 ## Research Question
 
@@ -18,22 +18,30 @@ StatsBomb open event data pulled from the `StatsBombR` package. Competition ID 5
 
 ## Repository Layout
 
--   `scripts/` - data pipeline (00_setup.R through 05_visualise.R)
--   `app/` - the Shiny app (app.R and all .rds data files)
--   `docs/` - the Shinylive build served by GitHub Pages
--   `data/` - raw and cleaned data and figures
+- `scripts/` — data pipeline (`00_setup.R` through `05_visualise.R`)
+- `app/`     — the Shiny app (`app.R` and all `.rds` data files)
+- `docs/`    — the Shinylive build served by GitHub Pages
+- `data/`    — raw and cleaned data and figures
 
 ## How to Reproduce
 
 ### Step 1: Install dependencies
 
-Open football-analytics.Rproj in RStudio, then run:
+If `devtools` is not already installed, run this in the R console first:
+
+```r
+install.packages("devtools")
+```
+
+
+Then open `football-analytics.Rproj` in RStudio and run:
 
 ```         
 source("scripts/00_setup.R")
 ```
 
-This installs and loads all required packages, including StatsBombR (installed from GitHub via devtools).
+This installs and loads all required packages, including `StatsBombR`
+(installed from GitHub via `devtools`).
 
 ### Step 2: Run the data pipeline in order
 
@@ -61,12 +69,17 @@ To regenerate the Shinylive bundle served by GitHub Pages, run:
 shinylive::export("app", "docs")
 ```
 
-Then commit and push the updated docs/ folder. GitHub Pages serves from docs/ on the main branch. Allow a few minutes for the deployment to update.
+Then commit and push the updated `docs/` folder. GitHub Pages serves from
+`docs/` on the main branch. Allow a few minutes for the deployment to update.
+
 
 ------------------------------------------------------------------------
 
 ## Notes
 
--   An internet connection is required for Step 1 (01_data.R pulls live data from the StatsBomb API).
--   The R version used was R 4.5.1. Results should be reproducible on later versions, but package behaviour may differ.
--   Penalty shootout events (period 5) and own goals are excluded from all xG and shot analyses.
+- An internet connection is required for Step 1 (`01_data.R` pulls live data
+  from the StatsBomb API).
+- Built with R 4.5.1. Results should be reproducible on later versions, but
+  package behaviour may differ.
+- Penalty shootout events (period 5) and own goals are excluded from all xG
+  and shot analyses.
