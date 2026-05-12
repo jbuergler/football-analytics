@@ -16,11 +16,14 @@
 #         data/cleaned/weuro2025_shots_clean.rds
 
 # 1. LOAD LIBRARIES ----
+# Note: these are already loaded if 00_setup.R has been run
 library(tidyverse)
 library(naniar)   
 library(StatsBombR)
 
 # 2. LOAD RAW DATA ----
+# NOTE: Raw data is already loaded in environment from 01_data.R
+# If starting fresh, run these lines:
 events_raw    <- readRDS("data/raw/weuro2025_events.rds")
 weuro_matches <- readRDS("data/raw/weuro2025_matches.rds")
 
@@ -40,22 +43,24 @@ events_filtered <- events_raw %>%
 saveRDS(events_filtered, "data/raw/events_filtered.rds")
 
 # Quick check - period 5 should now be gone
-# unique(events_filtered$period) # yes, only periods 1-4
+unique(events_filtered$period) # yes, only periods 1-4
 
 # 4. CLEAN AND ENGINEER FEATURES ----
-# allclean() unpacks the nested location columns into usable x/y coordinates
+# allclean() puts location columns into usable x/y coordinates columns
 # and adds ElapsedTime - without this, location.x is still a list column
-# methods from StatsBomb Working with R guide (StatsBomb, 2022).
+# methods from StatsBomb Working with R guide (StatsBomb, 2022, p.25).
 # https://blogarchive.statsbomb.com/uploads/2022/08/Working-with-R.pdf
 # get.opposingteam() adds OpposingTeam - avoids manual joins downstream.
 # streamline all team names so it only shows the name of the country
-# Pitch third variables engineered from StatsBomb coordinate system (120 x 80)
+# Pitch third variables engineered from StatsBomb coordinate system: 120 x 80 (StatsBomb, 2019, p.34)
+# link: https://github.com/statsbomb/open-data/blob/master/doc/StatsBomb%20Open%20Data%20Specification%20v1.1.pdf
+
 events_clean <- allclean(events_filtered) %>%
   get.opposingteam() %>%
   rename(
     location_x = location.x,
     location_y = location.y,
-    opponent   = OpposingTeam,
+    opponent = OpposingTeam,
     team = team.name,
     player = player.name
   ) %>%
@@ -63,15 +68,15 @@ events_clean <- allclean(events_filtered) %>%
   mutate(
     team = str_remove(team, " Women's"),
     team = if_else(team == "WNT Finland", "Finland", team),
-    opponent  = str_remove(opponent, " Women's"),
-    opponent  = if_else(opponent == "WNT Finland", "Finland", opponent)
+    opponent = str_remove(opponent, " Women's"),
+    opponent = if_else(opponent == "WNT Finland", "Finland", opponent)
   ) %>%
   mutate(
     pitch_third = case_when(
       location_x <= 40 ~ "defensive_third",
       location_x <= 80 ~ "middle_third",
       location_x >  80 ~ "attacking_third",
-      TRUE             ~ NA_character_
+      TRUE ~ NA_character_
     )
   ) %>%
   left_join(
@@ -111,7 +116,7 @@ shots_clean <- events_clean %>%
     shot_outcome = shot.outcome.name,
     shot_type = shot.type.name,
     shot_body_part = shot.body_part.name,
-    shot_technique  = shot.technique.name,
+    shot_technique = shot.technique.name,
     xg = shot.statsbomb_xg,
     first_time = shot.first_time,
     one_on_one = shot.one_on_one,
@@ -128,14 +133,14 @@ shots_clean <- events_clean %>%
     match_date = as.Date(match_date)
   )
 
-# nrow(shots_clean) # 875 shots total
+nrow(shots_clean) # 875 shots total
 miss_var_summary(shots_clean) # only binary flags had NAs, replaced above
 
 # 6. SAVE CLEANED DATA ----
 dir.create("data/cleaned", recursive = TRUE, showWarnings = FALSE)
 
 saveRDS(events_clean, "data/cleaned/weuro2025_events_clean.rds")
-saveRDS(shots_clean,  "data/cleaned/weuro2025_shots_clean.rds")
+saveRDS(shots_clean, "data/cleaned/weuro2025_shots_clean.rds")
 
 # Confirm files are saved
 list.files("data/cleaned")
