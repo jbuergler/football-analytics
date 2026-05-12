@@ -133,7 +133,7 @@ shots_clean <- events_clean %>%
     match_date = as.Date(match_date)
   )
 
-nrow(shots_clean) # 875 shots total
+nrow(shots_clean) # 875 shots in total
 miss_var_summary(shots_clean) # only binary flags had NAs, replaced above
 
 # 6. SAVE CLEANED DATA ----
