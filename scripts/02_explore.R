@@ -146,14 +146,17 @@ events_raw %>%
     shot.follow.dribble = sum(shot.follows_dribble, na.rm = TRUE) # 1
   )
 
-
 # 5. PASSING EVENTS ----
 # Available categories within pass columns
 unique(events_raw$pass.type.name)     
 # Kick Off, Corner, Free Kick etc.
 
 unique(events_raw$pass.outcome.name)  
-# Incomplete, Out, Pass Offside etc.
+# NA, Incomplete, Out, Pass Offside etc.
+# note: checked what NA in pass.outcome.name means
+# according to StatsBomb, NA in pass.outcome.name means successfully completed pass
+# reference: StatsBomb (2022) Working with R
+# # https://blogarchive.statsbomb.com/uploads/2022/08/Working-with-R.pdf
 
 unique(events_raw$pass.technique.name) 
 # Straight, Through Ball, Inswinging etc.
@@ -163,7 +166,6 @@ events_raw %>%
   summarise(
     # pass type 
     kickoff = sum(pass.type.name == "Kick Off", na.rm = TRUE), # 178
-    throw.in = sum(pass.type.name == "Throw-In", na.rm = TRUE), # 0
     recovery = sum(pass.type.name == "Recovery", na.rm = TRUE), # 2,663
     interception = sum(pass.type.name == "Interception", na.rm = TRUE), # 160
     goalkick = sum(pass.type.name == "Goal Kick", na.rm = TRUE), # 569
@@ -229,6 +231,7 @@ events_raw %>%
 
 # Complete and incomplete dribbles are almost exactly split (455 vs 487) -
 # slight edge to defenders across the tournament
+# not used in analysis though as this is more individual skills than team based metric
 
 # 7. DEFENSIVE EVENTS ----
 ## 7a. Duels ----
