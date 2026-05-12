@@ -42,7 +42,7 @@ csl: harvard-cite-them-right.csl
 
 # Introduction and Research Question
 
-The UEFA Women's European Championship (Euro) is a key international tournament in women's football. In 2025 it was held in Switzerland from 2nd to 27th July 2025. It came at a time when women's football continues to grow in visibility, commercial value, and public attention. The tournament has attracted record television audiences in the United Kingdom [@womensSportTrust2026]. Sixteen nations competed across the group stage and knockout rounds, producing 106 goals across 31 matches and setting multiple tournament records [@salley2025].
+The UEFA Women's European Championship (Euro) is a key international tournament in women's football. In 2025 it was held in Switzerland from 2nd to 27th July 2025. At achieved record television audiences in the United Kingdom during a time when the visibility of women's football continues to grow [@womensSportTrust2026]. Sixteen nations competed across the group stage and knockout rounds, producing 106 goals across 31 matches and setting multiple tournament records [@salley2025].
 
 Research on women's football shows that the sport is continuing to grow and is part of it becoming more professionalised. However, there still remain major gaps between the women's and men's game in areas like commercial investment, media coverage, and resources [@tjonndal2024]. That gap is where event data analysis comes in, as it can reveal whether the results are reflected in teams' performances. Anyone who is watching the game, whether it is a fan who is curious about the result, a coach who wants to plan for future fixtures or a journalist writing the post-tournament story, might ask if England's win matched with how they played.
 
@@ -52,7 +52,7 @@ The result raised an immediate analytical question: did it reflect the balance o
 
 **Did England deserve to win the Women's Euro 2025?**
 
-This question matters because although women's football is becoming increasingly more professionalised, there are still major gaps compared to men regarding its visibility, financial conditions, and commercial value [@tjonndal2024]. Recent research also shows that professional women's football has evolved technically and tactically, with event data revealing longer possession sequences, fewer long-distance shots, and more difficult, valuable passes [@bransenDavis2024]. This makes event data a useful basis for assessing whether the result reflected the balance of play. For that reason, this project evaluates whether England's title win in 2025 was deserved on performance as well as on the scoreboard.
+Recent research also shows that professional women's football has evolved technically and tactically, with event data revealing longer possession sequences, fewer long-distance shots, and more difficult, valuable passes [@bransenDavis2024]. This makes event data a useful basis for assessing whether the result reflected the balance of play. For that reason, this project evaluates whether England's title win in 2025 was deserved on performance as well as on the scoreboard.
 
 # Data Collection and Preparation
 
@@ -147,7 +147,7 @@ All metrics were calculated based on the cleaned event data and consolidated int
 
 **High press rate:** High press rate measures how often a team applies pressure in the opponent's half. Any pressure event that happened beyond `location_x > 60` on the StatsBomb coordinate system counted as a high press. StatsBomb records a pressure event each time a player actively applies pressure to an opponent in possession, which is a direct measure of pressing behaviour.
 
-**Counter-press rate:** When a team loses the ball and immediately tries to win it back, StatsBomb flags this as a counterpress. The counter-press rate is the share of all pressure events that were classified as such. Missing values were recoded to `FALSE` so the full pressure count could be used to compute the rate in %.
+**Counter-press rate:** When a team loses the ball and immediately tries to win it back, StatsBomb flags this as a counterpress. The counter-press rate is the share of all pressure events that were classified as such. StatsBomb only records them as `TRUE` if such an event happened, with all other events showing `NA` [@statsbomb2019, p.29].Thus, all the missing values were recoded to `FALSE` so the full pressure count could be used to compute the rate in %.
 
 **Pass completion rate:** The proportion of attempted passes that successfully reached a teammate from all open play passes. Unknown outcomes and injury clearances from `pass.outcome.name` were excluded. It is worth noting that in the StatsBomb data, `NA` values in `pass.outcome.name` refer to completed passes [@statsbomb2019, p.28].
 
@@ -165,7 +165,7 @@ All pressing metrics were split by stage type (group stage vs knockout rounds) t
 
 The dashboard was built using R Shiny with the `bslib` package for the layout and theme [@sievert2023]. A consistent colour palette was applied for the entire dashboard based on the official hex colours of Spain in gold (`#F1BF00`) and England in red (`#CE1124`). All other teams were highlighted in grey to ensure England and Spain can be immediately identified across every chart.
 
-The dashboard was structured across a total of six tabs that guide the reader through the story of the tournament and ultimately answer the research question. Each tab also includes a navigation sidebar that can be collapsed if needed. This gives some initial context of what each tab is showing.
+The dashboard was structured across a total of six tabs that guide the reader through the story of the tournament and ultimately answer the research question: Tournament Facts and Context, Tournament Overview, The Journey, The Final (Shots), The Final (Possession), and Was It Deserved? Each tab also includes a navigation sidebar that can be collapsed if needed. This gives some initial context of what each tab is showing.
 
 In the first tab, Tournament Facts and Context was provided, as well as manager, formation, and high-performing player information for England and Spain. After that, the Tournament Overview provided context for each team's performance regarding their expected goals (scored and conceded). Moving on, the Journey Tab shows the development of the two finalists throughout the tournament across metrics like accumulated xG, match-by-match xG and pressing. Afterwards, the final was analysed in more detail across two tabs to analyse the shot and xG situation, as well as the Possession in separate windows. The final was shown across two tabs on purpose as the plots would have looked too cluttered and difficult to read. In the last tab, the research question was answered using the analysed metrics.
 
@@ -214,11 +214,11 @@ To compare England's and Spain's routes to the final and how they performed one 
 readRDS("data/figures/fig_cumulative_xg.rds")
 ```
 
-@fig-match-eng and @fig-match-esp further confirm the cumulative xG trend. They show the xG breakdown for each of England's and Spain's games compared with their opponents. As already seen in @fig-cumulative-xg, England's xG was largely shaped by their massive win over Wales, where they achieved their highest single-match xG of the tournament (5.71). If that outlier was removed, England's attack looked a lot more modest. Spain, however, confirm the previous trend of having a more consistent xG pattern. They rarely generated less than 2 xG per game, no matter who they played.
+@fig-match-eng and @fig-match-esp further confirm the cumulative xG trend. They show the xG breakdown for each of England's and Spain's games compared with their opponents. As already seen in @fig-cumulative-xg, England's xG was largely shaped by their massive win over Wales, where they achieved their highest single-match xG of the tournament (5.71). If that outlier was removed, England's average xG across the other five games would only be 1.79. This shows a much more modest attacking output, which is significantly lower than Spain's tournament average of 2.65. Spain, on the other hand, confirms the previous trend of having a more consistent xG pattern. They rarely generated less than 2 xG per game, no matter who they played and did not have a significant outlier like England.
 
 ```{r}
 #| label: fig-match-eng
-#| fig-cap: "Match-by-match xG for England across the Tournament. Red bars show England xG, grey bars show opponent xG. England's group stage total is heavily influenced by the 6-1 win against Wales."
+#| fig-cap: "Match-by-match xG for England across the Tournament. Red bars show England xG, grey bars show opponent xG. England's group stage total is heavily influenced by the 6-1 win against."
 #| fig-width: 6
 #| fig-height: 2.5
 readRDS("data/figures/fig_match_xg_bars_eng.rds")
@@ -293,7 +293,9 @@ readRDS("data/figures/fig_player_passmap.rds")
 
 As shown in @tbl-verdict, Spain led England on all seven performance metrics across the tournament. Spain averaged more xG per match (2.65 vs 2.45) and conceded less as well (0.67 vs 1.25 xG per match). They also dominated in terms of pass completion (87.2% vs 79.4%). This number alone does not indicate better possession. But Spain showed their attacking threat through other metrics. Particularly, for the final third carries, Spain had a 6.6 percentage point lead compared to England. Consequently, by attacking more, this also led to fewer shots faced per match (8.7 vs 11.8).
 
-One finding that complicates this picture is England's pressing in the final. Spain had a much higher high-press rate across the tournament (67.8% vs 51.5%). But England applied 393 pressures to Spain's 253 in the final. This suggests that England's tactical approach was more offensive than the xG gap would indicate. Their defensive resilience was a big part of that. The data, however, showed Spain was the better side in all seven of the tournament-wide metrics.
+One finding that complicates this picture is England's pressing in the final. Spain had a much higher high-press rate across the tournament (67.8% vs 51.5%). But England applied 393 pressures to Spain's 253 in the final. These two facts are not contradictory. They just describe two different strategies. Spain's high-press rate shows how often they applied pressure in England's half. The larger amount of total pressures for England implies a different approach. They did not necessarily press lower down the pitch but more frequently. This is supported by the pass distribution data (@fig-pass-thirds). By completing 37% of their passes in their own half compared to Spain's 22%, they were protecting their defensive shape than trying to force errors high up the pitch. These numbers describe a team that focused on being defensively compact instead of trying to control the game.
+
+The data showed Spain was the better side in all seven tournament-wide metrics. Of those, xG on both sides is the most concrete evidence. Spain created better chances and conceded fewer no matter who they played. The measure that would put England at advantage, penalty conversion, is not visualised as it does not capture an open play event.
 
 ```{r}
 #| label: tbl-verdict
@@ -312,11 +314,9 @@ readRDS("data/cleaned/tbl_verdict_summary.rds") %>%
 
 ## Implication of Findings
 
-The numbers are quite clear and show that Spain was the stronger side. They created more and better chances (2.65 vs 2.45 xG per match), conceded far less (0.67 vs 1.25 xG against), and pressed higher at every stage of the tournament, as shown in @tbl-verdict. The gap was even wider in the final, where Spain created 2.14 xG from 23 shots compared to England's 0.88 from 8. In terms of attack and defence, Spain should have won.
+The numbers show that Spain was the stronger side. They created more and better chances (2.65 vs 2.45 xG per match), conceded far less (0.67 vs 1.25 xG against), and pressed higher at every stage of the tournament, as shown in @tbl-verdict. The gap was even wider in the final, where Spain created 2.14 xG from 23 shots compared to England's 0.88 from 8. In terms of attack and defence, Spain should have won.
 
-It is the way England won that makes the result worth looking at. Spain had pressed higher than England at every stage of the tournament. In the final, England were the more aggressive team with 393 pressings to Spain's 253, which is the opposite of the other games in the tournament. Combining this with a pass share mainly focused in their own defensive third suggests a team that chose to absorb pressure instead of attacking themselves. By being defensively strong, they were able to limit Spain's space and get the game to penalties.
-
-The result shows what is regularly observed in football, where match outcomes are heavily influenced by randomness and may not always reflect underlying team performance [@brechotFlepp2020].
+It is the way England won that makes the result worth looking at. Spain had pressed higher than England at every stage of the tournament. In the final, England were the more aggressive team with 393 pressings to Spain's 253, which is the opposite of the other games in the tournament. Combining this with a pass share mainly focused in their own defensive third suggests a team that chose to absorb pressure instead of attacking themselves. By being defensively strong, they were able to limit Spain's space and get the game to penalties. England's win shows a pattern that is regularly observed in football research. Match outcomes are heavily influenced by randomness and may not always reflect underlying team performance [@brechotFlepp2020].
 
 The data has a different use depending on who is looking at it. If a coach is looking to prepare for a future fixture against Spain, they could look at how their pressing dropped between different stages of the tournament (from 77% in the group stage to 62% in the knockouts). That decrease suggests Spain presses less aggressively as the stakes in a tournament increase. This is worth considering when planning how to build attacks against them in a knockout game. For a journalist, the xG timeline of the final is the clearest story. Spain dominated for 120 minutes, England's last shot was in the 68th minute, and penalties decided a match that statistics alone cannot fully explain.
 
