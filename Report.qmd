@@ -6,8 +6,6 @@ date: today
 format:
   typst:
     toc: true
-    lof: true          
-    lot: true          
     number-sections: true
     fontsize: 11pt
     mainfont: "Calibri"
@@ -16,6 +14,8 @@ format:
     margin-right: 2.54cm
     margin-top: 2.54cm
     margin-bottom: 2.54cm
+    par-indent: 0pt
+    par-leading: 8pt
     linestretch: 1.15
     papersize: a4
 
@@ -48,7 +48,7 @@ The UEFA Women's European Championship (Euro) is a key international tournament 
 
 The final match was held at St. Jakob Park on the 27th July 2025, where England competed against Spain. Spain were the reigning World Cup holders, while England entered the title as defending European Champions. Both player of the tournament and top scorer awards went to the Spanish players Aitana Bonmatí and Esther González, respectively [@schwagerpatel2025]. England retained their European title with a 3-1 penalty shootout win after a 1-1 draw after extra time [@sanders2025].
 
-The result raised an immediate analytical question: did it reflect the balance of the play throughout the tournament and in the final itself? Coaches, journalists, and fans all have reasons to ask whether the performance of the winner matched the scoreline. While the women's game continues to grow and professionalise, there are still major gaps between the women's and men's game in areas like commercial investment, media coverage, and resources [@tjonndal2024]. Data-driven analysis can help bridge that gap by applying the same performance analysis to women's football that is already common in the men's game. Research shows that quality of the women's play has developed significantly, with event data revealing longer possession sequences, fewer long-distance shots, and more difficult, valuable passes [@bransenDavis2024]. This makes event data a useful basis for assessing whether match results reflect actual team performance.
+The result raised an immediate analytical question: did it reflect the balance of the play throughout the tournament and in the final itself? Coaches, journalists, and fans all have reasons to ask whether the performance of the winner matched the scoreline. While the women's game continues to grow and professionalise, there are still major gaps between the women's and men's game in areas like commercial investment, media coverage, and resources [@tjonndal2024]. Data-driven analysis can help fill that gap by applying the same performance analysis to women's football that is already common in the men's game. Research shows that the quality of the women's play has developed significantly, with event data revealing longer possession sequences, fewer long-distance shots, and more difficult, valuable passes [@bransenDavis2024]. This makes event data a useful basis for assessing whether match results reflect actual team performance.
 
 In this project, StatsBomb open event data is used to compare England and Spain's performances in the tournament and the final. Metrics like expected goals (xG), pressing, and ball progression are analysed to address the main research question:
 
@@ -58,7 +58,7 @@ In this project, StatsBomb open event data is used to compare England and Spain'
 
 ## Source and Access
 
-For this project, event data for the UEFA Women's EURO 2025 was sourced via the `StatsBombR` package in R [@hudlNoDate]. Recently, StatsBomb was incorporated into Hudl's industry-leading ecosystem of integrated video and analytic solutions [@hudlStatsbomb2024]. They are an established provider of football event data, recording over 3,400 events per match across more than 190 competitions and thus providing a wide range of data free of charge [@hudlStatsbombNoDate]. Key functions, including `allclean()` were used to convert location columns into usable x and y coordinates and end locations. Without this step, location coordinates remain as list columns and cannot be used for the analysis. This followed the Working with R guide [@statsbomb2022, p.25].
+For this project, event data for the UEFA Women's EURO 2025 was sourced via the `StatsBombR` package in R [@hudlNoDate]. Recently, StatsBomb was incorporated into Hudl's industry-leading ecosystem of integrated video and analytic solutions [@hudlStatsbomb2024]. They are an established provider of football event data, recording over 3,400 events per match across more than 190 competitions and thus providing a wide range of data free of charge [@hudlStatsbombNoDate]. Key functions, including `allclean()`, were used to convert location columns into usable x and y coordinates and end locations. Without this step, location coordinates remain as list columns and cannot be used for the analysis. This followed the Working with R guide by @statsbomb2022 [p.25].
 
 ## Dataset Structure and Granularity
 
@@ -86,17 +86,17 @@ In order to prepare the data for the analysis, several cleaning steps were taken
 
 **Own goals:** As an own goal does not reflect the performance of the attacking team, they were excluded from all shot and xG analyses. There were a total of 3 own goals, which makes the analytical goal count (103) different from the 106 goals shown on the dashboard.
 
-**Team name standardisation:** To ensure consistent and clean team names across all tables and visualisations, all prefixes and suffixes like "Women's" or "WNT" (for Finland) were removed.
+**Team name standardisation:** To have team names consistent and clean in all tables and visualisations, all prefixes and suffixes like "Women's" or "WNT" (for Finland) were removed.
 
 **Summary Tables:** For all metrics used in this project, summary tables were created first and saved as `.rds` files. They were loaded directly by the Shiny dashboard. This approach improves loading speed and separates the data preparation from the app itself.
 
-The cleaning process produced two output tables: `weuro2025_events_clean.rds`, which includes all event types and is used for pressing and possession analysis. `weuro2025_shots_clean.rds` contains shots only and is used for all XG and shot analysis.
+The cleaning process produced two output tables: `weuro2025_events_clean.rds`, which includes all event types and is used for pressing and possession analysis. `weuro2025_shots_clean.rds` contains shots only and is used for all xG and shot analysis.
 
 ## Coverage and Caveats
 
 As shown in @tbl-data-summary, the dataset covers all 31 matches of the UEFA Women's Euro 2025 tournament from the group stage through to the final. As coverage is subject to StatsBomb's data collection methodology, any recording errors cannot be ruled out.
 
-This project analysed on-ball actions only. Off-ball movements and physical metrics such as distance covered are not included. This means that some aspects of performance, especially defensive organisation away from the ball, were not covered in this analysis. StatsBomb's freeze frame data, which records the location of all players involved in the event, including goalkeeper and defender positions at the moment of each shot, was not used in this analysis [@hudlStatsbomb2021]. However, it informed the pre-computed xG values available in the dataset, which makes them more contextually accurate. It should be noted that these xG values reflect StatsBomb's model assumptions and cannot be independently verified from the open dataset alone, but remain a well-established and widely used metric in football analytics [@matchamnodate]. StatsBomb records concrete pressing events when a player applies pressure to an opponent in possession, instead of computing pressure through combining multiple defensive actions [@dorrington2025]. This is an advantage, as it allows pressing intensity to be evaluated directly from recorded events.
+This project analysed on-ball actions only. Off-ball movements and physical metrics such as distance covered are not included. This means that some aspects of performance, especially defensive organisation away from the ball, were not covered in this analysis. StatsBomb's freeze frame data, which records the location of all players involved in the event, including goalkeeper and defender positions at the moment of each shot, was not used in this analysis [@hudlStatsbomb2021]. However, it informed the pre-computed xG values available in the dataset, which makes them more contextually accurate. These xG values reflect StatsBomb's model assumptions and cannot be independently verified from the open dataset alone, but remain a well-established and widely used metric in football analytics [@matchamnodate]. StatsBomb records concrete pressing events when a player applies pressure to an opponent in possession, instead of computing pressure through combining multiple defensive actions [@dorrington2025]. This is an advantage, as it allows pressing intensity to be evaluated directly from recorded events.
 
 The filtered dataset recorded a total of 105,525 individual events, including 875 shots (excluding own goals and penalty shootouts).
 
@@ -137,19 +137,19 @@ knitr::kable(data_summary, col.names = c("Item", "Detail"))
 
 ## From Raw Data to Dashboard
 
-This project follows a structured pipeline of five scripts, moving from raw data collection through to the interactive dashboard. First, raw event data was pulled from StatsBomb in script `01_data.R`. Afterwards, the data was explored (`02_explore.R`) and cleaned (`03_clean.R`). Following that, the data was aggregated into summary tables (`04_analyse.R`). The plots were first created as static visuals in `05_visualise.R`. Once the static versions were confirmed, they were moved as interactive elements in `app/app.R`. The visualisation process was iterative, with some debugging and changes made based on the app output on Shinylive. The xG dominance ranking and player passmaps were converted from `plotly` to static `renderPlot` due to Shinylive WebAssembly constraints, as outlined in Section 3.4. Once the app ran successfully, the dashboard was then deployed to GitHub. These steps ensure that the analysis can be reproduced and the dashboard only uses smaller, cleaned data tables that are easier to load through Shiny.
+This project follows a structured pipeline of five scripts, moving from raw data collection through to the interactive dashboard. First, raw event data was pulled from StatsBomb in script `01_data.R`. Afterwards, the data was explored (`02_explore.R`) and cleaned (`03_clean.R`). Following that, the data was aggregated into summary tables (`04_analyse.R`). The plots were first created as static visuals in `05_visualisation.R`. Once the static versions were confirmed, they were moved as interactive elements in `app/app.R`. The visualisation process was iterative, with some debugging and changes made based on the app output on Shinylive. The xG dominance ranking and player passmaps were converted from `plotly` to static `renderPlot` due to Shinylive WebAssembly constraints, as outlined in Section 3.4. Once the app ran successfully, the dashboard was then deployed to GitHub. These steps ensure that the analysis can be reproduced and the dashboard only uses smaller, cleaned data tables that are easier to load through Shiny.
 
 ## Metrics
 
 All metrics were calculated based on the cleaned event data and consolidated into summary tables. The following metrics were used across the dashboard:
 
-**Expected goals difference (xG diff):** The xG difference was calculated as a team's total minus their opponent's xG. The metric was then averaged across all matches for a tournament-wide measure. It illustrates whether a team consistently created better chances than they conceded. This is the primary metric for the Tournament Overview tab of the Dashboard.
+**Expected goals difference (xG diff):** The xG difference was calculated as a team's total minus their opponent's xG. The metric was then averaged across all matches for a tournament-wide measure. It illustrates whether a team consistently created better chances than they conceded. This is the primary metric for the Tournament Overview tab of the Dashboard. Taking the average across matches rather than tournament totals considers the different number of games each team played. This makes comparisons between teams more meaningful.
 
-**High press rate:** High press rate measures how often a team applies pressure in the opponent's half. Any pressure event that happened beyond `location_x > 60` on the StatsBomb coordinate system counted as a high press. StatsBomb records a pressure event each time a player actively applies pressure to an opponent in possession, which is a direct measure of pressing behaviour.
+**High press rate:** High press rate measures how often a team applies pressure in the opponent's half. Any pressure event that happened beyond `location_x > 60` on the StatsBomb coordinate system counted as a high press. This threshold corresponds to the halfway line on the StatsBomb coordinate system (0 to 120). Therefore, this directly measures pressure that was applied in the opponents half. StatsBomb records a pressure event each time a player actively applies pressure to an opponent in possession, which is a direct measure of pressing behaviour.
 
 **Counter-press rate:** When a team loses the ball and immediately tries to win it back, StatsBomb flags this as a counterpress. The counter-press rate is the share of all pressure events that were classified as such. StatsBomb only records them as `TRUE` if such an event happened, with all other events showing `NA` [@statsbomb2019, p.29]. Thus, all the missing values were recoded to `FALSE` so the full pressure count could be used to compute the rate in %.
 
-**Pass completion rate:** This is the proportion of attempted passes that successfully reached a teammate from all open play passes. Unknown outcomes and injury clearances from `pass.outcome.name` were excluded. In the StatsBomb data, `NA` values in `pass.outcome.name` refer to completed passes. Only failed passes or where the outcome is unclear receive an outcome label [@statsbomb2019, p.28].
+**Pass completion rate:** This is the proportion of attempted passes that successfully reached a teammate from all open play passes. Unknown outcomes (138 rows) and injury clearances (7 rows) from `pass.outcome.name` were excluded. In the StatsBomb data, `NA` values in `pass.outcome.name` refer to completed passes. Only failed passes or where the outcome is unclear receive an outcome label [@statsbomb2019, p.28].
 
 **Final third carry rate:** This refers to the proportion of all carries ending beyond `x = 80` on the StatsBomb coordinate system, which represents the final third of the pitch. This metric was chosen over the standard StatsBomb progressive carry definition (carries advancing the ball by at least 10 units). As it directly shows penetration into the attacking third instead of forward progress from any location, this was chosen as a more meaningful metric to analyse the attacking play.
 
@@ -171,7 +171,7 @@ The dashboard was structured across a total of six tabs that guide the reader th
 
 In the first tab, Tournament Facts and Context was provided, as well as manager, formation, and high-performing player information for England and Spain. After that, the Tournament Overview provided context for each team's performance regarding their expected goals (scored and conceded). Moving on, the Journey Tab shows the development of the two finalists throughout the tournament across metrics like accumulated xG, match-by-match xG and pressing. Afterwards, the final was analysed in more detail across two tabs to analyse the shot and xG situation, as well as the Possession in separate windows. The final was shown across two tabs on purpose, as the plots would have looked too cluttered and difficult to read. In the last tab, the research question was answered using the analysed metrics. The tab sequence was chosen intentionally to build the analysis. It first shows tournament-wide context, then shows the journey to the final before evaluating the final itself. This way, the verdict in the last tab is supported by the evidence the reader has already seen.
 
-The individual chart types were chosen based on the analytical question each visualisation attempted to address. A horizontal bar chart ranks all 16 teams by xG dominance, making the ranking immediately readable. A scatter plot compares total xG against goals scored, showing which teams over- or underperformed in terms of goals. Cumulative line charts show how the xG and momentum change across the tournament, while step charts show the xG accumulated shot by shot in the final. Pitch-based plots like shot maps (scatter plot) and player passmaps (arrow maps) use spatial data to show where on the pitch certain actions happened. Reference lines at +1 and -1 are added to the xG ranking chart to provide context for what a meaningfully positive or negative xG difference per match refers to.
+The individual chart types were chosen based on the analytical question each visualisation attempted to address. A scatter plot compares total xG against goals scored, showing which teams over- or underperformed in terms of goals. A horizontal bar chart ranks all 16 teams by xG dominance, making the ranking immediately readable. Cumulative line charts show how the xG and momentum change across the tournament, while step charts show the xG accumulated shot by shot in the final. Pitch-based plots like shot maps (scatter plot) and player passmaps (arrow maps) use spatial data to show where on the pitch certain actions happened. Reference lines at +1 and -1 are added to the xG ranking chart to provide context for what a meaningfully positive or negative xG difference per match refers to.
 
 Apart from two exceptions, all `plotly` charts include hover tooltips providing exact values for each element of the plots. The xG Dominance tournament ranking chart and player passmaps use static `renderPlot` instead of `plotly`. For the passmaps, this was due to a compatibility constraint between the `ggsoccer` package and the rendering mechanism of `plotly` in the Shinylive WebAssembly environment. For the xG ranking chart, the static approach was chosen because of a Shinylive WebAssembly issue with categorical variables on the y-axis. This caused issues in rendering the plot with `plotly`. This was solved by converting the plot to a static one, which is acceptable, as interactivity does not add meaningful value to a ranked chart. The relative positions and reference lines at ±1 communicate the findings clearly without tooltips.
 
@@ -183,7 +183,7 @@ Apart from two exceptions, all `plotly` charts include hover tooltips providing 
 
 ```{r}
 #| label: fig-xg-scatter
-#| fig-cap: "Goals scored vs total xG for all 16 Teams. Teams above the dashed line scored more than expected, and teams below the dashed line scored less than expected. Both England and Spain outperformed their xG, with Spain generating greater overall chance quality. Exact values per team are available via the interactive tooltips in the dashboard"
+#| fig-cap: "Goals scored vs total xG for all 16 Teams. Teams above the dashed line scored more than expected, and teams below the dashed line scored less than expected. Both England and Spain outperformed their xG, with Spain generating greater overall chance quality. Exact values per team are available via the interactive tooltips in the dashboard."
 #| fig-width: 6
 #| fig-height: 3.5
 
@@ -196,7 +196,7 @@ In terms of average xG difference, @fig-xg-ranking illustrates how Spain outperf
 #| label: fig-xg-ranking
 #| fig-cap: "All 16 Teams ranked by average xG Difference per Match. Spain led the Tournament (+1.98), ahead of England (+1.20)."
 #| fig-width: 6
-#| fig-height: 3
+#| fig-height: 2.8
 
 readRDS("data/figures/fig_xg_ranking.rds")
 ```
@@ -209,7 +209,7 @@ To compare England's and Spain's routes to the final and how they performed one 
 
 ```{r}
 #| label: fig-cumulative-xg
-#| fig-cap: "Cumulative xG across the tournament for England and Spain. Spain built xG at a consistently higher rate, pulling clear from Match 4 onwards. Grey lines show all other teams. Exact xG values per match point are available via the interactive tooltips in the dashboard"
+#| fig-cap: "Cumulative xG across the tournament for England and Spain. Spain built xG at a consistently higher rate, pulling clear from Match 4 onwards. Grey lines show all other teams. Exact xG values per match point are available via the interactive tooltips in the dashboard."
 #| fig-width: 6
 #| fig-height: 3
 
@@ -234,13 +234,13 @@ readRDS("data/figures/fig_match_xg_bars_eng.rds")
 readRDS("data/figures/fig_match_xg_bars_esp.rds")
 ```
 
-@fig-pressing shows the pressing intensity across high pressing and counter pressing. Evaluating both these metrics, Spain was ahead of England in the group stages and knockouts. They achieved their highest rates in the group stages with 77% (high-press rate) and 32% (counter-press rate). Spain's numbers suggest a team that set up to win back the ball high up the pitch and keep opponents in their own half. This style fits with their xG advantage across the tournament. The data, however, shows that Spain, in particular, reduced their pressing intensity in the knockouts, compared to the group stages. This is not surprising, considering the margins to win in the knockouts are usually higher, and a pressing done wrong could lead to a fatal counterattack. Surprisingly, England's counterpressing only marginally reduced in the later stages of the tournament (- 3 percentage points). This shows that there was a smaller tactical change compared to Spain.
+@fig-pressing shows the pressing intensity across high pressing and counter pressing. Evaluating both these metrics, Spain was ahead of England in the group stages and knockouts. They achieved their highest rates in the group stages with 77% (high-press rate) and 32% (counter-press rate). Spain's numbers suggest a team that set up to win back the ball high up the pitch and keep opponents in their own half. This style fits with their xG advantage across the tournament. The data, however, shows that Spain, in particular, reduced their pressing intensity in the knockouts, compared to the group stages. This is not surprising, considering the margins to win in the knockouts are usually higher, and a pressing done wrong could lead to a fatal counterattack. Surprisingly, England's counterpressing only marginally reduced in the later stages of the tournament (minus 3 percentage points). This shows that there was a smaller tactical change compared to Spain.
 
 ```{r}
 #| label: fig-pressing
 #| fig-cap: "Pressing Intensity by stage. High press rate and counter-press rate for England and Spain across the group stage and knockout rounds. Spain pressed higher at every stage."
 #| fig-width: 6
-#| fig-height: 3
+#| fig-height: 2.7
 
 readRDS("data/figures/fig_press_shift.rds")
 ```
@@ -251,14 +251,14 @@ Looking at the attacking output in the final, Spain clearly dominated England on
 
 ```{r}
 #| label: fig-shot-map
-#| fig-cap: "Shot map for the Women's Euro 2025 Final. England attack from the left, Spain attack from the right. Circle size represents xG value. The white ring indicates a goal. Spain registered 23 shots to England's 8. Exact xG values and shot outcomes for each attempt are available via the interactive tooltips in the dashboard"
+#| fig-cap: "Shot map for the Women's Euro 2025 Final. England attack from the left, Spain attack from the right. Circle size represents xG value. The white ring indicates a goal. Spain registered 23 shots to England's 8. Exact xG values and shot outcomes for each attempt are available via the interactive tooltips in the dashboard."
 #| fig-width: 6
 #| fig-height: 3
 
 readRDS("data/figures/fig_shot_map.rds")
 ```
 
-@fig-xg-timeline further illustrates how Spain dominated in attack from the start of the match. They accumulated a total of 2.14xG across their 23 shots by the end of extra time. England only had a total xG of 0.88 from 8 shots, but had a higher xG per shot (0.11 xG vs 0.09 xG). England's last shot came in the 68th minute, which means they did not create any chances in the final 52 minutes of the game, including extra time. The match ended 1-1 after 120 minutes despite this xG gap and Spain's more dominant attacking display. England then won 3-1 on penalties, which could not have been predicted with the attacking performance data alone.
+@fig-xg-timeline further illustrates how Spain dominated in attack from the start of the match. They accumulated a total of 2.14 xG across their 23 shots by the end of extra time. England only had a total xG of 0.88 from 8 shots, but had a higher xG per shot (0.11 xG vs 0.09 xG). England's last shot came in the 68th minute, which means they did not create any chances in the final 52 minutes of the game, including extra time. The match ended 1-1 after 120 minutes despite this xG gap and Spain's more dominant attacking display. England then won 3-1 on penalties, which could not have been predicted with the attacking performance data alone.
 
 ```{r}
 #| label: fig-xg-timeline
@@ -269,7 +269,7 @@ readRDS("data/figures/fig_shot_map.rds")
 readRDS("data/figures/fig_xg_timeline.rds")
 ```
 
-Spain also dominated possession. As shown in @fig-pass-thirds, they directed 29% of completed passes into the attacking third, compared to England's 15%. It further displays that England made more passes in defensive areas of the pitch (37% vs 22%). Across both shots and possession, it is clear that Spain attempted more shots and ball movements into the final third.
+Spain also dominated possession. As shown in @fig-pass-thirds, they directed 29% of completed passes into the attacking third, compared to England's 15%. It further displays that England made more passes in defensive areas of the pitch (37% vs 22%). Across both shots and possession, it is clear that Spain attempted more shots and ball movements into the final third, whereas England focused on keeping the ball in their own half.
 
 ```{r}
 #| label: fig-pass-thirds
@@ -316,11 +316,11 @@ readRDS("data/cleaned/tbl_verdict_summary.rds") %>%
 
 ## Implication of Findings
 
-The numbers in @tbl-verdict show that Spain was the stronger side across the tournament. The gap was even wider in the final, as shown in Section 4.3. In terms of attack and defence, Spain should have won.
+The numbers in @tbl-verdict show that Spain was the stronger side across the tournament. This gap was even wider in the final, where Spain dominated on both chance quality and possession, as shown in Section 4.3. In terms of attack and defence, Spain should have won.
 
 It is the way England won that makes the result worth looking at. As shown in Section 4.4, Spain pressed higher than England throughout the tournament, but in the final, England pressed more. Combining this with a pass share mainly focused on their own defensive third suggests a team that chose to absorb pressure instead of attacking themselves. By being defensively strong, they were able to limit Spain's space and get the game to penalties. Spain only converting one of their 23 shots from 2.14 xG suggests England's defensive organisation was a significant factor. Statsbomb's xG model already includes goalkeeper and defender positioning at the moment of each shot [@hudlStatsbomb2021]. England's defensive resilience explains part of that gap, but it cannot be confirmed from open event data alone. That England's win does show a pattern that is regularly observed in football research. Match outcomes are heavily influenced by randomness and may not always reflect underlying team performance [@brechotFlepp2020].
 
-The data has a different use depending on who is looking at it. If a coach is looking to prepare for a future fixture against Spain, they could look at how their pressing dropped between different stages of the tournament (from 77% in the group stage to 62% in the knockouts). That decrease suggests Spain presses less aggressively as the stakes in a tournament increase. This is worth considering when planning how to build attacks against them in a knockout game. For a journalist, the xG timeline of the final is the clearest story. Spain dominated for 120 minutes, England's last shot was in the 68th minute, and penalties decided a match that statistics alone cannot fully explain.
+The findings have a different use depending on who is looking at them. If a coach is looking to prepare for a future fixture against Spain, they could look at how their pressing dropped between different stages of the tournament (from 77% in the group stage to 62% in the knockouts). That decrease suggests Spain presses less aggressively as the stakes in a tournament increase. This is worth considering when planning how to build attacks against them in a knockout game. For a journalist, the xG timeline of the final is the clearest story. Spain dominated for 120 minutes, England's last shot was in the 68th minute, and penalties decided a match that statistics alone cannot fully explain.
 
 ## Limitations
 
@@ -332,7 +332,7 @@ Third, the player-level analysis only focused on Bonmatí and Hemp, who were the
 
 ## Future Outlook
 
-There are several extensions to further strengthen this analysis. For example, the StatsBomb freeze frame data could be included. This could help evaluate shot quality in a more accurate way by including goalkeeper positioning and defensive pressure at the moment of each attempt. This would directly address the gap between Spain's 2.14 xG and the single goal they scored in the final. Second, if available, physical tracking data should be incorporated. This would allow England's defensive shape to be quantified instead of implied. It is currently one of the main gaps in explaining how they kept Spain to one goal from 23 shots. The same analysis could also be extended to other international tournaments, like the 2022 Women's Euro or the 2023 World Cup. This could help to benchmark England's and Spain's 2025 performances against their own past results. With that, the additional verdict reached here would be either confirmed or challenged. Another extension could be to include match situation data that shows whether a team was winning, drawing, or losing. The `get.gamestate()` function, which is available within the `StatsBombR` package would make this possible without requiring additional data access [@statsbomb2022, p.25]. This would be particularly valuable when interpreting England's second-half pressing in the final. They might have consciously shifted to a more defensive shape after equalising in the 56th minute.
+There are several extensions to further strengthen this analysis. For example, the StatsBomb freeze frame data could be included. This could help evaluate shot quality in a more accurate way by including goalkeeper positioning and defensive pressure at the moment of each attempt. This would directly address the gap between Spain's 2.14 xG and the single goal they scored in the final. Second, if available, physical tracking data should be incorporated. This would allow England's defensive shape to be quantified instead of implied. It is currently one of the main gaps in explaining how they kept Spain to one goal from 23 shots. The same analysis could also be extended to other international tournaments, like the 2022 Women's Euro or the 2023 World Cup. This could help to benchmark England's and Spain's 2025 performances against their own past results. With that, the additional verdict reached here would be either confirmed or challenged. Another extension could be to include match situation data that shows whether a team was winning, drawing, or losing. The `get.gamestate()` function, which is available within the `StatsBombR` package, would make this possible without requiring additional data access [@statsbomb2022, p.25]. This would be particularly valuable when interpreting England's second-half pressing in the final. They might have consciously shifted to a more defensive shape after equalising in the 56th minute.
 
 Of these, incorporating freeze frame and the state of the game would be the simplest next step with the most direct impact on the research question. Both are available through StatsBomb and would not require additional data access. Full tracking data would have the most comprehensive impact to improve the analysis, but would require access to the respective data, which may be more difficult to achieve.
 
