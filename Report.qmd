@@ -6,6 +6,8 @@ date: today
 format:
   typst:
     toc: true
+    lof: true          
+    lot: true          
     number-sections: true
     fontsize: 11pt
     mainfont: "Calibri"
@@ -46,7 +48,7 @@ The UEFA Women's European Championship (Euro) is a key international tournament 
 
 The final match was held at St. Jakob Park on the 27th July 2025, where England competed against Spain. Spain were the reigning World Cup holders, while England entered the title as defending European Champions. Both player of the tournament and top scorer awards went to the Spanish players Aitana Bonmatí and Esther González, respectively [@schwagerpatel2025]. England retained their European title with a 3-1 penalty shootout win after a 1-1 draw after extra time [@sanders2025].
 
-The result raised an immediate analytical question: did it reflect the balance of the play throughout the tournament and in the final itself? Coaches, journalists, and fans all have reasons to ask whether the performance of the winner matched the scoreline. Research on women's football shows that the sport continues to grow and is becoming more professionalised. However, there still remain major gaps between the women's and men's game in areas like commercial investment, media coverage, and resources [@tjonndal2024]. Despite this, the quality of play has developed significantly, with event data revealing longer possession sequences, fewer long-distance shots, and more difficult, valuable passes [@bransenDavis2024]. This makes event data a useful basis for assessing whether match results reflect actual team performance.
+The result raised an immediate analytical question: did it reflect the balance of the play throughout the tournament and in the final itself? Coaches, journalists, and fans all have reasons to ask whether the performance of the winner matched the scoreline. While the women's game continues to grow and professionalise, there are still major gaps between the women's and men's game in areas like commercial investment, media coverage, and resources [@tjonndal2024]. Data-driven analysis can help bridge that gap by applying the same performance analysis to women's football that is already common in the men's game. Research shows that quality of the women's play has developed significantly, with event data revealing longer possession sequences, fewer long-distance shots, and more difficult, valuable passes [@bransenDavis2024]. This makes event data a useful basis for assessing whether match results reflect actual team performance.
 
 In this project, StatsBomb open event data is used to compare England and Spain's performances in the tournament and the final. Metrics like expected goals (xG), pressing, and ball progression are analysed to address the main research question:
 
