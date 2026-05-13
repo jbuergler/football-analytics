@@ -9,27 +9,29 @@
 # data/raw/weuro2025_events.rds
 # data/raw/weuro2025_matches.rds
 
-# --- 1. Libraries ----
+# 1. Libraries ----
 # Note: these are already loaded if 00_setup.R has been run
 library(StatsBombR)
 library(tidyverse)
 library(naniar)
 
-# --- 2. Pull competitions and confirm Euro 2025 IDs ----
-competitions <- FreeCompetitions()
+# 2. Pull competitions and confirm Euro 2025 IDs ----
+competitions <- FreeCompetitions() # Competition ID 53
 
-# Check what's available for competition_id 53 (UEFA Women's Euro)
+# Confirm correct competition and season ID's before pulling
 competitions %>%
   filter(competition_id == 53) %>%
-  select(competition_id, competition_name, season_id, season_name)
+  select(competition_id, competition_name, season_id, season_name) 
+# competition_id: 53, season_id: 315 for 2025
 
-# --- 3. Filter to Women's Euro 2025 and pull matches ----
+# 3. Filter to Women's Euro 2025 and pull matches ----
 # season_id 315 = UEFA Women's Euro 2025
 weuro_2025 <- competitions %>%
   filter(competition_id == 53, season_id == 315)
 
 weuro_matches <- FreeMatches(Competitions = weuro_2025)
 
+# check and verify match list before pulling events
 weuro_matches %>%
   select(match_id, match_date, 
          home_team.home_team_name, 
@@ -37,15 +39,17 @@ weuro_matches %>%
   arrange(match_date)
 
 
-# --- 4. Pull events for each match and combine into one dataframe ----
+# 4. Pull events for each match and combine into one dataframe ----
 # according to StatsBomb Working with R guide (StatsBomb, 2022, p.11).
 # https://blogarchive.statsbomb.com/uploads/2022/08/Working-with-R.pdf
 events_raw <- free_allevents(MatchesDF = weuro_matches, Parallel = TRUE)
 
-# --- 5. Save raw data to data/raw/ ----
-dir.create("data/raw", recursive = TRUE) # create raw data folder
+# 5. Save raw data to data/raw/ ----
+dir.create("data/raw", recursive = TRUE, showWarnings = FALSE) # create raw data folder if it doesn't exist
 saveRDS(events_raw, "data/raw/weuro2025_events.rds")
 saveRDS(weuro_matches, "data/raw/weuro2025_matches.rds")
 
-
-
+# 6. check if pull was successful
+# expected: 31 matches, ~ 100,000+ event rows
+cat("Matches pulled:", nrow(weuro_matches), "\n") # 31 matches
+cat("Events pulled:", nrow(events_raw), "\n") # 105,611 event rows
