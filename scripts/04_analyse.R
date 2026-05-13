@@ -39,10 +39,8 @@
 # LOAD LIBRARIES AND DATA ----
 # Note: these are already loaded if 00_setup.R has been run
 library(tidyverse)
-library(StatsBombR)
 
-# NOTE: cleaned is already loaded in environment from 03_clean.R
-# If starting fresh, run these lines:
+# Load cleaned data saved by 03_clean.R
 shots_clean <- readRDS("data/cleaned/weuro2025_shots_clean.rds")
 events_clean <- readRDS("data/cleaned/weuro2025_events_clean.rds")
 
@@ -129,6 +127,7 @@ tbl_team_xg_summary <- tbl_match_xg %>%
 
 # Key finding:
 # Spain 1st (avg_xg_diff 1.98), England 3rd (1.20).
+# England and Spain outperformed their xG (goals_minus_xg > 0)
 
 ## tbl_press_summary ----
 # Pressing intensity by team and stage type 
@@ -165,7 +164,7 @@ tbl_press_summary <- events_clean %>%
 
 # Key findings:
 # Spain led on high press rate at every stage (76.6 group, 61.8 knockout vs 56.3 and 48.5 for England)
-# Counter-press gap is smaller but consistent - Spain 32.3 group, England 20.
+# Similar picture for counterpress: 32.3 and 25.6 (Spain group and knockout) vs 19.9 vs 17.4
 
 ## tbl_ball_progression ----
 # Pass and carry metrics showing how each team moved the ball forward
@@ -174,7 +173,9 @@ tbl_press_summary <- events_clean %>%
 # shows how the attacking third was penetrated with ball carries
 # I excluded Unknown and Injury Clearance pass outcomes (138 and 7 rows respectively)
 # as neither of them show successful or failed passes
-# Progressive pass = at least 10 units forward
+# Progressive pass = at least 10 units forward (Based on StatsBomb pitch length of 120 units)
+# this is roughly equivalent to 6.5 metres on a standard pitch
+# this threshold was chosen to capture meaningful forward passes
 # Final Third: passes/ carries ending beyond x = 80 (attacking third boundary)
 
 # Step 1: carry metrics per team
@@ -313,6 +314,32 @@ saveRDS(tbl_final_timeline, "data/cleaned/tbl_final_timeline.rds")
 # Tab 3B: what happened in the England vs Spain final (possession)?
 
 ## tbl_final_player_actions ----
+# player selection: Hemp and Bonmatí selected as the primary
+# ball carriers into the attacking third for their teams
+# verified by ranking final third carries and passes separately below
+
+# Top players by final third carries in the final
+events_clean %>%
+  filter(match_id == final_match_id, type.name == "Carry",
+         carry.end_location.x > 80) %>%
+  count(team, player, sort = TRUE) %>%
+  group_by(team) %>%
+  slice_max(n, n = 5)
+# Hemp 1st England (23 final third carries), Bonmatí 1st Spain (42 final third carries)
+
+# Top players by final third passes in the final  
+events_clean %>%
+  filter(match_id == final_match_id, type.name == "Pass",
+         is.na(pass.outcome.name), pass.end_location.x > 80) %>%
+  count(team, player, sort = TRUE) %>%
+  group_by(team) %>%
+  slice_max(n, n = 5)
+
+# Hemp not in top 3 England passes but by far the highest in carries so she is the strongest pick
+# Bonmatí 2nd Spain (42) behind Ona Batlle (50) on passes but 1st on carries
+# Bonmatí selected as more like-for-like attacking midfielder comparison
+
+
 # Completed passes and progressive carries for Bonmatí and Hemp in the final.
 # Used for the player pass map in Tab 3B.
 # Filtered to final-third actions only to keep the map readable
@@ -346,9 +373,6 @@ tbl_final_player_actions <- events_clean %>%
   select(player_label, action_type, minute,
          location_x, location_y, end_x, end_y, tooltip) 
 
-# Player selection rationale:
-# Bonmatí: most active attacking player in the final by carries and passes into the final third
-# Hemp: England's equivalent: highest volume of forward ball-carrying for her side
 # Comparing them spatially follows StatsBomb Use Case 4: Plotting Passes
 # StatsBomb Working with R guide (StatsBomb, 2022, pp. 22-24)
 # https://blogarchive.statsbomb.com/uploads/2022/08/Working-with-R.pdf
