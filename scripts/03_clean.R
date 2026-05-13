@@ -15,6 +15,11 @@
 # Output: data/cleaned/weuro2025_events_clean.rds
 #         data/cleaned/weuro2025_shots_clean.rds
 
+# DATA ETHICS NOTE:
+# all the data was sourced from StatsBomb's open data
+# it is freely available for non-commercial and educational use
+# no personal data apart from player names is used
+
 # 1. LOAD LIBRARIES ----
 # Note: these are already loaded if 00_setup.R has been run
 library(tidyverse)
@@ -30,9 +35,9 @@ weuro_matches <- readRDS("data/raw/weuro2025_matches.rds")
 # 3. REMOVE PENALTY SHOOTOUTS ----
 # StatsBomb records shootout kicks as period = 5.
 # Three matches went to shootouts:
-#   Sweden v England (match_id 4018355)
-#   France v Germany (match_id 4018357)
-#   England v Spain Final (match_id 4020846)
+# Sweden v England (match_id 4018355)
+# France v Germany (match_id 4018357)
+# England v Spain Final (match_id 4020846)
 # All analysis should be based on 90 + extra time only.
 
 events_filtered <- events_raw %>%
@@ -106,6 +111,7 @@ events_clean <- allclean(events_filtered) %>%
 # stage_type values: "Group Stage", "Quarter-finals", "Semi-finals", "Final"
 # The four competition stages are collapsed into a binary group/knockout split
 # match_date also converted to Date type
+
 shots_clean <- events_clean %>%
   filter(type.name == "Shot") %>%
   select(
@@ -137,6 +143,8 @@ nrow(shots_clean) # 875 shots in total
 miss_var_summary(shots_clean) # only binary flags had NAs, replaced above
 
 # 6. SAVE CLEANED DATA ----
+# these files are used in 04_analyse.R to build the summary tables
+# that are then loaded by app/app.R
 dir.create("data/cleaned", recursive = TRUE, showWarnings = FALSE)
 
 saveRDS(events_clean, "data/cleaned/weuro2025_events_clean.rds")
