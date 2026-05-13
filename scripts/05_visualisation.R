@@ -23,6 +23,11 @@ library(ggrepel)
 library(ggsoccer)
 library(gt)
 
+# NOTE ON TITLES AND SUBTITLES ----
+# chart subtitles are intentionally not added to all the figures here
+# visual explanations are added via the fig-cap in the quarto report (.qmd)
+# as well as through the descriptive text in the dashboard UI in app.R
+
 ## COLOURS ----- 
 # defined once, used in both ggplot charts and bslib theme later in app
 euro_colours <- c(
@@ -657,7 +662,7 @@ saveRDS(fig_xg_scatter, "data/figures/fig_xg_scatter.rds")
 saveRDS(fig_xg_ranking, "data/figures/fig_xg_ranking.rds")
 saveRDS(fig_xg_ranking_app, "data/figures/fig_xg_ranking_app.rds") # not used in report but saved for app
 
-# Section 4.1 The Journey to the Final
+# Section 4.2 The Journey to the Final
 saveRDS(fig_cumulative_xg, "data/figures/fig_cumulative_xg.rds")
 saveRDS(fig_match_xg_bars_eng, "data/figures/fig_match_xg_bars_eng.rds")
 saveRDS(fig_match_xg_bars_esp, "data/figures/fig_match_xg_bars_esp.rds")
