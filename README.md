@@ -18,10 +18,10 @@ StatsBomb open event data pulled from the `StatsBombR` package. Competition ID 5
 
 ## Repository Layout
 
-- `scripts/` — data pipeline (`00_setup.R` through `05_visualise.R`)
-- `app/`     — the Shiny app (`app.R` and all `.rds` data files)
-- `docs/`    — the Shinylive build served by GitHub Pages
-- `data/`    — raw and cleaned data and figures
+- `scripts/` - data pipeline (`00_setup.R` through `05_visualise.R`)
+- `app/`     - the Shiny app (`app.R` and all `.rds` data files)
+- `docs/`    - the Shinylive build served by GitHub Pages
+- `data/`    - raw and cleaned data and figures
 
 ## How to Reproduce
 
@@ -33,7 +33,7 @@ source("scripts/00_setup.R")
 ```
 
 This installs and loads all required packages, including `devtools` and
-`StatsBombR`, if they are not already present on your machine.
+`StatsBombR`, if they are not already on your machine.
 
 ### Step 2: Run the data pipeline in order
 
