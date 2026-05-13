@@ -42,23 +42,21 @@ csl: harvard-cite-them-right.csl
 
 # Introduction and Research Question
 
-The UEFA Women's European Championship (Euro) is a key international tournament in women's football. In 2025, it was held in Switzerland from the 2nd to 27th July 2025. It achieved record television audiences in the United Kingdom during a time when the visibility of women's football continues to grow [@womensSportTrust2026]. Sixteen nations competed across the group stage and knockout rounds, producing 106 goals across 31 matches and setting multiple tournament records [@salley2025].
-
-Research on women's football shows that the sport is continuing to grow and becoming more professionalised. However, there still remain major gaps between the women's and men's game in areas like commercial investment, media coverage, and resources [@tjonndal2024]. That gap is where event data analysis comes in, as it can reveal whether the results are reflected in teams' performances. Anyone who is watching the game, whether it is a fan who is curious about the result, a coach who wants to plan for future fixtures or a journalist writing the post-tournament story, might ask if England's win matched with how they played.
+The UEFA Women's European Championship (Euro) is a key international tournament in women's football. In 2025, it was held in Switzerland from the 2nd to the 27th July 2025. It achieved record television audiences in the United Kingdom during a time when the visibility of women's football continues to grow [@womensSportTrust2026]. Sixteen nations competed across the group stage and knockout rounds, producing 106 goals across 31 matches and setting multiple tournament records [@salley2025].
 
 The final match was held at St. Jakob Park on the 27th July 2025, where England competed against Spain. Spain were the reigning World Cup holders, while England entered the title as defending European Champions. Both player of the tournament and top scorer awards went to the Spanish players Aitana Bonmatí and Esther González, respectively [@schwagerpatel2025]. England retained their European title with a 3-1 penalty shootout win after a 1-1 draw after extra time [@sanders2025].
 
-The result raised an immediate analytical question: did it reflect the balance of the play throughout the tournament and in the final itself? In this project, StatsBomb open event data is used to compare England and Spain's performances in the tournament and the final. Metrics like expected goals (xG), pressing, and ball progression are analysed and lead to the main research question:
+The result raised an immediate analytical question: did it reflect the balance of the play throughout the tournament and in the final itself? Coaches, journalists, and fans all have reasons to ask whether the performance of the winner matched the scoreline. Research on women's football shows that the sport continues to grow and is becoming more professionalised. However, there still remain major gaps between the women's and men's game in areas like commercial investment, media coverage, and resources [@tjonndal2024]. Despite this, the quality of play has developed significantly, with event data revealing longer possession sequences, fewer long-distance shots, and more difficult, valuable passes [@bransenDavis2024]. This makes event data a useful basis for assessing whether match results reflect actual team performance.
+
+In this project, StatsBomb open event data is used to compare England and Spain's performances in the tournament and the final. Metrics like expected goals (xG), pressing, and ball progression are analysed to address the main research question:
 
 **Did England deserve to win the Women's Euro 2025?**
-
-Recent research also shows that professional women's football has evolved technically and tactically, with event data revealing longer possession sequences, fewer long-distance shots, and more difficult, valuable passes [@bransenDavis2024]. This makes event data a useful basis for assessing whether the result reflected the balance of play. For that reason, this project evaluates whether England's title win in 2025 was deserved on performance as well as on the scoreboard.
 
 # Data Collection and Preparation
 
 ## Source and Access
 
-For this project, event data for the UEFA Women's EURO 2025 was sourced via the `StatsBombR` package in R [@hudlNoDate]. Recently, StatsBomb was incorporated into Hudl's industry-leading ecosystem of integrated video and analytic solutions [@hudlStatsbomb2024]. They are an established provider of football event data, recording over 3,400 events per match across more than 190 competitions and thus providing a wide range of data free of charge [@hudlStatsbombNoDate]. Key functions, including `allclean()` for enriching event coordinates and pass end locations were used based on the workflow outlined in the Working with R guide [@statsbomb2022, p.25].
+For this project, event data for the UEFA Women's EURO 2025 was sourced via the `StatsBombR` package in R [@hudlNoDate]. Recently, StatsBomb was incorporated into Hudl's industry-leading ecosystem of integrated video and analytic solutions [@hudlStatsbomb2024]. They are an established provider of football event data, recording over 3,400 events per match across more than 190 competitions and thus providing a wide range of data free of charge [@hudlStatsbombNoDate]. Key functions, including `allclean()` were used to convert location columns into usable x and y coordinates and end locations. This followed the Working with R guide [@statsbomb2022, p.25].
 
 ## Dataset Structure and Granularity
 
@@ -159,7 +157,7 @@ All metrics were calculated based on the cleaned event data and consolidated int
 
 ## Grouping and Filtering Decisions
 
-All pressing metrics were split by stage type (group stage vs knockout rounds) to capture if there were any tactical shifts as the tournament progressed. The final match was isolated by selecting only the match ID of the final itself using `competition_stage == "Final"` and analysed separately across the tabs that focused on a detailed analysis of the events in the final between England and Spain. Actions of the best players were filtered to Bonmatí and Hemp specifically. They accumulated the most final third passes and carries for their teams. The pass map visualisation was made based on the approach described in the Working with R guide by @statsbomb2022 [pp. 22-24].
+All pressing metrics were split by stage type (group stage vs knockout rounds) to capture if there were any tactical shifts as the tournament progressed. The final match was isolated by selecting only the match ID of the final itself using `competition_stage == "Final"` and analysed separately across the tabs that focused on a detailed analysis of the events in the final between England and Spain. Actions of the best players were filtered to Bonmatí and Hemp specifically. They were selected based on final third carries in the final, where Hemp ranked first for England (23 carries) and Bonmatí ranked first for Spain (42 carries). The pass map visualisation was made based on the approach described in the Working with R guide by @statsbomb2022 [pp. 22-24].
 
 ## Dashboard Design
 
@@ -179,18 +177,7 @@ Apart from two exceptions, all plotly charts include hover tooltips providing ex
 
 ## Tournament Overview
 
-@fig-xg-ranking shows that England and Spain outperformed relative to their expected goals. Spain scored 18 goals from 15.91 xG (+2.09), and England scored 16 goals from 14.68 xG (+1.32). Both teams were clinical in front of goal, with Spain being slightly more clinical and also generating more chance quality.
-
-```{r}
-#| label: fig-xg-ranking
-#| fig-cap: "All 16 Teams ranked by average xG Difference per Match. Spain led the Tournament (+1.98), ahead of England (+1.20)."
-#| fig-width: 6
-#| fig-height: 3
-
-readRDS("data/figures/fig_xg_ranking.rds")
-```
-
-In terms of average xG difference, @fig-xg-scatter illustrates how Spain outperformed all teams with an average xG difference of +1.98 per match. That means they created significantly better chances than they conceded across all their games. England ranked third with an average xG difference of +1.20 per match. This reveals that both finalists performed above the +1 reference line by creating more and better chances than they allowed. Wales had the lowest average xG difference per match (-2.65), which confirms their early group stage exit. However, this number is slightly inflated due to their 1-6 loss against England on Matchday 3.
+@fig-xg-scatter shows that England and Spain outperformed relative to their expected goals. Spain scored 18 goals from 15.91 xG (+2.09), and England scored 16 goals from 14.68 xG (+1.32). Both teams were clinical in front of goal, with Spain being slightly more clinical and also generating more chance quality.
 
 ```{r}
 #| label: fig-xg-scatter
@@ -201,11 +188,22 @@ In terms of average xG difference, @fig-xg-scatter illustrates how Spain outperf
 readRDS("data/figures/fig_xg_scatter.rds")
 ```
 
+In terms of average xG difference, @fig-xg-ranking illustrates how Spain outperformed all teams with an average xG difference of +1.98 per match. That means they created significantly better chances than they conceded across all their games. England ranked third with an average xG difference of +1.20 per match. This reveals that both finalists performed above the +1 reference line by creating more and better chances than they allowed. Wales had the lowest average xG difference per match (-2.65), which confirms their early group stage exit. However, this number is slightly inflated due to their 1-6 loss against England on Matchday 3.
+
+```{r}
+#| label: fig-xg-ranking
+#| fig-cap: "All 16 Teams ranked by average xG Difference per Match. Spain led the Tournament (+1.98), ahead of England (+1.20)."
+#| fig-width: 6
+#| fig-height: 3
+
+readRDS("data/figures/fig_xg_ranking.rds")
+```
+
 ## The Journey to the Final
 
 To compare England's and Spain's routes to the final and how they performed one by one until playing each other in Basel, several metrics were analysed.
 
-@fig-cumulative-xg depicts how both teams' cumulative xG increased over the whole tournament. It shows that Spain's xG increased consistently while England's increase was influenced by their 6-1 win against Wales on Matchday 3. Over the rest of the tournament, both teams' values were at \~ 13.80 after the semi-finals. After the final game on July 27th, Spain clearly took the lead over England, having an overall difference of +1.23.
+@fig-cumulative-xg depicts how both teams' cumulative xG increased over the whole tournament. It shows that Spain's xG increased consistently while England's increase was influenced by their 6-1 win against Wales on Matchday 3. After five matches each, both teams had accumulated approximately 13.80 xG. Spain then clearly took the lead over England after the final game on July 27th with a total difference of +1.23.
 
 ```{r}
 #| label: fig-cumulative-xg
@@ -247,7 +245,7 @@ readRDS("data/figures/fig_press_shift.rds")
 
 ## The Final
 
-Looking at the attacking output in the final, Spain clearly dominated England on both analysed metrics. @fig-shot-map shows where both team's shot were located at. Spain had a total of 23 shots compared to England's 8, a volume that shows their attacking dominance. The location of Spain's attempts was also more centrally located around the penalty area, compared to England's more dispersed shot ranges. Both goals in the match were headers. Spain's Caldentey headed in from close range in the 24th minute (0.396 xG), while England's Russo equalised with a header in the 56th minute (0.213 xG).
+Looking at the attacking output in the final, Spain clearly dominated England on both analysed metrics. @fig-shot-map shows the location of all shots taken by both teams. Spain had a total of 23 shots compared to England's 8, a volume that shows their attacking dominance. The location of Spain's attempts was also more centrally located around the penalty area, compared to England's more dispersed shot ranges. Both goals in the match were headers. Spain's Caldentey headed in from close range in the 24th minute (0.396 xG), while England's Russo equalised with a header in the 56th minute (0.213 xG).
 
 ```{r}
 #| label: fig-shot-map
@@ -280,7 +278,7 @@ Spain also dominated possession. As shown in @fig-pass-thirds, they directed 29%
 readRDS("data/figures/fig_final_pass_thirds.rds")
 ```
 
-In the final, Bonmatí and Hemp showed clear differences in their final-third actions. Despite both players playing the full 120 minutes, Bonmatí created much more attacking threat. As seen in @fig-passmap, Bonmatí played in the entire attacking third, making passes and carries to the final third from central and wide areas. On the other hand, most of Hemp's actions were concentrated around the left side. This matches England's more conservative attacking style.
+In the final, Bonmatí and Hemp showed clear differences in their final-third actions. Despite both players playing the full 120 minutes, Bonmatí created much more attacking threat. As seen in @fig-passmap, Hemp's actions were concentrated around the left side. Bonmatí, on the other hand, played in the entire attacking third, making passes and carries to the final third from central and wide areas. This matches England's more conservative attacking style.
 
 ```{r}
 #| label: fig-passmap
@@ -293,7 +291,7 @@ readRDS("data/figures/fig_player_passmap.rds")
 
 ## Analytical Outcome
 
-As shown in @tbl-verdict, Spain led England on all seven performance metrics across the tournament. Spain averaged more xG per match (2.65 vs 2.45) and conceded less as well (0.67 vs 1.25 xG per match). They also dominated in terms of pass completion (87.2% vs 79.4%). This number alone does not indicate better possession. But Spain showed their attacking threat through other metrics. Particularly, for the final third carries, Spain had a 6.6 percentage point lead compared to England. Consequently, by attacking more, this also led to fewer shots faced per match (8.7 vs 11.8).
+As shown in @tbl-verdict, which shows tournament-wide averages across all matches, Spain led England on all seven performance metrics. Spain averaged more xG per match (2.65 vs 2.45) and conceded less as well (0.67 vs 1.25 xG per match). They also dominated in terms of pass completion (87.2% vs 79.4%). This number alone does not indicate better possession. But Spain showed their attacking threat through other metrics. Particularly, for the final third carries, Spain had a 6.6 percentage point lead compared to England. Consequently, by attacking more, this also led to fewer shots faced per match (8.7 vs 11.8).
 
 One finding that complicates this picture is England's pressing in the final. Spain had a much higher high-press rate across the tournament (67.8% vs 51.5%). But England applied 393 pressures to Spain's 253 in the final. These two facts are not contradictory. They just describe two different strategies. Spain's high-press rate shows how often they applied pressure in England's half. The larger amount of total pressures for England implies a different approach. They did not necessarily press lower down the pitch, but more frequently. This is supported by the pass distribution data (@fig-pass-thirds). By completing 37% of their passes in their own half compared to Spain's 22%, they were protecting their defensive shape instead of trying to force errors high up the pitch. These numbers describe a team that focused on being defensively compact instead of trying to control the game.
 
@@ -318,7 +316,7 @@ readRDS("data/cleaned/tbl_verdict_summary.rds") %>%
 
 The numbers show that Spain was the stronger side. They created more and better chances (2.65 vs 2.45 xG per match), conceded far less (0.67 vs 1.25 xG against), and pressed higher at every stage of the tournament, as shown in @tbl-verdict. The gap was even wider in the final, as shown in Section 4.3. In terms of attack and defence, Spain should have won.
 
-It is the way England won that makes the result worth looking at. As shown in Section 4.4, Spain pressed higher than England throughout the tournament, but in the final, England pressed more. Combining this with a pass share mainly focused on their own defensive third suggests a team that chose to absorb pressure instead of attacking themselves. By being defensively strong, they were able to limit Spain's space and get the game to penalties. Spain only scoring once from 2.14xG is surprising. Statsbomb's xG model already includes goalkeeper and defender positioning at the moment of each shot [@hudlStatsbomb2021]. England's defensive resilience explains part of that gap, but it cannot be confirmed from open event data alone. That England's win does show a pattern that is regularly observed in football research. Match outcomes are heavily influenced by randomness and may not always reflect underlying team performance [@brechotFlepp2020].
+It is the way England won that makes the result worth looking at. As shown in Section 4.4, Spain pressed higher than England throughout the tournament, but in the final, England pressed more. Combining this with a pass share mainly focused on their own defensive third suggests a team that chose to absorb pressure instead of attacking themselves. By being defensively strong, they were able to limit Spain's space and get the game to penalties. Spain only converting one of their 23 shots from 2.14 xG suggests England's defensive organisation was a significant factor. Statsbomb's xG model already includes goalkeeper and defender positioning at the moment of each shot [@hudlStatsbomb2021]. England's defensive resilience explains part of that gap, but it cannot be confirmed from open event data alone. That England's win does show a pattern that is regularly observed in football research. Match outcomes are heavily influenced by randomness and may not always reflect underlying team performance [@brechotFlepp2020].
 
 The data has a different use depending on who is looking at it. If a coach is looking to prepare for a future fixture against Spain, they could look at how their pressing dropped between different stages of the tournament (from 77% in the group stage to 62% in the knockouts). That decrease suggests Spain presses less aggressively as the stakes in a tournament increase. This is worth considering when planning how to build attacks against them in a knockout game. For a journalist, the xG timeline of the final is the clearest story. Spain dominated for 120 minutes, England's last shot was in the 68th minute, and penalties decided a match that statistics alone cannot fully explain.
 
