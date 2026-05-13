@@ -3,10 +3,16 @@
 # Run once at the start of a session before running any other script
 
 # This project was built on:
-# R Version: R version 4.5.1 (2025-06-13)
+# R Version: R version 4.5.2 (2025-10-31 ucrt)
 
-install.packages("devtools") # needed for statsbomb
-devtools::install_github("statsbomb/StatsBombR") # have to install StatsBomb package first
+if (!requireNamespace("devtools", quietly = TRUE)) {
+  install.packages("devtools")
+}
+
+if (!requireNamespace("StatsBombR", quietly = TRUE)) {
+  devtools::install_github("statsbomb/StatsBombR")
+}
+
 library(StatsBombR) # StatsBomb open event data
 library(tidyverse) # data wrangling and visualisation (ggplot)
 library(naniar) # missing variables

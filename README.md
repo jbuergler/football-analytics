@@ -6,7 +6,7 @@ An interactive dashboard analysing England's victory at UEFA Women's Euro 2025 u
 
 **Live dashboard:** <https://jbuergler.github.io/football-analytics/>
 
-Built with R R 4.5.1, Shiny, and `bslib`, published to GitHub Pages via [Shinylive](https://shinylive.io/r/). The app runs entirely in the visitor's browser, with no server required. Data was pulled from the StatsBomb API in April 2026.
+Built with R 4.5.2 (2025-10-31 ucrt), Shiny, and `bslib`, published to GitHub Pages via [Shinylive](https://shinylive.io/r/). The app runs entirely in the visitor's browser, with no server required. Data was pulled from the StatsBomb API in April 2026.
 
 ## Research Question
 
@@ -26,22 +26,14 @@ StatsBomb open event data pulled from the `StatsBombR` package. Competition ID 5
 ## How to Reproduce
 
 ### Step 1: Install dependencies
-
-If `devtools` is not already installed, run this in the R console first:
+Open `football-analytics.Rproj` in RStudio and run:
 
 ```r
-install.packages("devtools")
-```
-
-
-Then open `football-analytics.Rproj` in RStudio and run:
-
-```         
 source("scripts/00_setup.R")
 ```
 
-This installs and loads all required packages, including `StatsBombR`
-(installed from GitHub via `devtools`).
+This installs and loads all required packages, including `devtools` and
+`StatsBombR`, if they are not already present on your machine.
 
 ### Step 2: Run the data pipeline in order
 
@@ -79,7 +71,7 @@ Then commit and push the updated `docs/` folder. GitHub Pages serves from
 
 - An internet connection is required for Step 1 (`01_data.R` pulls live data
   from the StatsBomb API).
-- Built with R 4.5.1. Results should be reproducible on later versions, but
+- Built with R 4.5.2. Results should be reproducible on later versions, but
   package behaviour may differ.
 - Penalty shootout events (period 5) and own goals are excluded from all xG
   and shot analyses.
