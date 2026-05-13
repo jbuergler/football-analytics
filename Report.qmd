@@ -351,7 +351,7 @@ Anara Technologies (2026) *Anara* (Pro Version). Available at: <https://anara.co
 -   Assisted in understanding and summarising academic literature
 -   Facilitated the organisation of research findings
 
-Anthropic (2026) *Claude* (Version claude-sonnet-4-6). Available at: <https://claude.ai>
+Anthropic (2026) *Claude* (Version Claude Sonnet 4.6). Available at: <https://claude.ai>
 
 -   Assisted in debugging R code and Shiny app development
 -   Support with structuring report sections
