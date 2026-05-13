@@ -196,7 +196,7 @@ In terms of average xG difference, @fig-xg-ranking illustrates how Spain outperf
 #| label: fig-xg-ranking
 #| fig-cap: "All 16 Teams ranked by average xG Difference per Match. Spain led the Tournament (+1.98), ahead of England (+1.20)."
 #| fig-width: 6
-#| fig-height: 2.8
+#| fig-height: 3.2
 
 readRDS("data/figures/fig_xg_ranking.rds")
 ```
@@ -240,7 +240,7 @@ readRDS("data/figures/fig_match_xg_bars_esp.rds")
 #| label: fig-pressing
 #| fig-cap: "Pressing Intensity by stage. High press rate and counter-press rate for England and Spain across the group stage and knockout rounds. Spain pressed higher at every stage."
 #| fig-width: 6
-#| fig-height: 2.7
+#| fig-height: 2.5
 
 readRDS("data/figures/fig_press_shift.rds")
 ```
@@ -253,7 +253,7 @@ Looking at the attacking output in the final, Spain clearly dominated England on
 #| label: fig-shot-map
 #| fig-cap: "Shot map for the Women's Euro 2025 Final. England attack from the left, Spain attack from the right. Circle size represents xG value. The white ring indicates a goal. Spain registered 23 shots to England's 8. Exact xG values and shot outcomes for each attempt are available via the interactive tooltips in the dashboard."
 #| fig-width: 6
-#| fig-height: 3
+#| fig-height: 2.8
 
 readRDS("data/figures/fig_shot_map.rds")
 ```
