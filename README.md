@@ -42,7 +42,7 @@ source("scripts/01_data.R")   # pull raw data from StatsBomb API
 source("scripts/02_explore.R") # explore event structure
 source("scripts/03_clean.R")  # clean and engineer features
 source("scripts/04_analyse.R") # build summary tables
-source("scripts/05_visualise.R") # build static charts
+source("scripts/05_visualisation.R") # build static charts
 ```
 
 Each script saves its outputs to data/ or data/figures/. Scripts 02 onwards can be run independently if the previous outputs already exist.
