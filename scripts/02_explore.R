@@ -1,12 +1,11 @@
 # ---- scripts/02_explore.R ----
 # Purpose: Explore the raw StatsBomb event data for Euro 2025
-# to understand available variables, event types,
-# and data quality before cleaning.
+# to understand available variables, event types, and data quality before cleaning.
 
-# NOTE: Raw data is already loaded in environment from 01_data.R
-# If starting fresh, uncomment these two lines:
-# events_raw    <- readRDS("data/raw/weuro2025_events.rds")
-# weuro_matches <- readRDS("data/raw/weuro2025_matches.rds")
+# Load raw data saved by 01_data.R
+# (skip these two lines if already loaded in the same session)
+events_raw    <- readRDS("data/raw/weuro2025_events.rds")
+weuro_matches <- readRDS("data/raw/weuro2025_matches.rds")
 
 # 1. DATA STRUCTURE OVERVIEW ----
 # All column names (143 columns total)
@@ -94,7 +93,7 @@ events_raw %>%
     from.counter = sum(play_pattern.name == "From Counter", na.rm = TRUE) # 811
   )
 
-# The vast majority are regular plays
+# The majority are regular plays
 # set pieces (corners and free kicks) are a small
 
 # 4. SHOTS AND OFFENSIVE EVENTS ----
@@ -146,6 +145,24 @@ events_raw %>%
     shot.follow.dribble = sum(shot.follows_dribble, na.rm = TRUE) # 1
   )
 
+# 4b. XG SANITY CHECK ----
+# xG will be one of the main metrics in this analysis
+# values should be between 0 and 1
+# (0 = no chance of scoring, 1 = certain goal)
+summary(events_raw$shot.statsbomb_xg)
+
+events_raw %>%
+  filter(!is.na(shot.statsbomb_xg)) %>%
+  summarise(
+    min_xg = min(shot.statsbomb_xg),
+    max_xg = max(shot.statsbomb_xg),
+    mean_xg = mean(shot.statsbomb_xg),
+    total_xg = sum(shot.statsbomb_xg)
+  )
+
+# min value: 0.004, max value: 0.834
+# so all values are between 0 and 1, so no issue with xG values for analysis
+
 # 5. PASSING EVENTS ----
 # Available categories within pass columns
 unique(events_raw$pass.type.name)     
@@ -193,12 +210,11 @@ events_raw %>%
     bodypart_notouch = sum(pass.body_part.name == "No Touch", na.rm = TRUE) # 15
     )
 
-# 99,037 passes have NA outcome - StatsBomb's convention is that 
-# NA = completed, only failed passes get an outcome name recorded.
+# 99,037 passes have NA outcome 
+# according to StatsBomb convention NA = completed passes
+# only failed passes get an outcome name recorded.
 # That's important for pass completion calculations later.
 
-# Pass quality and creation flags
-# These are particularly relevant for player/team analysis
 events_raw %>%
   summarise(
     aerial_passes_won = sum(pass.aerial_won == TRUE, na.rm = TRUE), # 508
@@ -213,8 +229,8 @@ events_raw %>%
     pass.cut_back = sum(pass.cut_back == TRUE, na.rm = TRUE), # 86
     pass.outswing = sum(pass.outswinging == TRUE, na.rm = TRUE), # 54
     right_pass = sum(pass.body_part.name == "Right Foot", na.rm = TRUE), # 18,097
-    left_pass = sum(pass.body_part.name == "Left Foot",  na.rm = TRUE), # 7,564
-    head_pass = sum(pass.body_part.name == "Head",       na.rm = TRUE), # 985
+    left_pass = sum(pass.body_part.name == "Left Foot", na.rm = TRUE), # 7,564
+    head_pass = sum(pass.body_part.name == "Head", na.rm = TRUE), # 985
     pass.no.touch = sum(pass.no_touch == TRUE, na.rm = TRUE), # 15
     pass.misscom = sum(pass.miscommunication == TRUE, na.rm = TRUE) # 5
   )
@@ -302,13 +318,14 @@ unique(events_raw$period)
 events_raw %>%
   filter(type.name == "Shot", shot.type.name == "Penalty") %>%
   count(match_id, period, team.name)
+
 # 3 Matches affected
 # Confirmed: period 5 = shootout. All cleaned tables will use:
 # filter(as.integer(period) <= 4)
 
 # Three matches went to shootouts - one of them is the final
 # This means England's penalty win is literally in the data (period 5) and 
-# needs to be stripped out before any xG comparison
+# needs to be excluded from xG analysis
 
 # Key decisions for 03_clean.R:
 # - Filter period 5 (penalty shootouts) - affects 3 matches
